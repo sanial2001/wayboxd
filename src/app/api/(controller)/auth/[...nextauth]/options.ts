@@ -1,10 +1,9 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions, User } from 'next-auth';
 import { comparePassword } from '@/app/_util/password';
-import { UserModel } from '@/app/api/model/response/user-model';
-import { getUserByEmail, getUserById } from '@/app/service/user/user-service';
+import { getUserById, getUserWithPasswordByEmail } from '@/app/service/user/user-service';
 
-async function getUserDetailsById(userId: number): Promise<UserModel> {
+async function getUserDetailsById(userId: number) {
   const user = await getUserById(userId);
   if (!user) {
     throw new Error('Invalid user id');
@@ -29,7 +28,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         const email = credentials?.email || '';
         const password = credentials?.password || '';
-        const user = await getUserByEmail(email);
+        const user = await getUserWithPasswordByEmail(email);
         if (!user) {
           throw new Error('Invalid email');
         }

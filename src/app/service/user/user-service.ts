@@ -23,6 +23,12 @@ export async function getUserByEmail(email: string): Promise<UserModel | null> {
   return mapUserEntityToModel(user);
 }
 
+export async function getUserWithPasswordByEmail(email: string): Promise<User | null> {
+  return prisma.user.findUnique({
+    where: { email },
+  });
+}
+
 export async function saveUser(data: any): Promise<UserModel> {
   const user = await prisma.user.create({
     data: {
@@ -41,7 +47,6 @@ function mapUserEntityToModel(user: User): UserModel {
     id: user.id,
     email: user.email,
     name: user.name,
-    password: user.password,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };

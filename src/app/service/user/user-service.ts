@@ -1,6 +1,7 @@
 import { UserModel } from '@/app/api/model/response/user-model';
 import prisma from '@/app/service/_lib/prisma';
 import { User } from '@prisma/client';
+import { hashSync } from 'bcrypt';
 
 export async function getUserById(id: number): Promise<UserModel | null> {
   const user = await prisma.user.findUnique({
@@ -22,6 +23,19 @@ export async function getUserByEmail(email: string): Promise<UserModel | null> {
   return mapUserEntityToModel(user);
 }
 
+export async function saveUser(data: any): Promise<UserModel> {
+  const user = await prisma.user.create({
+    data: {
+      email: data.email,
+      name: data.name ?? null,
+      password: createHashPassword(data.password),
+      createdAt: new Date(),
+      updatedAt: data.updatedAt ?? null,
+    },
+  });
+  return mapUserEntityToModel(user);
+}
+
 function mapUserEntityToModel(user: User): UserModel {
   return {
     id: user.id,
@@ -31,4 +45,8 @@ function mapUserEntityToModel(user: User): UserModel {
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };
+}
+
+function createHashPassword(password: string): string {
+  return hashSync(password, 10);
 }

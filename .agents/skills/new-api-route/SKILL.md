@@ -125,7 +125,7 @@ export async function GET(req: NextRequest) {
 `src/proxy.ts` uses `withAuth` and excludes public and auth paths:
 
 ```typescript
-matcher: ['/api/:path((?!public|auth).*)']
+matcher: ['/api/:path((?!public|auth).*)'];
 ```
 
 Add new public path segments to the negative lookahead when introducing new unauthenticated API prefixes.

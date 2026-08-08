@@ -30,10 +30,10 @@ Use when changing `prisma/schema.prisma` or creating migrations.
 
 ## Naming conventions
 
-| Item      | Convention              | Example              |
-| --------- | ----------------------- | -------------------- |
-| Model     | PascalCase singular     | `User`               |
-| Field     | camelCase               | `createdAt`          |
+| Item      | Convention              | Example               |
+| --------- | ----------------------- | --------------------- |
+| Model     | PascalCase singular     | `User`                |
+| Field     | camelCase               | `createdAt`           |
 | Migration | snake_case via `--name` | `add_user_name_index` |
 
 ## Deploy (non-dev)

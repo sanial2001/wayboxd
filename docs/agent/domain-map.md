@@ -26,10 +26,10 @@ User (users)
 
 ## API layout
 
-| Path | Auth | Purpose |
-| ---- | ---- | ------- |
-| `/api/public/*` | None | Public endpoints (signup, etc.) |
-| `/api/auth/*` | NextAuth | Session login/logout |
+| Path             | Auth             | Purpose                         |
+| ---------------- | ---------------- | ------------------------------- |
+| `/api/public/*`  | None             | Public endpoints (signup, etc.) |
+| `/api/auth/*`    | NextAuth         | Session login/logout            |
 | `/api/*` (other) | Session required | Protected APIs (`src/proxy.ts`) |
 
 ## Project layout

@@ -59,14 +59,14 @@ import prisma from '@/app/service/_lib/prisma';
 
 ### 4. Function naming conventions
 
-| Operation | Name pattern              |
-| --------- | ------------------------- |
-| Create    | `saveX(data)`             |
+| Operation | Name pattern                          |
+| --------- | ------------------------------------- |
+| Create    | `saveX(data)`                         |
 | Read one  | `getXById(id)` / `getXByEmail(email)` |
-| Read many | `getXsByY(y)`             |
-| Update    | `updateX(id, data)`       |
-| Delete    | `deleteX(id)`             |
-| Map       | `mapXEntityToModel(entity)` |
+| Read many | `getXsByY(y)`                         |
+| Update    | `updateX(id, data)`                   |
+| Delete    | `deleteX(id)`                         |
+| Map       | `mapXEntityToModel(entity)`           |
 
 ### 5. Map entities to response models
 

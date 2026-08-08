@@ -20,14 +20,14 @@ Wayboxd is a Next.js 16 (App Router, React 19) app with PostgreSQL via Prisma OR
 
 ## Key commands
 
-| Task                 | Command                          |
-| -------------------- | -------------------------------- |
-| Dev server           | `npm run dev`                    |
-| Lint                 | `npm run lint`                   |
-| Format               | `npm run format`                 |
-| Prisma generate      | `npm run prisma:generate`        |
+| Task                 | Command                            |
+| -------------------- | ---------------------------------- |
+| Dev server           | `npm run dev`                      |
+| Lint                 | `npm run lint`                     |
+| Format               | `npm run format`                   |
+| Prisma generate      | `npm run prisma:generate`          |
 | Prisma migrate (dev) | `npm run prisma:migrate -- <name>` |
-| Prisma deploy        | `npm run prisma:deploy`          |
+| Prisma deploy        | `npm run prisma:deploy`            |
 
 ## Gotchas
 

@@ -1,0 +1,30 @@
+---
+description: Wayboxd domain model and API structure
+alwaysApply: false
+---
+
+# Wayboxd Domain
+
+Read `docs/agent/domain-map.md` for the full map.
+
+## Quick reference
+
+**Auth track:** `User` → NextAuth credentials → JWT session
+
+**Public API:** `src/app/api/(controller)/public/` (no session required)
+
+**Protected API:** all other routes under `src/app/api/(controller)/` (session required via `src/proxy.ts`)
+
+## Current models
+
+| Model | Table   | Notes                          |
+| ----- | ------- | ------------------------------ |
+| User  | `users` | email unique, bcrypt password  |
+
+## API prefixes
+
+| Prefix | Audience        |
+| ------ | --------------- |
+| `public/` | Unauthenticated |
+| `auth/`   | NextAuth        |
+| other     | Authenticated   |

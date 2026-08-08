@@ -1,11 +1,18 @@
 import { UserSignupRequest } from '@/app/api/model/request/user-signup-request';
 import { createApiResponse } from '@/app/service/_utils/api-response';
-import { saveUser } from '@/app/service/user/user-service';
+import { getUserByEmail, saveUser } from '@/app/service/user/user-service';
 import { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
     const body: UserSignupRequest = await req.json();
+    const existingUser = await getUserByEmail(body.email);
+    if (existingUser) {
+      return createApiResponse({
+        error: 'User Email already exists',
+        status: 400,
+      });
+    }
     const partialUser = createPartialUser(body);
     const user = await saveUser(partialUser);
     return createApiResponse({

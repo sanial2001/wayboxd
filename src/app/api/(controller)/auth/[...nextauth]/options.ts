@@ -1,13 +1,8 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions, User } from 'next-auth';
 import { comparePassword } from '@/app/_util/password';
-import prisma from '@/app/service/_lib/prisma';
 import { UserModel } from '@/app/api/model/response/user-model';
-import { getUserById } from '@/app/service/user/user-service';
-
-async function getUserDetailsByEmail(email: string) {
-  return prisma.user.findUnique({ where: { email } });
-}
+import { getUserByEmail, getUserById } from '@/app/service/user/user-service';
 
 async function getUserDetailsById(userId: number): Promise<UserModel> {
   const user = await getUserById(userId);
@@ -34,8 +29,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         const email = credentials?.email || '';
         const password = credentials?.password || '';
-        const user = await getUserDetailsByEmail(email);
-
+        const user = await getUserByEmail(email);
         if (!user) {
           throw new Error('Invalid email');
         }

@@ -12,6 +12,16 @@ export async function getUserById(id: number): Promise<UserModel | null> {
   return mapUserEntityToModel(user);
 }
 
+export async function getUserByEmail(email: string): Promise<UserModel | null> {
+  const user = await prisma.user.findUnique({ 
+    where: { email } 
+  });
+  if (!user) {
+    return null;
+  }
+  return mapUserEntityToModel(user);
+}
+
 function mapUserEntityToModel(user: User): UserModel {
   return {
     id: user.id,

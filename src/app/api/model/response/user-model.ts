@@ -4,5 +4,5 @@ export interface UserModel {
   name: string | null;
   password: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }

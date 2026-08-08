@@ -29,6 +29,16 @@ export async function getUserWithPasswordByEmail(email: string): Promise<User | 
   });
 }
 
+export async function updateUser(id: number, data: Partial<UserModel>): Promise<UserModel> {
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      updatedAt: new Date(),
+    },
+  });
+  return mapUserEntityToModel(user);
+}
+
 export async function saveUser(data: any): Promise<UserModel> {
   const user = await prisma.user.create({
     data: {

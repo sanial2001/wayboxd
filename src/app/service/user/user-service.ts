@@ -3,8 +3,8 @@ import prisma from '@/app/service/_lib/prisma';
 import { User } from '@prisma/client';
 
 export async function getUserById(id: number): Promise<UserModel | null> {
-  const user = await prisma.user.findUnique({ 
-    where: { id } 
+  const user = await prisma.user.findUnique({
+    where: { id },
   });
   if (!user) {
     return null;
@@ -13,8 +13,8 @@ export async function getUserById(id: number): Promise<UserModel | null> {
 }
 
 export async function getUserByEmail(email: string): Promise<UserModel | null> {
-  const user = await prisma.user.findUnique({ 
-    where: { email } 
+  const user = await prisma.user.findUnique({
+    where: { email },
   });
   if (!user) {
     return null;

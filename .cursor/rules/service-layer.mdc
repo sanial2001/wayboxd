@@ -1,0 +1,34 @@
+---
+description: Service layer conventions for Wayboxd
+globs: src/app/service/**/*.ts
+alwaysApply: false
+---
+
+# Service Layer
+
+Use the `new-service` skill for full templates.
+
+## Rules
+
+1. **No try-catch** — let exceptions bubble up to route handlers
+2. **Prisma import**: `import prisma from '@/app/service/_lib/prisma'`
+3. **Return typed models**, not raw Prisma entities — use `mapXEntityToModel` helpers
+4. **Response models** live in `src/app/api/model/response/`
+5. **Request models** live in `src/app/api/model/response/` for API output; input DTOs in `src/app/api/model/request/`
+6. **Password hashing** stays in the service layer (see `user-service.ts` and `@/app/_util/password`)
+
+## Function naming
+
+| Operation | Pattern                |
+| --------- | ---------------------- |
+| Create    | `saveX` / `createX`    |
+| Read one  | `getXById` / `getXByEmail` |
+| Read many | `getXsByY`             |
+| Update    | `updateX`              |
+| Delete    | `deleteX`              |
+| Map       | `mapXEntityToModel`    |
+
+## Utilities
+
+- API response helper: `src/app/service/_utils/api-response.ts`
+- Prisma client: `src/app/service/_lib/prisma.ts`

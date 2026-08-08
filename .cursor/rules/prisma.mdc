@@ -1,0 +1,34 @@
+---
+description: Prisma schema and migration conventions
+globs: prisma/**
+alwaysApply: false
+---
+
+# Prisma
+
+Use the `new-prisma-migration` skill for migration workflow.
+
+## Rules
+
+1. **Never edit applied migrations** — only modify `schema.prisma` and create new migrations
+2. **`prisma.config.ts` loads `.env.local` then `.env`** — ensure `DATABASE_URL` is set for CLI commands
+3. **Use `@@map` for table names** when matching existing conventions (e.g. `users`)
+
+## Commands
+
+```bash
+# Dev migration
+npm run prisma:migrate -- <migration_name>
+
+# Deploy (CI/prod)
+npm run prisma:deploy
+
+# Generate client (runs automatically on dev/build)
+npm run prisma:generate
+```
+
+## Naming
+
+- Models: PascalCase singular (`User`)
+- Fields: camelCase
+- Migration names: descriptive snake_case via `prisma migrate dev --name`

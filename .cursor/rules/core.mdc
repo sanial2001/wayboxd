@@ -1,0 +1,43 @@
+---
+description: Core Wayboxd coding standards and project structure
+alwaysApply: true
+---
+
+# Wayboxd Core Standards
+
+## Project structure
+
+```
+src/
+  ├── app/
+  │   ├── _util/          # Utility helpers (password, etc.)
+  │   ├── api/            # API route handlers under (controller)/
+  │   │   └── model/      # Request/response types
+  │   └── service/        # Business logic (no try-catch here)
+  └── proxy.ts            # Auth proxy (Next.js 16; excludes public/auth API paths)
+prisma/                   # Schema and migrations
+```
+
+## TypeScript
+
+- Use English for all code and documentation
+- Always declare types; avoid `any`
+- Naming: PascalCase (types/classes), camelCase (functions/vars), kebab-case (files/dirs), UPPERCASE (constants/env)
+- Keep functions focused; use early returns
+- Null safety: prefer `obj?.property`, `obj?.value ?? defaultValue`
+
+## Logging
+
+- Avoid `console.log` in route handlers and services
+- Add structured logging via a shared logger when the project introduces one
+
+## Code quality
+
+- Run `npm run lint` and `npm run format:check` before committing
+- Husky pre-commit runs prettier on staged files; pre-push runs build and lint
+
+## Agent context
+
+- Domain map: `docs/agent/domain-map.md`
+- Team memory (decisions, gotchas): `docs/agent/memory.md`
+- Workflows: use skills in `.agents/skills/` (`new-api-route`, `new-service`, `new-prisma-migration`)

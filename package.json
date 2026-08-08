@@ -11,7 +11,8 @@
     "format:check": "prettier --check .",
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate",
-    "prisma:deploy": "npx prisma migrate deploy"
+    "prisma:deploy": "npx prisma migrate deploy",
+    "prepare": "husky"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
@@ -33,6 +34,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "husky": "^9.1.7",
     "prettier": "^3.9.6",
     "prisma": "^7.9.1",
     "tailwindcss": "^4",

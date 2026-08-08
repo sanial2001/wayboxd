@@ -3,26 +3,18 @@ import { NextAuthOptions, User } from 'next-auth';
 import { comparePassword } from '@/app/_util/password';
 import prisma from '@/app/service/_lib/prisma';
 import { UserModel } from '@/app/api/model/response/user-model';
+import { getUserById } from '@/app/service/user/user-service';
 
 async function getUserDetailsByEmail(email: string) {
   return prisma.user.findUnique({ where: { email } });
 }
 
 async function getUserDetailsById(userId: number): Promise<UserModel> {
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-
+  const user = await getUserById(userId);
   if (!user) {
     throw new Error('Invalid user id');
   }
-
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    password: user.password,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  };
+  return user;
 }
 
 export const authOptions: NextAuthOptions = {

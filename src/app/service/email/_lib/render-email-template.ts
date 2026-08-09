@@ -20,11 +20,7 @@ export function renderEmailTemplate<T extends EmailTemplateId>(
   return interpolate(source, vars as Record<string, string>, extension === 'html');
 }
 
-function interpolate(
-  source: string,
-  vars: Record<string, string>,
-  htmlEscape: boolean
-): string {
+function interpolate(source: string, vars: Record<string, string>, htmlEscape: boolean): string {
   return source.replace(/\{\{(\w+)\}\}/g, (_match, key: string) => {
     const value = vars[key] ?? '';
     return htmlEscape ? escapeHtml(value) : value;

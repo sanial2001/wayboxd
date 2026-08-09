@@ -9,6 +9,7 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Protected API routes rely on `src/proxy.ts` (`withAuth`) — matcher excludes `public` and `auth`.
 - Coding standards live in `.cursor/rules/`; workflows live in `.agents/skills/`.
 - Use `createApiResponse` from `@/app/service/_utils/api-response` for all API JSON responses.
+- UI code calls APIs via `src/app/api/client/*-service-client.ts`, not inline `fetch` in components.
 
 ## Gotchas
 
@@ -23,4 +24,5 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Do not add try-catch in service layer functions.
 - Do not return raw `NextResponse.json` from API routes — use `createApiResponse`.
 - Do not put Prisma queries in route handlers — use the entity's service file.
+- Do not call `fetch('/api/...')` directly in UI components — add a function to `src/app/api/client/`.
 - Do not expose `password` from service mappers used by public/protected API routes.

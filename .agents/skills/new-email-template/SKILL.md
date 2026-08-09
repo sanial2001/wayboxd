@@ -38,6 +38,7 @@ src/app/service/email/
 - No try-catch in `email-service` builders (same as other services).
 - Keep HTML email-client safe: tables, inline styles, system/Georgia fonts.
 - Always ship a `.txt` alternative alongside `.html`.
+- Sanitize user-controlled values: HTML escape in `renderEmailTemplate` (html mode), `sanitizeEmailText` for subjects, `sanitizeEmailHttpUrl` for CTA links.
 - Signup/welcome sends must not fail the user-facing API if transport errors later — handle that in the route when wiring the provider.
 - Do not dump templates at repo root (`emails/`) — canonical home is `src/app/service/email/templates/`.
 

@@ -1,4 +1,8 @@
 import { renderEmailTemplate } from '@/app/service/email/_lib/render-email-template';
+import {
+  sanitizeEmailHttpUrl,
+  sanitizeEmailText,
+} from '@/app/service/email/_lib/sanitize-email-value';
 import type { RenderedEmail, WelcomeSignupEmailInput } from '@/app/service/email/types';
 
 /**
@@ -6,12 +10,15 @@ import type { RenderedEmail, WelcomeSignupEmailInput } from '@/app/service/email
  * Provider send (Resend, etc.) should call these builders — keep transport out of templates.
  */
 export function buildWelcomeSignupEmail(input: WelcomeSignupEmailInput): RenderedEmail {
-  const name = input.name.trim();
-  const preheader = 'Go somewhere. Have an opinion. Your scrapbook is empty — for now.';
+  const name = sanitizeEmailText(input.name);
+  const ctaUrl = sanitizeEmailHttpUrl(input.ctaUrl);
+  const preheader = sanitizeEmailText(
+    'Go somewhere. Have an opinion. Your scrapbook is empty — for now.'
+  );
 
   const vars = {
     name,
-    ctaUrl: input.ctaUrl,
+    ctaUrl,
     preheader,
   };
 

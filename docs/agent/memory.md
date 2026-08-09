@@ -29,3 +29,4 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Do not call `fetch('/api/...')` directly in UI components — add a function to `src/app/api/client/`.
 - Do not expose `password` from service mappers used by public/protected API routes.
 - Do not add email HTML under a top-level `emails/` folder — use `src/app/service/email/templates/`.
+- Never interpolate raw user input into email HTML/subjects — use `sanitizeEmailText` / HTML escaping in `render-email-template` / `sanitizeEmailHttpUrl`.

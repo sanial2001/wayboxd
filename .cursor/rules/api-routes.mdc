@@ -1,0 +1,41 @@
+---
+description: API route handler conventions for Wayboxd
+globs: src/app/api/**/*.ts
+alwaysApply: false
+---
+
+# API Routes
+
+Routes live under `src/app/api/(controller)/`. Use the `new-api-route` skill for full templates.
+
+## Rules
+
+1. **Always wrap handlers in try-catch** — only route handlers catch errors
+2. **Use `createApiResponse`** from `@/app/service/_utils/api-response` for all responses
+3. **Validate at route level** — auth, input checks; business logic stays in service layer
+4. **Public routes** go under `public/` (e.g. `public/user-signup/route.ts`)
+5. **Protected routes** require auth via `src/proxy.ts` — matcher excludes `public` and `auth`
+
+## Auth
+
+- NextAuth config: `src/app/api/(controller)/auth/[...nextauth]/options.ts`
+- Public API paths: `/api/public/*`
+- Auth API paths: `/api/auth/*`
+- All other `/api/*` paths require a valid session token (see `src/proxy.ts`)
+
+## Error codes
+
+| Method | Error Code     |
+| ------ | -------------- |
+| GET    | `GET_ERROR`    |
+| POST   | `POST_ERROR`   |
+| PUT    | `PUT_ERROR`    |
+| DELETE | `DELETE_ERROR` |
+
+Use `errorCode` in `createApiResponse` for client-facing failures when helpful.
+
+## Request/response models
+
+- Request types: `src/app/api/model/request/`
+- Response types: `src/app/api/model/response/`
+- Never return password hashes from API responses

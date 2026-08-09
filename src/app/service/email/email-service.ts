@@ -7,8 +7,7 @@ import type { RenderedEmail, WelcomeSignupEmailInput } from '@/app/service/email
  */
 export function buildWelcomeSignupEmail(input: WelcomeSignupEmailInput): RenderedEmail {
   const name = input.name.trim();
-  const preheader =
-    'Go somewhere. Have an opinion. Your scrapbook is empty — for now.';
+  const preheader = 'Go somewhere. Have an opinion. Your scrapbook is empty — for now.';
 
   const vars = {
     name,

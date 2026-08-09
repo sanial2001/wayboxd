@@ -15,7 +15,8 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 
 - `prisma.config.ts` loads `.env.local` then `.env` — ensure `DATABASE_URL` is set for migrations.
 - `npm run dev` runs `prisma generate` then `next dev`.
-- Husky pre-push runs `npm run build` and `npm run lint`.
+- Husky pre-commit runs `lint-staged` (Prettier on staged files, auto-re-staged). Do not use `npm run format` in the hook — that formats the whole tree and leaves unstaged changes behind.
+- Husky pre-push runs `npm run build`.
 - Next.js 16 uses `proxy.ts` (not `middleware.ts`) for request proxy/auth.
 - Password hashes must never appear in `UserModel` or public API responses.
 

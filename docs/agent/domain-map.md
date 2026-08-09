@@ -26,6 +26,20 @@ User (users)
 
 **Public signup:** `POST /api/public/user-signup`
 
+### Email (transactional)
+
+```
+src/app/service/email/
+  ├── email-service.ts           # buildWelcomeSignupEmail(), future send*
+  ├── types.ts
+  ├── _lib/                      # renderer + brand tokens
+  └── templates/                 # <id>.html + <id>.txt + previews/
+```
+
+**Current templates:** `welcome-signup` (scrapbook Option A)
+
+**Skill:** `.agents/skills/new-email-template/`
+
 ## API layout
 
 | Path             | Auth             | Purpose                         |
@@ -43,7 +57,7 @@ src/app/
   │   ├── (controller)/      # route handlers
   │   ├── client/            # browser fetch wrappers (*-service-client.ts)
   │   └── model/             # request/response types
-  └── service/               # business logic + prisma
+  └── service/               # business logic + prisma (+ email templates)
 src/proxy.ts                 # auth proxy matcher
 prisma/                      # schema + migrations
 ```

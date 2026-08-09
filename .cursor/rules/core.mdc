@@ -34,7 +34,7 @@ prisma/                   # Schema and migrations
 ## Code quality
 
 - Run `npm run lint` and `npm run format:check` before committing
-- Husky pre-commit runs prettier on staged files; pre-push runs build and lint
+- Husky pre-commit runs `lint-staged` (Prettier on staged files, auto-re-staged); pre-push runs build
 
 ## Agent context
 

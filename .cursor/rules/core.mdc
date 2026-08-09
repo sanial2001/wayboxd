@@ -40,4 +40,4 @@ prisma/                   # Schema and migrations
 
 - Domain map: `docs/agent/domain-map.md`
 - Team memory (decisions, gotchas): `docs/agent/memory.md`
-- Workflows: use skills in `.agents/skills/` (`new-api-route`, `new-service`, `new-prisma-migration`)
+- Workflows: use skills in `.agents/skills/` (`new-api-route`, `new-api-client`, `new-service`, `new-prisma-migration`)

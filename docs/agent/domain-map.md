@@ -20,6 +20,8 @@ User (users)
 
 **Services:** `src/app/service/user/user-service.ts`
 
+**Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`)
+
 **Auth:** `src/app/api/(controller)/auth/[...nextauth]/options.ts`
 
 **Public signup:** `POST /api/public/user-signup`
@@ -39,6 +41,7 @@ src/app/
   ├── _util/                 # password helpers
   ├── api/
   │   ├── (controller)/      # route handlers
+  │   ├── client/            # browser fetch wrappers (*-service-client.ts)
   │   └── model/             # request/response types
   └── service/               # business logic + prisma
 src/proxy.ts                 # auth proxy matcher

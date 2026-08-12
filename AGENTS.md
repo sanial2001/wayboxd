@@ -16,7 +16,7 @@ Instructions for Cursor Cloud Agents and automated environments.
 
 Wayboxd is a Next.js 16 (App Router, React 19) app with PostgreSQL via Prisma ORM and NextAuth credentials auth.
 
-**Coding standards** are in `.cursor/rules/`. **Workflows** are in `.agents/skills/`. **Domain context** is in `docs/agent/domain-map.md`.
+**Coding standards** are in `.cursor/rules/`. **Workflows** are in `.agents/skills/` (including `new-email-template`). **Domain context** is in `docs/agent/domain-map.md`.
 
 ## Key commands
 

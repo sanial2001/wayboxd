@@ -1,0 +1,15 @@
+Passport stamped. You’re in, {{name}}.
+
+Go somewhere. Have an opinion.
+
+Your scrapbook is empty — for now. WayBoxd is where real places meet real opinions.
+Not a booking site. Not a polite three-star review.
+
+Enter the scrapbook: {{ctaUrl}}
+
+First marks in the book
+1. Follow someone whose taste you’d trust on a weird Tuesday
+2. Log a place you actually went
+3. Write the review you’d send in a group chat
+
+You’re getting this because you joined WayBoxd.

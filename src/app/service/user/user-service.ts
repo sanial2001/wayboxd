@@ -1,3 +1,4 @@
+import { comparePassword } from '@/app/_util/password';
 import { UserModel } from '@/app/api/model/response/user-model';
 import prisma from '@/app/service/_lib/prisma';
 import { User } from '@prisma/client';
@@ -37,6 +38,23 @@ export async function getUserWithPasswordByUsername(username: string): Promise<U
   return prisma.user.findFirst({
     where: { username },
   });
+}
+
+export async function authenticateUser(
+  username: string,
+  password: string
+): Promise<UserModel | null> {
+  const user = await getUserWithPasswordByUsername(username);
+  if (!user) {
+    return null;
+  }
+
+  const isPasswordValid = await comparePassword(password, user.password);
+  if (!isPasswordValid) {
+    return null;
+  }
+
+  return mapUserEntityToModel(user);
 }
 
 export async function updateUser(id: number, data: Partial<UserModel>): Promise<UserModel> {

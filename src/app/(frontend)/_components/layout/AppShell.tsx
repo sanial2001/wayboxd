@@ -1,8 +1,8 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { AuthGateProvider } from '@/components/auth/AuthGate';
+import { AuthGateProvider, AuthQueryOpener } from '@/components/auth/AuthGate';
 import { LandingHeader } from '@/components/layout/LandingHeader';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { SiteHeader } from '@/components/layout/SiteHeader';
@@ -16,6 +16,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       <AuthGateProvider>
         <div className="flex min-h-full flex-col">
           <LandingHeader />
+          <Suspense fallback={null}>
+            <AuthQueryOpener />
+          </Suspense>
           <main className="flex-1 pb-8">{children}</main>
         </div>
       </AuthGateProvider>

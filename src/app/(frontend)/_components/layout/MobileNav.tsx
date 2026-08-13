@@ -1,19 +1,22 @@
 'use client';
 
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/cn';
 
-const items = [
-  { href: '/home', label: 'Home', icon: '🏠' },
-  { href: '/discover', label: 'Find', icon: '✨' },
-  { href: '/review/new', label: 'Spill', icon: '+', prominent: true },
-  { href: '/map', label: 'Map', icon: '🗺' },
-  { href: '/profile/kelvin', label: 'You', icon: '☺' },
-];
-
 export function MobileNav() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const username = session?.userDetails?.username ?? 'kelvin';
+
+  const items = [
+    { href: '/home', label: 'Home', icon: '🏠' },
+    { href: '/discover', label: 'Find', icon: '✨' },
+    { href: '/review/new', label: 'Spill', icon: '+', prominent: true },
+    { href: '/map', label: 'Map', icon: '🗺' },
+    { href: `/profile/${username}`, label: 'You', icon: '☺' },
+  ] as const;
 
   return (
     <nav
@@ -27,7 +30,7 @@ export function MobileNav() {
               ? pathname === '/home'
               : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
-          if (item.prominent) {
+          if ('prominent' in item && item.prominent) {
             return (
               <li key={item.href} className="flex justify-center">
                 <Link

@@ -1,3 +1,4 @@
+import { UserSigninRequest } from '@/app/api/model/request/user-signin-request';
 import { UserSignupRequest } from '@/app/api/model/request/user-signup-request';
 import { ApiResponse } from '@/app/api/model/response/api-response';
 import { UserModel } from '@/app/api/model/response/user-model';
@@ -12,6 +13,23 @@ export async function userSignupClient(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(userSignupRequest),
+    });
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function userSigninClient(
+  userSigninRequest: UserSigninRequest
+): Promise<ApiResponse<UserModel>> {
+  try {
+    const response = await fetch('/api/public/user-signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userSigninRequest),
     });
     return await response.json();
   } catch (error) {

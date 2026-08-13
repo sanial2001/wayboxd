@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { Logo } from '@/components/layout/Logo';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
@@ -18,9 +19,16 @@ const navItems = [
   { href: '/map', label: 'Map' },
 ];
 
+const fallbackAvatar =
+  'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop';
+
 export function SiteHeader() {
   const pathname = usePathname();
-  const me = people.find((p) => p.username === 'kelvin')!;
+  const { data: session, status } = useSession();
+  const username = session?.userDetails?.username;
+  const mockMatch = username ? people.find((p) => p.username === username) : undefined;
+  const avatarSrc = mockMatch?.avatar ?? fallbackAvatar;
+  const authenticated = status === 'authenticated' && !!username;
 
   return (
     <header className="sticky top-0 z-40 border-b-[3px] border-border bg-paper/90 backdrop-blur-md">
@@ -62,13 +70,39 @@ export function SiteHeader() {
             <span aria-hidden>🔔</span>
             <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-border bg-coral" />
           </button>
-          <Avatar
-            src={me.avatar}
-            alt={`@${me.username}`}
-            href={`/profile/${me.username}`}
-            size="sm"
-            className="hidden sm:inline-block"
-          />
+          {authenticated ? (
+            <>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="hidden sm:inline-flex"
+                onClick={() => signOut({ callbackUrl: '/' })}
+              >
+                Sign out
+              </Button>
+              <Avatar
+                src={avatarSrc}
+                alt={`@${username}`}
+                href={`/profile/${username}`}
+                size="sm"
+                className="hidden sm:inline-block"
+              />
+            </>
+          ) : status === 'loading' ? (
+            <span className="hidden font-display text-xs font-bold uppercase text-muted sm:inline">
+              …
+            </span>
+          ) : (
+            <Button
+              href="/?auth=signin"
+              variant="secondary"
+              size="sm"
+              className="hidden sm:inline-flex"
+            >
+              Sign in
+            </Button>
+          )}
         </div>
       </Container>
     </header>

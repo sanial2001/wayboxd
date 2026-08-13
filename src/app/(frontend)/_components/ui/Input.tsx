@@ -5,9 +5,10 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   hint?: string;
   leading?: ReactNode;
+  trailing?: ReactNode;
 };
 
-export function Input({ label, hint, leading, className, id, ...props }: InputProps) {
+export function Input({ label, hint, leading, trailing, className, id, ...props }: InputProps) {
   const inputId = id ?? props.name;
 
   return (
@@ -24,10 +25,12 @@ export function Input({ label, hint, leading, className, id, ...props }: InputPr
           className={cn(
             'w-full rounded-2xl border-[3px] border-border bg-surface px-4 py-3 font-sans text-base text-ink shadow-chunky-sm placeholder:text-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple/30',
             leading && 'pl-11',
+            trailing && 'pr-14',
             className
           )}
           {...props}
         />
+        {trailing ? <span className="absolute right-2 flex items-center">{trailing}</span> : null}
       </span>
       {hint ? <span className="text-sm text-muted">{hint}</span> : null}
     </label>

@@ -17,9 +17,14 @@ src/app/service/
   │   └── prisma.ts
   ├── _utils/
   │   └── api-response.ts
+  ├── email/                    # transactional email (see new-email-template skill)
+  │   ├── email-service.ts
+  │   └── templates/
   └── <entity-name>/
       └── <entity-name>-service.ts
 ```
+
+For outbound email templates, use the `new-email-template` skill — do not scatter HTML at repo root.
 
 ## Key rules
 

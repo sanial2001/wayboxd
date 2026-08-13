@@ -1,7 +1,7 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions, User } from 'next-auth';
 import { comparePassword } from '@/app/_util/password';
-import { getUserById, getUserWithPasswordByEmail } from '@/app/service/user/user-service';
+import { getUserById, getUserWithPasswordByUsername } from '@/app/service/user/user-service';
 
 async function getUserDetailsById(userId: number) {
   const user = await getUserById(userId);
@@ -22,15 +22,15 @@ export const authOptions: NextAuthOptions = {
       name: 'Credentials',
       type: 'credentials',
       credentials: {
-        email: { label: 'email:', type: 'text' },
+        username: { label: 'username:', type: 'text' },
         password: { label: 'password:', type: 'password' },
       },
       async authorize(credentials) {
-        const email = credentials?.email || '';
+        const username = credentials?.username || '';
         const password = credentials?.password || '';
-        const user = await getUserWithPasswordByEmail(email);
+        const user = await getUserWithPasswordByUsername(username);
         if (!user) {
-          throw new Error('Invalid email');
+          throw new Error('Invalid username');
         }
 
         const isPasswordValid = await comparePassword(password, user.password);
@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
         const authUser: User = {
           id: String(user.id),
           image: '',
-          name: user.name,
+          name: user.username,
           email: user.email,
         };
 

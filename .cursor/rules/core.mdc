@@ -13,7 +13,7 @@ src/
   │   ├── _util/          # Utility helpers (password, etc.)
   │   ├── api/            # API route handlers under (controller)/
   │   │   └── model/      # Request/response types
-  │   └── service/        # Business logic (no try-catch here)
+  │   └── service/        # Business logic + email templates (no try-catch here)
   └── proxy.ts            # Auth proxy (Next.js 16; excludes public/auth API paths)
 prisma/                   # Schema and migrations
 ```
@@ -34,10 +34,10 @@ prisma/                   # Schema and migrations
 ## Code quality
 
 - Run `npm run lint` and `npm run format:check` before committing
-- Husky pre-commit runs prettier on staged files; pre-push runs build and lint
+- Husky pre-commit runs `lint-staged` (Prettier on staged files, auto-re-staged); pre-push runs build
 
 ## Agent context
 
 - Domain map: `docs/agent/domain-map.md`
 - Team memory (decisions, gotchas): `docs/agent/memory.md`
-- Workflows: use skills in `.agents/skills/` (`new-api-route`, `new-service`, `new-prisma-migration`)
+- Workflows: use skills in `.agents/skills/` (`new-api-route`, `new-api-client`, `new-service`, `new-email-template`, `new-prisma-migration`)

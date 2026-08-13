@@ -16,7 +16,7 @@ Instructions for Cursor Cloud Agents and automated environments.
 
 Wayboxd is a Next.js 16 (App Router, React 19) app with PostgreSQL via Prisma ORM and NextAuth credentials auth.
 
-**Coding standards** are in `.cursor/rules/`. **Workflows** are in `.agents/skills/`. **Domain context** is in `docs/agent/domain-map.md`.
+**Coding standards** are in `.cursor/rules/`. **Workflows** are in `.agents/skills/` (including `new-email-template`). **Domain context** is in `docs/agent/domain-map.md`.
 
 ## Key commands
 
@@ -33,6 +33,7 @@ Wayboxd is a Next.js 16 (App Router, React 19) app with PostgreSQL via Prisma OR
 
 - Before every commit, run `npm run lint` and `npm run format:check` if you skipped hooks.
 - `prisma.config.ts` loads `.env.local` then `.env` — ensure `DATABASE_URL` is set for Prisma CLI.
-- Husky pre-push runs `npm run build` and `npm run lint`.
+- Husky pre-commit runs `lint-staged` (Prettier on staged files only; fixes are re-staged into the commit).
+- Husky pre-push runs `npm run build`.
 - Public API routes must live under `src/app/api/(controller)/public/` to bypass auth in `src/proxy.ts`.
 - Auth uses NextAuth at `/api/auth/*`; proxy matcher excludes `public` and `auth`.

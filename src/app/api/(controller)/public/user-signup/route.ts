@@ -1,6 +1,6 @@
 import { UserSignupRequest } from '@/app/api/model/request/user-signup-request';
 import { createApiResponse } from '@/app/service/_utils/api-response';
-import { getUserByEmail, saveUser } from '@/app/service/user/user-service';
+import { getUserByUsername, saveUser } from '@/app/service/user/user-service';
 import { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -15,10 +15,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const existingUser = await getUserByEmail(body.email.trim());
-    if (existingUser) {
+    const existingUsername = await getUserByUsername(body.username.trim());
+    if (existingUsername) {
       return createApiResponse({
-        error: 'User Email already exists',
+        error: 'Username already exists',
         status: 400,
       });
     }
@@ -43,8 +43,8 @@ function validateSignupRequest(body: UserSignupRequest): string | null {
   if (typeof body.email !== 'string' || !body.email.trim()) {
     return 'Email is required';
   }
-  if (typeof body.name !== 'string' || !body.name.trim()) {
-    return 'Name is required';
+  if (typeof body.username !== 'string' || !body.username.trim()) {
+    return 'Username is required';
   }
   if (typeof body.password !== 'string' || !body.password.trim()) {
     return 'Password is required';
@@ -54,8 +54,8 @@ function validateSignupRequest(body: UserSignupRequest): string | null {
 
 function createPartialUser(body: UserSignupRequest) {
   return {
-    email: body.email.trim(),
-    name: body.name.trim(),
+    email: body.email?.trim() ?? null,
+    username: body.username.trim(),
     password: body.password,
   };
 }

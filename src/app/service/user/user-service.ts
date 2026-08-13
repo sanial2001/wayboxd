@@ -1,3 +1,4 @@
+import { comparePassword } from '@/app/_util/password';
 import { UserModel } from '@/app/api/model/response/user-model';
 import prisma from '@/app/service/_lib/prisma';
 import { User } from '@prisma/client';
@@ -14,7 +15,7 @@ export async function getUserById(id: number): Promise<UserModel | null> {
 }
 
 export async function getUserByEmail(email: string): Promise<UserModel | null> {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: { email },
   });
   if (!user) {
@@ -23,10 +24,37 @@ export async function getUserByEmail(email: string): Promise<UserModel | null> {
   return mapUserEntityToModel(user);
 }
 
-export async function getUserWithPasswordByEmail(email: string): Promise<User | null> {
-  return prisma.user.findUnique({
-    where: { email },
+export async function getUserByUsername(username: string): Promise<UserModel | null> {
+  const user = await prisma.user.findUnique({
+    where: { username },
   });
+  if (!user) {
+    return null;
+  }
+  return mapUserEntityToModel(user);
+}
+
+export async function getUserWithPasswordByUsername(username: string): Promise<User | null> {
+  return prisma.user.findFirst({
+    where: { username },
+  });
+}
+
+export async function authenticateUser(
+  username: string,
+  password: string
+): Promise<UserModel | null> {
+  const user = await getUserWithPasswordByUsername(username);
+  if (!user) {
+    return null;
+  }
+
+  const isPasswordValid = await comparePassword(password, user.password);
+  if (!isPasswordValid) {
+    return null;
+  }
+
+  return mapUserEntityToModel(user);
 }
 
 export async function updateUser(id: number, data: Partial<UserModel>): Promise<UserModel> {
@@ -42,8 +70,8 @@ export async function updateUser(id: number, data: Partial<UserModel>): Promise<
 export async function saveUser(data: any): Promise<UserModel> {
   const user = await prisma.user.create({
     data: {
-      email: data.email,
-      name: data.name ?? null,
+      email: data.email ?? null,
+      username: data.username,
       password: createHashPassword(data.password),
       createdAt: new Date(),
       updatedAt: data.updatedAt ?? null,
@@ -56,7 +84,7 @@ function mapUserEntityToModel(user: User): UserModel {
   return {
     id: user.id,
     email: user.email,
-    name: user.name,
+    username: user.username,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };

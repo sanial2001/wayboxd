@@ -1,0 +1,31 @@
+---
+description: API client layer conventions for Wayboxd
+globs: src/app/api/client/**/*.ts
+alwaysApply: false
+---
+
+# API Client Layer
+
+Client functions live in `src/app/api/client/`. Use the `new-api-client` skill for templates.
+
+## Rules
+
+1. **One file per domain** — e.g. `user-service-client.ts` for user APIs
+2. **Suffix functions with `Client`** — e.g. `userSignupClient`
+3. **Use `fetch` with relative `/api/...` paths** — works in browser and server components that call client functions
+4. **Import request/response types** from `src/app/api/model/` — do not redefine DTOs in client files
+5. **Return typed `ApiResponse<T>`** when the route uses `createApiResponse`
+6. **No business logic** — client functions only handle HTTP; validation and persistence stay in routes/services
+7. **Use from `'use client'` components** — client layer is for UI and browser-side API calls
+
+## Public vs protected routes
+
+| Route type | Path prefix | Auth |
+| ---------- | ----------- | ---- |
+| Public     | `/api/public/` | None |
+| Protected  | `/api/` (other) | Session cookie via proxy |
+
+## Error handling
+
+- Prefer returning `response.json()` as `ApiResponse<T>` so callers can read `error` / `data`
+- Re-throw network failures after optional logging when a shared client logger exists

@@ -20,17 +20,35 @@ User (users)
 
 **Services:** `src/app/service/user/user-service.ts`
 
+**Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`)
+
 **Auth:** `src/app/api/(controller)/auth/[...nextauth]/options.ts`
 
 **Public signup:** `POST /api/public/user-signup`
 
+**Public sign-in:** `POST /api/public/user-signin`
+
+### Email (transactional)
+
+```
+src/app/service/email/
+  ├── email-service.ts           # buildWelcomeSignupEmail(), future send*
+  ├── types.ts
+  ├── _lib/                      # renderer + brand tokens
+  └── templates/                 # <id>.html + <id>.txt + previews/
+```
+
+**Current templates:** `welcome-signup` (scrapbook Option A)
+
+**Skill:** `.agents/skills/new-email-template/`
+
 ## API layout
 
-| Path             | Auth             | Purpose                         |
-| ---------------- | ---------------- | ------------------------------- |
-| `/api/public/*`  | None             | Public endpoints (signup, etc.) |
-| `/api/auth/*`    | NextAuth         | Session login/logout            |
-| `/api/*` (other) | Session required | Protected APIs (`src/proxy.ts`) |
+| Path             | Auth             | Purpose                                  |
+| ---------------- | ---------------- | ---------------------------------------- |
+| `/api/public/*`  | None             | Public endpoints (signup, sign-in, etc.) |
+| `/api/auth/*`    | NextAuth         | Session login/logout                     |
+| `/api/*` (other) | Session required | Protected APIs (`src/proxy.ts`)          |
 
 ## Project layout
 
@@ -39,8 +57,9 @@ src/app/
   ├── _util/                 # password helpers
   ├── api/
   │   ├── (controller)/      # route handlers
+  │   ├── client/            # browser fetch wrappers (*-service-client.ts)
   │   └── model/             # request/response types
-  └── service/               # business logic + prisma
+  └── service/               # business logic + prisma (+ email templates)
 src/proxy.ts                 # auth proxy matcher
 prisma/                      # schema + migrations
 ```

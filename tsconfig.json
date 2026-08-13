@@ -19,6 +19,11 @@
       }
     ],
     "paths": {
+      "@/components/*": ["./src/app/(frontend)/_components/*"],
+      "@/data/*": ["./src/app/(frontend)/_data/*"],
+      "@/lib/*": ["./src/app/(frontend)/_lib/*"],
+      "@/types": ["./src/app/(frontend)/_types/index.ts"],
+      "@/types/*": ["./src/app/(frontend)/_types/*"],
       "@/*": ["./src/*"]
     }
   },

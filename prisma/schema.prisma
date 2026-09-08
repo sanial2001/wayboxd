@@ -17,6 +17,35 @@ model User {
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime? @map("updated_at")
 
+  createdPlaces     Place[]   @relation("PlaceCreator")
+
   @@index([username])
   @@map("users")
+}
+
+model Place {
+  id              Int           @id @default(autoincrement())
+  slug            String        @unique @map("slug")
+  name            String        @map("name")
+  description     String?       @map("description")
+  category        String        @map("category")
+  parentPlaceId   Int?          @map("parent_place_id")
+  parent          Place?        @relation("PlaceHierarchy", fields: [parentPlaceId], references: [id])
+  children        Place[]       @relation("PlaceHierarchy")
+  city            String        @map("city")
+  region          String?       @map("region")
+  country         String        @map("country")
+  latitude        Decimal?      @map("latitude") @db.Decimal(9, 6)
+  longitude       Decimal?      @map("longitude") @db.Decimal(9, 6)
+  address         String?       @map("address")
+  coverImageUrl   String?       @map("cover_image_url")
+  createdByUserId Int?          @map("created_by_user_id")
+  createdBy       User?         @relation("PlaceCreator", fields: [createdByUserId], references: [id])
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime?     @map("updated_at")
+
+  @@index([city, country])
+  @@index([category])
+  @@index([parentPlaceId])
+  @@map("places")
 }

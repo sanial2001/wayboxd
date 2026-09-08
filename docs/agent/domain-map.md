@@ -59,6 +59,24 @@ Place (places)
 
 **Service:** `src/app/service/place/place-service.ts`
 
+### Reviews
+
+```
+Review (reviews)
+  ├── userId → User (author)
+  ├── placeId → Place
+  ├── title, body
+  ├── rating (1–5)
+  ├── wouldGoAgain, visitDate, tags
+  └── timestamps (createdAt, updatedAt)
+```
+
+One review per user per place (`@@unique([userId, placeId])`).
+
+**Enum:** `src/app/api/model/enums/review-rating.ts`
+
+**Service:** `src/app/service/review/review-service.ts`
+
 ## API layout
 
 | Path             | Auth             | Purpose                                  |

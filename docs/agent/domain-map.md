@@ -42,6 +42,23 @@ src/app/service/email/
 
 **Skill:** `.agents/skills/new-email-template/`
 
+### Places
+
+```
+Place (places)
+  ├── slug (unique)
+  ├── name, description, category (string; validated via PlaceCategory enum)
+  ├── parentPlaceId → Place (hierarchy, e.g. Solang → Manali)
+  ├── city, region, country, lat/lng, address
+  ├── coverImageUrl
+  ├── createdByUserId → User
+  └── timestamps (createdAt, updatedAt)
+```
+
+**Enum:** `src/app/api/model/enums/place-category.ts`
+
+**Service:** `src/app/service/place/place-service.ts`
+
 ## API layout
 
 | Path             | Auth             | Purpose                                  |

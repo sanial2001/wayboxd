@@ -1,9 +1,18 @@
 import { PlaceCategory, getPlaceCategoryFromString } from '@/app/api/model/enums/place-category';
 import { SavePlaceRequest } from '@/app/api/model/request/save-place-request';
 import { UpdatePlaceRequest } from '@/app/api/model/request/update-place-request';
+import {
+  OSM_PLACE_SEARCH_SOURCE,
+  OsmPlaceSearchHit,
+} from '@/app/api/model/response/osm-place-search-hit';
 import { PlaceModel } from '@/app/api/model/response/place-model';
+import { PlaceSearchResult } from '@/app/api/model/response/place-search-result';
+import { searchOsmPlacesByQuery } from '@/app/service/place/photon-client';
 import prisma from '@/app/service/_lib/prisma';
 import { Place, Prisma } from '@prisma/client';
+
+const PLACE_SEARCH_MIN_QUERY_LENGTH = 2;
+const PLACE_SEARCH_LOCAL_LIMIT = 5;
 
 export async function getPlaceById(id: number): Promise<PlaceModel | null> {
   const place = await prisma.place.findUnique({
@@ -42,6 +51,21 @@ export async function getPlacesByParentPlaceId(parentPlaceId: number): Promise<P
     orderBy: { name: 'asc' },
   });
   return mapPlaceEntitiesToModels(places);
+}
+
+export async function searchPlaces(query: string): Promise<PlaceSearchResult> {
+  const trimmedQuery = query.trim();
+  if (trimmedQuery.length < PLACE_SEARCH_MIN_QUERY_LENGTH) {
+    return { local: [], osm: [] };
+  }
+
+  const [local, osmHits] = await Promise.all([
+    searchLocalPlaces(trimmedQuery),
+    searchOsmPlacesByQuery(trimmedQuery),
+  ]);
+
+  const osm = await excludeOsmHitsAlreadyInDatabase(osmHits);
+  return { local, osm };
 }
 
 export async function savePlace(data: SavePlaceRequest): Promise<PlaceModel | null> {
@@ -118,6 +142,45 @@ export async function deletePlace(id: number): Promise<PlaceModel | null> {
     where: { id },
   });
   return mapPlaceEntityToModel(place);
+}
+
+async function searchLocalPlaces(query: string): Promise<PlaceModel[]> {
+  const places = await prisma.place.findMany({
+    where: {
+      OR: [
+        { name: { contains: query, mode: 'insensitive' } },
+        { city: { contains: query, mode: 'insensitive' } },
+      ],
+    },
+    orderBy: { name: 'asc' },
+    take: PLACE_SEARCH_LOCAL_LIMIT,
+  });
+  return mapPlaceEntitiesToModels(places);
+}
+
+async function excludeOsmHitsAlreadyInDatabase(
+  hits: OsmPlaceSearchHit[]
+): Promise<OsmPlaceSearchHit[]> {
+  if (hits.length === 0) {
+    return [];
+  }
+
+  const externalIds = hits.map((hit) => hit.externalId);
+  const existingPlaces = await prisma.place.findMany({
+    where: {
+      externalSource: OSM_PLACE_SEARCH_SOURCE,
+      externalId: { in: externalIds },
+    },
+    select: { externalId: true },
+  });
+
+  const existingExternalIds = new Set(
+    existingPlaces
+      .map((place) => place.externalId)
+      .filter((externalId): externalId is string => externalId !== null)
+  );
+
+  return hits.filter((hit) => !existingExternalIds.has(hit.externalId));
 }
 
 function mapPlaceEntitiesToModels(places: Place[]): PlaceModel[] {

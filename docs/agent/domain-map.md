@@ -57,7 +57,9 @@ Place (places)
 
 **Enum:** `src/app/api/model/enums/place-category.ts`
 
-**Service:** `src/app/service/place/place-service.ts`
+**Service:** `src/app/service/place/place-service.ts` (`searchPlaces` merges local DB + Photon OSM hits)
+
+**Search result type:** `src/app/api/model/response/place-search-result.ts`
 
 ### Reviews
 

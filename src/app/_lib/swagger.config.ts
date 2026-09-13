@@ -21,13 +21,9 @@ const options: swaggerJsdoc.Options = {
     ],
     tags: [
       {
-        name: 'User',
-        description: 'Public endpoints. No session or API key required.',
-      },
-      {
         name: 'Place',
         description:
-          'Place search and save (session required). Sign in first so the browser sends the NextAuth session cookie.',
+          'Place search and save (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
       },
     ],
     components: {
@@ -37,7 +33,7 @@ const options: swaggerJsdoc.Options = {
           in: 'cookie',
           name: 'next-auth.session-token',
           description:
-            'NextAuth session cookie set after POST /api/public/user-signin. Swagger UI sends cookies when Try it out is used.',
+            'NextAuth session cookie from an app sign-in. Swagger UI sends cookies when Try it out is used.',
         },
       },
       schemas: {
@@ -213,7 +209,7 @@ const options: swaggerJsdoc.Options = {
       },
     },
   },
-  apis: [path.join(process.cwd(), 'src/app/api/**/*.docs.ts')],
+  apis: [path.join(process.cwd(), 'src/app/api/(controller)/place/**/route.docs.ts')],
 };
 
 export function getSwaggerSpec() {

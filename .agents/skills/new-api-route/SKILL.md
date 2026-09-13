@@ -189,7 +189,7 @@ src/app/api/(controller)/<resource>/
 
 Public routes should set `security: []`. Protected routes use `bearerAuth`.
 
-For POST/PUT with a request body, add a `requestBody` block — see `src/app/api/(controller)/public/user-signup/route.docs.ts`.
+For POST/PUT with a request body, add a `requestBody` block — see `src/app/api/(controller)/place/save/manual/route.docs.ts`.
 
 For dynamic routes (e.g. `[id]`), use `parameters` with `in: path`. Paths in docs use `{param}`, not `[param]`.
 

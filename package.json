@@ -12,6 +12,7 @@
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate",
     "prisma:deploy": "npx prisma migrate deploy",
+    "swagger:validate": "node scripts/validate-swagger.js",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -37,12 +38,16 @@
     "@types/pg": "^8.21.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/swagger-jsdoc": "^6.0.4",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "glob": "^11.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "^3.9.6",
     "prisma": "^7.9.1",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-react": "^5.32.15",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

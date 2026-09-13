@@ -79,11 +79,15 @@ One review per user per place (`@@unique([userId, placeId])`).
 
 ## API layout
 
-| Path             | Auth             | Purpose                                  |
-| ---------------- | ---------------- | ---------------------------------------- |
-| `/api/public/*`  | None             | Public endpoints (signup, sign-in, etc.) |
-| `/api/auth/*`    | NextAuth         | Session login/logout                     |
-| `/api/*` (other) | Session required | Protected APIs (`src/proxy.ts`)          |
+| Path                     | Auth             | Purpose                                       |
+| ------------------------ | ---------------- | --------------------------------------------- |
+| `/api/public/*`          | None             | Public endpoints (signup, sign-in, etc.)      |
+| `/api/auth/*`            | NextAuth         | Session login/logout                          |
+| `/api/docs/swagger.json` | Session required | OpenAPI spec (404 when `APP_ENV=production`)  |
+| `/api-docs`              | Page is public   | Swagger UI (spec fetch still needs a session) |
+| `/api/*` (other)         | Session required | Protected APIs (`src/proxy.ts`)               |
+
+Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.
 
 ## Project layout
 

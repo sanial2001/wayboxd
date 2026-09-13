@@ -129,3 +129,62 @@ matcher: ['/api/:path((?!public|auth).*)'];
 ```
 
 Add new public path segments to the negative lookahead when introducing new unauthenticated API prefixes.
+
+## Swagger documentation
+
+Every new route **must** have a companion `route.docs.ts` file in the same folder. The Swagger spec is generated from JSDoc `@swagger` comments in all `*.docs.ts` files under `src/app/api/`.
+
+### File placement
+
+```
+src/app/api/(controller)/<resource>/
+  ├── route.ts          # handler
+  └── route.docs.ts     # swagger docs
+```
+
+### Template
+
+```typescript
+/**
+ * @swagger
+ * /api/<resource>:
+ *   get:
+ *     summary: Brief description of what this does
+ *     tags: [ResourceName]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: Resource ID
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiError'
+ */
+```
+
+Public routes should set `security: []`. Protected routes use `bearerAuth`.
+
+For POST/PUT with a request body, add a `requestBody` block — see `src/app/api/(controller)/public/user-signup/route.docs.ts`.
+
+For dynamic routes (e.g. `[id]`), use `parameters` with `in: path`. Paths in docs use `{param}`, not `[param]`.
+
+Run `npm run swagger:validate` after adding or changing routes.

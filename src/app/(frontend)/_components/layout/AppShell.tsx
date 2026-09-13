@@ -10,6 +10,11 @@ import { SiteHeader } from '@/components/layout/SiteHeader';
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isLanding = pathname === '/';
+  const isApiDocs = pathname === '/api-docs';
+
+  if (isApiDocs) {
+    return <>{children}</>;
+  }
 
   if (isLanding) {
     return (

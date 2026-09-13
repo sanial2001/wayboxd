@@ -14,6 +14,7 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - UI code calls APIs via `src/app/api/client/*-service-client.ts`, not inline `fetch` in components.
 - Transactional email templates live under `src/app/service/email/templates/` (not repo-root dumps). Builders in `email-service.ts`; provider transport (Resend planned) stays out of template files.
 - Welcome signup email design is locked to scrapbook Option A (`welcome-signup`); theme tokens in `email/_lib/email-tokens.ts`.
+- **Structured logging**: `serverLogger` (`@/app/_lib/server-logger`) on the server; `clientLogger` (`@/app/_lib/client-logger`) in UI and `@/app/api/client/` — browser logs POST to `/api/public/logs` and are written with `serverLogger`. Set `LOG_LEVEL` for verbosity (defaults: `info` in production, `debug` otherwise).
 
 ## Gotchas
 
@@ -35,3 +36,4 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Do not expose `password` from service mappers used by public/protected API routes.
 - Do not add email HTML under a top-level `emails/` folder — use `src/app/service/email/templates/`.
 - Never interpolate raw user input into email HTML/subjects — use `sanitizeEmailText` / HTML escaping in `render-email-template` / `sanitizeEmailHttpUrl`.
+- Do not use `console.log` in route handlers or services — use `serverLogger` / `clientLogger`.

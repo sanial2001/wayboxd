@@ -30,7 +30,8 @@ prisma/                   # Schema and migrations
 ## Logging
 
 - Avoid `console.log` in route handlers and services
-- Add structured logging via a shared logger when the project introduces one
+- **Server**: `serverLogger` from `@/app/_lib/server-logger` (Pino JSON to stdout — visible in Vercel function logs). Optional `LOG_LEVEL` env (see `.env.example`).
+- **Browser / client components**: `clientLogger` from `@/app/_lib/client-logger` (forwards `info+` to `POST /api/public/logs` via `@/app/api/client/log-service-client`). Do not log passwords or tokens in client payloads.
 
 ## Code quality
 

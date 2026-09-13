@@ -22,7 +22,7 @@ const options: swaggerJsdoc.Options = {
     tags: [
       {
         name: 'User',
-        description: 'Public user signup and sign-in.',
+        description: 'Public endpoints. No session or API key required.',
       },
       {
         name: 'Place',
@@ -32,11 +32,6 @@ const options: swaggerJsdoc.Options = {
     ],
     components: {
       securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
         sessionCookie: {
           type: 'apiKey',
           in: 'cookie',
@@ -217,11 +212,6 @@ const options: swaggerJsdoc.Options = {
         },
       },
     },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
   },
   apis: [path.join(process.cwd(), 'src/app/api/**/*.docs.ts')],
 };

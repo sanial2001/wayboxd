@@ -71,6 +71,8 @@ Place (places)
 
 **Save place from OSM (session required):** `POST /api/place/save/from-osm` → `findOrCreatePlaceFromOsmRequest`
 
+**Save manual place (session required):** `POST /api/place/save/manual` → `saveManualPlace` (409 + candidates on duplicate)
+
 ### Reviews
 
 ```

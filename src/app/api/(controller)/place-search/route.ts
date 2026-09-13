@@ -1,3 +1,4 @@
+import { validateAuthAndGetUserId } from '@/app/api/(controller)/_util/validate';
 import { createApiResponse } from '@/app/service/_utils/api-response';
 import { searchPlaces } from '@/app/service/place/place-service';
 import { NextRequest } from 'next/server';
@@ -6,6 +7,11 @@ const MIN_QUERY_LENGTH = 2;
 
 export async function GET(req: NextRequest) {
   try {
+    const auth = await validateAuthAndGetUserId();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const query = req.nextUrl.searchParams.get('q')?.trim() ?? '';
 
     if (query.length < MIN_QUERY_LENGTH) {

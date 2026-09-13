@@ -25,12 +25,13 @@ src/app/api/model/
           └── photon-api-types.ts
 ```
 
-| Kind of type                          | Location               |
-| ------------------------------------- | ---------------------- |
-| Public API request body               | `request/`             |
-| Public API response / app models      | `response/`            |
-| Stored enum values + parsers          | `enums/`               |
-| External API JSON (Photon, Stripe, …) | `external/<provider>/` |
+| Kind of type                                           | Location               |
+| ------------------------------------------------------ | ---------------------- |
+| Public API request body                                | `request/`             |
+| Public API response / app models                       | `response/`            |
+| Route auth helper results (e.g. auth validation union) | `response/`            |
+| Stored enum values + parsers                           | `enums/`               |
+| External API JSON (Photon, Stripe, …)                  | `external/<provider>/` |
 
 ## Examples
 

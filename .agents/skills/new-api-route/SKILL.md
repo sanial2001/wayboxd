@@ -31,7 +31,7 @@ import { NextRequest } from 'next/server';
 import { createApiResponse } from '@/app/service/_utils/api-response';
 ```
 
-For protected routes, rely on `src/proxy.ts` for session enforcement before the handler runs.
+For protected routes, use **both** `src/proxy.ts` (middleware) and in-handler session checks via `validateAuthAndGetUserId()` from `@/app/api/(controller)/_util/validate`.
 
 ## Rules
 
@@ -93,12 +93,18 @@ export async function POST(req: NextRequest) {
 ### GET (protected)
 
 ```typescript
+import { validateAuthAndGetUserId } from '@/app/api/(controller)/_util/validate';
 import { NextRequest } from 'next/server';
 import { createApiResponse } from '@/app/service/_utils/api-response';
 import { getUserById } from '@/app/service/user/user-service';
 
 export async function GET(req: NextRequest) {
   try {
+    const auth = await validateAuthAndGetUserId();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const id = Number(req.nextUrl.searchParams.get('id'));
     const user = await getUserById(id);
 

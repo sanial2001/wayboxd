@@ -69,6 +69,8 @@ Place (places)
 
 **Place search (session required):** `GET /api/place-search?q=`
 
+**Import OSM place (session required):** `POST /api/place/from-osm` → `findOrCreatePlaceFromOsm`
+
 ### Reviews
 
 ```

@@ -4,6 +4,7 @@ import {
   getPlaceExternalSourceFromString,
 } from '@/app/api/model/enums/place-external-source';
 import { SaveManualPlaceRequest } from '@/app/api/model/request/save-manual-place-request';
+import { SavePlaceFromOsmRequest } from '@/app/api/model/request/save-place-from-osm-request';
 import { SavePlaceRequest } from '@/app/api/model/request/save-place-request';
 import { UpdatePlaceRequest } from '@/app/api/model/request/update-place-request';
 import { ManualPlaceSaveResult } from '@/app/api/model/response/manual-place-save-result';
@@ -65,7 +66,7 @@ export async function findOrCreatePlaceFromOsm(
   if (existing) {
     return existing;
   }
-  return savePlace({
+  const created = await savePlace({
     name: hit.name,
     category: hit.category,
     city: hit.city,
@@ -78,6 +79,21 @@ export async function findOrCreatePlaceFromOsm(
     externalId: hit.externalId,
     createdByUserId: createdByUserId ?? null,
   });
+  if (created) {
+    return created;
+  }
+  return getPlaceByExternalId(PlaceExternalSource.OSM, hit.externalId);
+}
+
+export async function findOrCreatePlaceFromOsmRequest(
+  data: SavePlaceFromOsmRequest,
+  createdByUserId: number
+): Promise<PlaceModel | null> {
+  const hit = toOsmPlaceSearchHitFromRequest(data);
+  if (!hit) {
+    return null;
+  }
+  return findOrCreatePlaceFromOsm(hit, createdByUserId);
 }
 
 export async function getPlacesByCity(city: string, country?: string): Promise<PlaceModel[]> {
@@ -340,6 +356,40 @@ function mapPlaceEntityToModel(place: Place): PlaceModel | null {
     createdByUserId: place.createdByUserId,
     createdAt: place.createdAt,
     updatedAt: place.updatedAt,
+  };
+}
+
+function toOsmPlaceSearchHitFromRequest(data: SavePlaceFromOsmRequest): OsmPlaceSearchHit | null {
+  if (
+    typeof data.externalId !== 'string' ||
+    !data.externalId.trim() ||
+    typeof data.name !== 'string' ||
+    !data.name.trim() ||
+    typeof data.city !== 'string' ||
+    !data.city.trim() ||
+    typeof data.country !== 'string' ||
+    !data.country.trim() ||
+    !isValidPlaceCategory(data.category) ||
+    !Number.isFinite(data.latitude) ||
+    !Number.isFinite(data.longitude)
+  ) {
+    return null;
+  }
+
+  return {
+    source: OSM_PLACE_SEARCH_SOURCE,
+    externalId: data.externalId.trim(),
+    osmType: data.osmType?.trim() ?? '',
+    osmKey: data.osmKey?.trim() ?? '',
+    osmValue: data.osmValue?.trim() ?? '',
+    name: data.name.trim(),
+    category: data.category,
+    city: data.city.trim(),
+    region: data.region?.trim() ?? null,
+    country: data.country.trim(),
+    latitude: data.latitude,
+    longitude: data.longitude,
+    address: data.address?.trim() ?? null,
   };
 }
 

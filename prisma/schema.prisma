@@ -33,6 +33,8 @@ model Place {
   parentPlaceId   Int?          @map("parent_place_id")
   parent          Place?        @relation("PlaceHierarchy", fields: [parentPlaceId], references: [id])
   children        Place[]       @relation("PlaceHierarchy")
+  externalSource  String?       @map("external_source")
+  externalId      String?       @map("external_id")
   city            String        @map("city")
   region          String?       @map("region")
   country         String        @map("country")

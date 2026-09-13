@@ -21,6 +21,7 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Husky pre-push runs `npm run build`.
 - Next.js 16 uses `proxy.ts` (not `middleware.ts`) for request proxy/auth.
 - Password hashes must never appear in `UserModel` or public API responses.
+- Swagger spec at `GET /api/docs/swagger.json` returns 404 when `APP_ENV=production`. The UI lives at `/api-docs`. Session is required for the spec route (not excluded in `src/proxy.ts`). The spec route uses raw `NextResponse.json` because it serves OpenAPI JSON, not an `ApiResponse` envelope.
 
 ## Do not repeat
 

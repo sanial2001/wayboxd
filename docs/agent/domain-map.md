@@ -67,9 +67,9 @@ Place (places)
 
 **Client:** `src/app/api/client/place-service-client.ts` (`searchPlacesClient`)
 
-**Place search (session required):** `GET /api/place-search?q=`
+**Place search (session required):** `GET /api/place/search?q=`
 
-**Import OSM place (session required):** `POST /api/place/from-osm` → `findOrCreatePlaceFromOsm`
+**Save place from OSM (session required):** `POST /api/place/save/from-osm` → `findOrCreatePlaceFromOsmRequest`
 
 ### Reviews
 

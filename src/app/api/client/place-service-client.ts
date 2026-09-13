@@ -5,7 +5,7 @@ import { PlaceSearchResult } from '@/app/api/model/response/place-search-result'
 
 export async function searchPlacesClient(query: string): Promise<ApiResponse<PlaceSearchResult>> {
   const params = new URLSearchParams({ q: query.trim() });
-  const response = await fetch(`/api/place-search?${params.toString()}`, {
+  const response = await fetch(`/api/place/search?${params.toString()}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export async function searchPlacesClient(query: string): Promise<ApiResponse<Pla
 export async function savePlaceFromOsmClient(
   request: SavePlaceFromOsmRequest
 ): Promise<ApiResponse<PlaceModel>> {
-  const response = await fetch('/api/place/from-osm', {
+  const response = await fetch('/api/place/save/from-osm', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

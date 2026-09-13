@@ -84,9 +84,14 @@ export async function findOrCreatePlaceFromOsm(
       return created;
     }
   } catch (error) {
-    if (!isPlaceExternalIdentityUniqueViolation(error)) {
+    if (!isPrismaUniqueConstraintViolation(error)) {
       throw error;
     }
+    const raced = await getPlaceByExternalId(PlaceExternalSource.OSM, hit.externalId);
+    if (raced) {
+      return raced;
+    }
+    throw error;
   }
   return getPlaceByExternalId(PlaceExternalSource.OSM, hit.externalId);
 }
@@ -422,18 +427,8 @@ function normalizePlaceNameForComparison(value: string): string {
     .replace(/[^a-z0-9]+/g, '');
 }
 
-function isPlaceExternalIdentityUniqueViolation(error: unknown): boolean {
-  if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
-    return false;
-  }
-  if (error.code !== 'P2002') {
-    return false;
-  }
-  const target = error.meta?.target;
-  if (!Array.isArray(target)) {
-    return false;
-  }
-  return target.includes('external_source') && target.includes('external_id');
+function isPrismaUniqueConstraintViolation(error: unknown): boolean {
+  return error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002';
 }
 
 function isValidExternalIdentity(

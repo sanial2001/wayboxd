@@ -65,6 +65,10 @@ Place (places)
 
 **Search result type:** `src/app/api/model/response/place-search-result.ts`
 
+**Client:** `src/app/api/client/place-service-client.ts` (`searchPlacesClient`)
+
+**Public search:** `GET /api/public/place-search?q=`
+
 ### Reviews
 
 ```

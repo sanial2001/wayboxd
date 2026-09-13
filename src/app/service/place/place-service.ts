@@ -3,8 +3,10 @@ import {
   PlaceExternalSource,
   getPlaceExternalSourceFromString,
 } from '@/app/api/model/enums/place-external-source';
+import { SaveManualPlaceRequest } from '@/app/api/model/request/save-manual-place-request';
 import { SavePlaceRequest } from '@/app/api/model/request/save-place-request';
 import { UpdatePlaceRequest } from '@/app/api/model/request/update-place-request';
+import { ManualPlaceSaveResult } from '@/app/api/model/response/manual-place-save-result';
 import {
   OSM_PLACE_SEARCH_SOURCE,
   OsmPlaceSearchHit,
@@ -112,6 +114,42 @@ export async function searchPlaces(query: string): Promise<PlaceSearchResult> {
   return { local, osm };
 }
 
+export async function saveManualPlace(
+  data: SaveManualPlaceRequest
+): Promise<ManualPlaceSaveResult | null> {
+  if (!isValidManualPlaceInput(data)) {
+    return null;
+  }
+  if (!isValidPlaceCategory(data.category)) {
+    return null;
+  }
+
+  const candidates = await findManualPlaceDuplicateCandidates(data.name, data.city, data.country);
+  if (candidates.length > 0) {
+    return { status: 'duplicate', candidates };
+  }
+
+  const place = await savePlace({
+    name: data.name.trim(),
+    category: data.category,
+    city: data.city.trim(),
+    country: data.country.trim(),
+    region: data.region ?? null,
+    latitude: data.latitude ?? null,
+    longitude: data.longitude ?? null,
+    address: data.address ?? null,
+    externalSource: PlaceExternalSource.MANUAL,
+    externalId: null,
+    createdByUserId: data.createdByUserId ?? null,
+  });
+
+  if (!place) {
+    return null;
+  }
+
+  return { status: 'created', place };
+}
+
 export async function savePlace(data: SavePlaceRequest): Promise<PlaceModel | null> {
   if (!isValidPlaceCategory(data.category)) {
     return null;
@@ -197,6 +235,36 @@ export async function deletePlace(id: number): Promise<PlaceModel | null> {
   return mapPlaceEntityToModel(place);
 }
 
+async function findManualPlaceDuplicateCandidates(
+  name: string,
+  city: string,
+  country: string
+): Promise<PlaceModel[]> {
+  const trimmedName = name.trim();
+  const trimmedCity = city.trim();
+  const trimmedCountry = country.trim();
+  const normalizedName = normalizePlaceNameForComparison(trimmedName);
+
+  const places = await prisma.place.findMany({
+    where: {
+      city: { equals: trimmedCity, mode: 'insensitive' },
+      country: { equals: trimmedCountry, mode: 'insensitive' },
+      name: { contains: trimmedName, mode: 'insensitive' },
+    },
+    orderBy: { name: 'asc' },
+    take: 10,
+  });
+
+  return mapPlaceEntitiesToModels(places).filter((place) => {
+    const candidateNormalized = normalizePlaceNameForComparison(place.name);
+    return (
+      candidateNormalized === normalizedName ||
+      candidateNormalized.includes(normalizedName) ||
+      normalizedName.includes(candidateNormalized)
+    );
+  });
+}
+
 async function searchLocalPlaces(query: string): Promise<PlaceModel[]> {
   const places = await prisma.place.findMany({
     where: {
@@ -277,6 +345,25 @@ function mapPlaceEntityToModel(place: Place): PlaceModel | null {
 
 function isValidPlaceCategory(category: PlaceCategory): boolean {
   return getPlaceCategoryFromString(category) !== null;
+}
+
+function isValidManualPlaceInput(data: SaveManualPlaceRequest): boolean {
+  return (
+    typeof data.name === 'string' &&
+    data.name.trim().length > 0 &&
+    typeof data.city === 'string' &&
+    data.city.trim().length > 0 &&
+    typeof data.country === 'string' &&
+    data.country.trim().length > 0
+  );
+}
+
+function normalizePlaceNameForComparison(value: string): string {
+  return value
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '');
 }
 
 function isValidExternalIdentity(

@@ -59,7 +59,9 @@ Place (places)
 
 **Enum:** `src/app/api/model/enums/place-external-source.ts` (`osm`, `manual`)
 
-**Service:** `src/app/service/place/place-service.ts` (`searchPlaces`, `findOrCreatePlaceFromOsm`, `getPlaceByExternalId`)
+**Service:** `src/app/service/place/place-service.ts` (`searchPlaces`, `findOrCreatePlaceFromOsm`, `saveManualPlace`, `getPlaceByExternalId`)
+
+**Manual add:** `SaveManualPlaceRequest` → `saveManualPlace` → `savePlace` with `manual` source, or `{ status: 'duplicate', candidates }`
 
 **Search result type:** `src/app/api/model/response/place-search-result.ts`
 

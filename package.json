@@ -12,6 +12,7 @@
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate",
     "prisma:deploy": "npx prisma migrate deploy",
+    "swagger:validate": "node scripts/validate-swagger.js",
     "prepare": "husky"
   },
   "lint-staged": {

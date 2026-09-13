@@ -22,6 +22,7 @@ prisma/                   # Schema and migrations
 
 - Use English for all code and documentation
 - Always declare types; avoid `any`
+- **Interfaces and types** belong in `src/app/api/model/` only (see `model-layer-types` skill)
 - Naming: PascalCase (types/classes), camelCase (functions/vars), kebab-case (files/dirs), UPPERCASE (constants/env)
 - Keep functions focused; use early returns
 - Null safety: prefer `obj?.property`, `obj?.value ?? defaultValue`
@@ -40,4 +41,4 @@ prisma/                   # Schema and migrations
 
 - Domain map: `docs/agent/domain-map.md`
 - Team memory (decisions, gotchas): `docs/agent/memory.md`
-- Workflows: use skills in `.agents/skills/` (`new-api-route`, `new-api-client`, `new-service`, `new-email-template`, `new-prisma-migration`)
+- Workflows: use skills in `.agents/skills/` (`new-api-route`, `new-api-client`, `new-service`, `new-email-template`, `new-prisma-migration`, `model-layer-types`)

@@ -4,6 +4,7 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 
 ## Decisions
 
+- **All TypeScript interfaces and types** live under `src/app/api/model/` (request, response, enums, `external/<provider>/`). Service and route files import them; do not define data shapes in `src/app/service/`. Skill: `model-layer-types`.
 - Business logic belongs in `src/app/service/`, not in route handlers or page components.
 - Public API routes live under `src/app/api/(controller)/public/` and are excluded from auth in `src/proxy.ts`.
 - Protected API routes rely on `src/proxy.ts` (`withAuth`) — matcher excludes `public` and `auth`.
@@ -16,6 +17,7 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 ## Gotchas
 
 - `prisma.config.ts` loads `.env.local` then `.env` — ensure `DATABASE_URL` is set for migrations.
+- Photon place search reads `PHOTON_BASE_URL` and `PHOTON_USER_AGENT` from env (see `.env.example`).
 - `npm run dev` runs `prisma generate` then `next dev`.
 - Husky pre-commit runs `lint-staged` (Prettier on staged files, auto-re-staged). Do not use `npm run format` in the hook — that formats the whole tree and leaves unstaged changes behind.
 - Husky pre-push runs `npm run build`.

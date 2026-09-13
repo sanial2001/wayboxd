@@ -59,8 +59,10 @@ import prisma from '@/app/service/_lib/prisma';
 
 - Always declare return types explicitly
 - Avoid `any` — prefer typed inputs or `Partial<UserModel>` where appropriate
+- **Declare all interfaces and types in the model layer** — never in service files (see `model-layer-types` skill)
 - **Response types** → `src/app/api/model/response/`
 - **Request types** → `src/app/api/model/request/`
+- **External API wire types** → `src/app/api/model/external/<provider>/`
 
 ### 4. Function naming conventions
 

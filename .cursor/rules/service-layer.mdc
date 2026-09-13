@@ -13,9 +13,10 @@ Use the `new-service` skill for full templates.
 1. **No try-catch** — let exceptions bubble up to route handlers
 2. **Prisma import**: `import prisma from '@/app/service/_lib/prisma'`
 3. **Return typed models**, not raw Prisma entities — use `mapXEntityToModel` helpers
-4. **Response models** live in `src/app/api/model/response/`
-5. **Request models** live in `src/app/api/model/response/` for API output; input DTOs in `src/app/api/model/request/`
-6. **Password hashing** stays in the service layer (see `user-service.ts` and `@/app/_util/password`)
+4. **All interfaces and types** live under `src/app/api/model/` (see `model-layer-types` skill) — never in service files
+5. **Response models** live in `src/app/api/model/response/`
+6. **Request models** — input DTOs in `src/app/api/model/request/`
+7. **Password hashing** stays in the service layer (see `user-service.ts` and `@/app/_util/password`)
 
 ## Function naming
 

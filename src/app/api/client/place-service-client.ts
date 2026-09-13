@@ -3,7 +3,7 @@ import { PlaceSearchResult } from '@/app/api/model/response/place-search-result'
 
 export async function searchPlacesClient(query: string): Promise<ApiResponse<PlaceSearchResult>> {
   const params = new URLSearchParams({ q: query.trim() });
-  const response = await fetch(`/api/public/place-search?${params.toString()}`, {
+  const response = await fetch(`/api/place-search?${params.toString()}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -67,7 +67,7 @@ Place (places)
 
 **Client:** `src/app/api/client/place-service-client.ts` (`searchPlacesClient`)
 
-**Public search:** `GET /api/public/place-search?q=`
+**Place search (session required):** `GET /api/place-search?q=`
 
 ### Reviews
 

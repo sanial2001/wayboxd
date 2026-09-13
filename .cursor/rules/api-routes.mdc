@@ -14,15 +14,16 @@ Routes live under `src/app/api/(controller)/`. Use the `new-api-route` skill for
 2. **Use `createApiResponse`** from `@/app/service/_utils/api-response` for all responses
 3. **Validate at route level** — auth, input checks; business logic stays in service layer
 4. **Public routes** go under `public/` (e.g. `public/user-signup/route.ts`)
-5. **Protected routes** require auth via `src/proxy.ts` — matcher excludes `public` and `auth`
+5. **Protected routes** require auth via `src/proxy.ts` and `validateAuthAndGetUserId()` in the handler — matcher excludes `public` and `auth`
 6. **Every new `route.ts` needs a sibling `route.docs.ts`** — JSDoc `@swagger` comments are merged into `/api/docs/swagger.json`
 
 ## Auth
 
 - NextAuth config: `src/app/api/(controller)/auth/[...nextauth]/options.ts`
+- Session in handlers: `getAuthenticatedUser()` / `validateAuthAndGetUserId()` in `src/app/api/(controller)/_util/`
 - Public API paths: `/api/public/*`
 - Auth API paths: `/api/auth/*`
-- All other `/api/*` paths require a valid session token (see `src/proxy.ts`)
+- All other `/api/*` paths require a valid session (proxy + in-route check)
 
 ## Error codes
 

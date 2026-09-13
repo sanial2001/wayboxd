@@ -4,9 +4,11 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 
 ## Decisions
 
+- **All TypeScript interfaces and types** live under `src/app/api/model/` (request, response, enums, `external/<provider>/`). Includes `_util/validate.ts` result types — not in controller `_util/`. Skill: `model-layer-types`.
 - Business logic belongs in `src/app/service/`, not in route handlers or page components.
 - Public API routes live under `src/app/api/(controller)/public/` and are excluded from auth in `src/proxy.ts`.
 - Protected API routes rely on `src/proxy.ts` (`withAuth`) — matcher excludes `public` and `auth`.
+- Protected route handlers also call `validateAuthAndGetUserId()` from `src/app/api/(controller)/_util/validate.ts` (session via `getServerSession`, same pattern as onelot-app).
 - Coding standards live in `.cursor/rules/`; workflows live in `.agents/skills/`.
 - Use `createApiResponse` from `@/app/service/_utils/api-response` for all API JSON responses.
 - UI code calls APIs via `src/app/api/client/*-service-client.ts`, not inline `fetch` in components.
@@ -16,6 +18,7 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 ## Gotchas
 
 - `prisma.config.ts` loads `.env.local` then `.env` — ensure `DATABASE_URL` is set for migrations.
+- Photon place search reads `PHOTON_BASE_URL` and `PHOTON_USER_AGENT` from env (see `.env.example`).
 - `npm run dev` runs `prisma generate` then `next dev`.
 - Husky pre-commit runs `lint-staged` (Prettier on staged files, auto-re-staged). Do not use `npm run format` in the hook — that formats the whole tree and leaves unstaged changes behind.
 - Husky pre-push runs `npm run build`.

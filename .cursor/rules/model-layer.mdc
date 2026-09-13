@@ -1,0 +1,22 @@
+---
+description: All TypeScript interfaces and types belong in the API model layer
+globs: src/app/service/**/*.ts, src/app/api/**/*.ts
+alwaysApply: false
+---
+
+# Model layer types
+
+Use the `model-layer-types` skill when adding or moving types.
+
+## Rule
+
+**Declare all interfaces and types in the model layer** (`src/app/api/model/`). Do not define data-shape `interface` or `type` aliases in service modules, route handlers, or components.
+
+| Shape | Path |
+| --- | --- |
+| API input | `model/request/` |
+| API output / domain DTOs | `model/response/` |
+| Enums + enum mappers | `model/enums/` |
+| External provider JSON | `model/external/<provider>/` |
+
+Services import types and implement fetch/map logic only.

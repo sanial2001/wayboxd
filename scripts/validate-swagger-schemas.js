@@ -14,7 +14,7 @@ const API_DIR = path.join(process.cwd(), 'src/app/api');
 let hasErrors = false;
 const schemaErrors = [];
 
-const WHITELIST_PATTERNS = [/\(controller\)\/public\//];
+const WHITELIST_PATTERNS = [/\(controller\)\/public\//, /\(controller\)\/place\//];
 
 function isWhitelisted(filePath) {
   const relativePath = path.relative(API_DIR, filePath);

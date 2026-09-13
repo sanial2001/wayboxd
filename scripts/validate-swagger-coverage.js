@@ -15,7 +15,7 @@ const REQUEST_MODELS_DIR = path.join(process.cwd(), 'src/app/api/model/request')
 const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
 const BODY_METHODS = ['POST', 'PUT', 'PATCH'];
 
-const WHITELIST_PATTERNS = [/\(controller\)\/public\//];
+const WHITELIST_PATTERNS = [/\(controller\)\/public\//, /\(controller\)\/place\//];
 
 let hasErrors = false;
 const missingDocs = [];

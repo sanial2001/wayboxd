@@ -1,4 +1,5 @@
 import { PlaceCategory } from '@/app/api/model/enums/place-category';
+import { PlaceExternalSource } from '@/app/api/model/enums/place-external-source';
 
 export interface PlaceModel {
   id: number;
@@ -7,6 +8,8 @@ export interface PlaceModel {
   description: string | null;
   category: PlaceCategory;
   parentPlaceId: number | null;
+  externalSource: PlaceExternalSource | null;
+  externalId: string | null;
   city: string;
   region: string | null;
   country: string;

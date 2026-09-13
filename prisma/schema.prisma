@@ -48,6 +48,7 @@ model Place {
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime?     @map("updated_at")
 
+  @@unique([externalSource, externalId])
   @@index([city, country])
   @@index([category])
   @@index([parentPlaceId])

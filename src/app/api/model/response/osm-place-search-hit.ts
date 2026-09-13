@@ -1,6 +1,7 @@
 import { PlaceCategory } from '@/app/api/model/enums/place-category';
+import { PlaceExternalSource } from '@/app/api/model/enums/place-external-source';
 
-export const OSM_PLACE_SEARCH_SOURCE = 'osm' as const;
+export const OSM_PLACE_SEARCH_SOURCE = PlaceExternalSource.OSM;
 
 export type OsmPlaceSearchSource = typeof OSM_PLACE_SEARCH_SOURCE;
 

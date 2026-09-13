@@ -1,4 +1,8 @@
 import { PlaceCategory, getPlaceCategoryFromString } from '@/app/api/model/enums/place-category';
+import {
+  PlaceExternalSource,
+  getPlaceExternalSourceFromString,
+} from '@/app/api/model/enums/place-external-source';
 import { SavePlaceRequest } from '@/app/api/model/request/save-place-request';
 import { UpdatePlaceRequest } from '@/app/api/model/request/update-place-request';
 import {
@@ -8,6 +12,7 @@ import {
 import { PlaceModel } from '@/app/api/model/response/place-model';
 import { PlaceSearchResult } from '@/app/api/model/response/place-search-result';
 import { searchOsmPlacesByQuery } from '@/app/service/place/photon-client';
+import { generateUniquePlaceSlug } from '@/app/service/place/place-slug';
 import prisma from '@/app/service/_lib/prisma';
 import { Place, Prisma } from '@prisma/client';
 
@@ -32,6 +37,45 @@ export async function getPlaceBySlug(slug: string): Promise<PlaceModel | null> {
     return null;
   }
   return mapPlaceEntityToModel(place);
+}
+
+export async function getPlaceByExternalId(
+  externalSource: PlaceExternalSource,
+  externalId: string
+): Promise<PlaceModel | null> {
+  const place = await prisma.place.findFirst({
+    where: {
+      externalSource,
+      externalId,
+    },
+  });
+  if (!place) {
+    return null;
+  }
+  return mapPlaceEntityToModel(place);
+}
+
+export async function findOrCreatePlaceFromOsm(
+  hit: OsmPlaceSearchHit,
+  createdByUserId?: number | null
+): Promise<PlaceModel | null> {
+  const existing = await getPlaceByExternalId(PlaceExternalSource.OSM, hit.externalId);
+  if (existing) {
+    return existing;
+  }
+  return savePlace({
+    name: hit.name,
+    category: hit.category,
+    city: hit.city,
+    region: hit.region,
+    country: hit.country,
+    latitude: hit.latitude,
+    longitude: hit.longitude,
+    address: hit.address,
+    externalSource: PlaceExternalSource.OSM,
+    externalId: hit.externalId,
+    createdByUserId: createdByUserId ?? null,
+  });
 }
 
 export async function getPlacesByCity(city: string, country?: string): Promise<PlaceModel[]> {
@@ -72,10 +116,17 @@ export async function savePlace(data: SavePlaceRequest): Promise<PlaceModel | nu
   if (!isValidPlaceCategory(data.category)) {
     return null;
   }
+  if (!isValidExternalIdentity(data.externalSource, data.externalId)) {
+    return null;
+  }
+
+  const slug = data.slug?.trim()
+    ? data.slug.trim()
+    : await generateUniquePlaceSlug(data.name, data.city);
 
   const place = await prisma.place.create({
     data: {
-      slug: data.slug,
+      slug,
       name: data.name,
       description: data.description ?? null,
       category: data.category,
@@ -87,6 +138,8 @@ export async function savePlace(data: SavePlaceRequest): Promise<PlaceModel | nu
       longitude: toDecimalOrNull(data.longitude),
       address: data.address ?? null,
       coverImageUrl: data.coverImageUrl ?? null,
+      externalSource: data.externalSource ?? null,
+      externalId: data.externalId?.trim() ?? null,
       createdByUserId: data.createdByUserId ?? null,
       createdAt: new Date(),
     },
@@ -193,6 +246,13 @@ function mapPlaceEntityToModel(place: Place): PlaceModel | null {
     return null;
   }
 
+  const externalSource = place.externalSource
+    ? getPlaceExternalSourceFromString(place.externalSource)
+    : null;
+  if (place.externalSource && !externalSource) {
+    return null;
+  }
+
   return {
     id: place.id,
     slug: place.slug,
@@ -200,6 +260,8 @@ function mapPlaceEntityToModel(place: Place): PlaceModel | null {
     description: place.description,
     category,
     parentPlaceId: place.parentPlaceId,
+    externalSource,
+    externalId: place.externalId,
     city: place.city,
     region: place.region,
     country: place.country,
@@ -215,6 +277,19 @@ function mapPlaceEntityToModel(place: Place): PlaceModel | null {
 
 function isValidPlaceCategory(category: PlaceCategory): boolean {
   return getPlaceCategoryFromString(category) !== null;
+}
+
+function isValidExternalIdentity(
+  externalSource: PlaceExternalSource | null | undefined,
+  externalId: string | null | undefined
+): boolean {
+  if (externalSource === undefined || externalSource === null) {
+    return externalId === undefined || externalId === null || externalId.trim() === '';
+  }
+  if (externalSource === PlaceExternalSource.MANUAL) {
+    return externalId === undefined || externalId === null || externalId.trim() === '';
+  }
+  return typeof externalId === 'string' && externalId.trim().length > 0;
 }
 
 function toDecimalOrNull(value: number | null | undefined): Prisma.Decimal | null {

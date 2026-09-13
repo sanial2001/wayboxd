@@ -66,21 +66,27 @@ export async function findOrCreatePlaceFromOsm(
   if (existing) {
     return existing;
   }
-  const created = await savePlace({
-    name: hit.name,
-    category: hit.category,
-    city: hit.city,
-    region: hit.region,
-    country: hit.country,
-    latitude: hit.latitude,
-    longitude: hit.longitude,
-    address: hit.address,
-    externalSource: PlaceExternalSource.OSM,
-    externalId: hit.externalId,
-    createdByUserId: createdByUserId ?? null,
-  });
-  if (created) {
-    return created;
+  try {
+    const created = await savePlace({
+      name: hit.name,
+      category: hit.category,
+      city: hit.city,
+      region: hit.region,
+      country: hit.country,
+      latitude: hit.latitude,
+      longitude: hit.longitude,
+      address: hit.address,
+      externalSource: PlaceExternalSource.OSM,
+      externalId: hit.externalId,
+      createdByUserId: createdByUserId ?? null,
+    });
+    if (created) {
+      return created;
+    }
+  } catch (error) {
+    if (!isPlaceExternalIdentityUniqueViolation(error)) {
+      throw error;
+    }
   }
   return getPlaceByExternalId(PlaceExternalSource.OSM, hit.externalId);
 }
@@ -123,7 +129,7 @@ export async function searchPlaces(query: string): Promise<PlaceSearchResult> {
 
   const [local, osmHits] = await Promise.all([
     searchLocalPlaces(trimmedQuery),
-    searchOsmPlacesByQuery(trimmedQuery),
+    searchOsmPlacesByQuery(trimmedQuery).catch((): OsmPlaceSearchHit[] => []),
   ]);
 
   const osm = await excludeOsmHitsAlreadyInDatabase(osmHits);
@@ -414,6 +420,20 @@ function normalizePlaceNameForComparison(value: string): string {
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '');
+}
+
+function isPlaceExternalIdentityUniqueViolation(error: unknown): boolean {
+  if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
+    return false;
+  }
+  if (error.code !== 'P2002') {
+    return false;
+  }
+  const target = error.meta?.target;
+  if (!Array.isArray(target)) {
+    return false;
+  }
+  return target.includes('external_source') && target.includes('external_id');
 }
 
 function isValidExternalIdentity(

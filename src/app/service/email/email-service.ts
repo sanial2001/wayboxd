@@ -13,7 +13,7 @@ export function buildWelcomeSignupEmail(input: WelcomeSignupEmailInput): Rendere
   const name = sanitizeEmailText(input.name);
   const ctaUrl = sanitizeEmailHttpUrl(input.ctaUrl);
   const preheader = sanitizeEmailText(
-    'Go somewhere. Have an opinion. Your scrapbook is empty — for now.'
+    'Go somewhere. Have a take. Your scrapbook is empty — for now.'
   );
 
   const vars = {

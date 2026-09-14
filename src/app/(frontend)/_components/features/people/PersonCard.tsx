@@ -32,7 +32,7 @@ export function PersonCard({ person, tilt }: PersonCardProps) {
       <dl className="grid grid-cols-2 gap-2 text-sm">
         <div className="rounded-xl border-[2.5px] border-border bg-surface-2 px-3 py-2">
           <dt className="font-display text-[10px] font-bold uppercase tracking-wide text-muted">
-            Opinions filed
+            Takes filed
           </dt>
           <dd className="font-display text-lg font-black">{person.placesReviewed}</dd>
         </div>

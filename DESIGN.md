@@ -2,19 +2,19 @@
 
 ## Product
 
-WayBoxd is a social platform for discovering places through real people's experiences and opinions.
+WayBoxd is a social platform for discovering places through real people's experiences and takes.
 
 **Letterboxd × travel × social discovery**
 
-> **Go somewhere. Have an opinion.**
+> **Go somewhere. Have a take.**
 
 WayBoxd is **not** primarily a trip planner, booking platform, map utility, or generic review directory.
 
 ## Brand
 
-**Real places. Real opinions. Unofficial personality.**
+**Real places. Real takes. Unofficial personality.**
 
-Personality: playful, vibrant, expressive, opinionated, human, trustworthy, curious, slightly irreverent, travel-obsessed.
+Personality: playful, vibrant, expressive, blunt, human, trustworthy, curious, slightly irreverent, travel-obsessed.
 
 ## Visual Direction
 
@@ -60,7 +60,7 @@ Thick rounded borders, chunky buttons, hard offset shadows, sticker-like cards, 
 
 ## Core Principle
 
-**PLACE → PEOPLE → OPINIONS**
+**PLACE → PEOPLE → TAKES**
 
 Reviews are social content. Ratings are supporting information.
 
@@ -72,4 +72,4 @@ Witty, human, clever — never childish or cringe.
 
 Do not build another travel utility. Build a **culture around places**.
 
-> **GO SOMEWHERE. HAVE AN OPINION.**
+> **GO SOMEWHERE. HAVE A TAKE.**

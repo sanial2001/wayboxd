@@ -42,7 +42,7 @@ export function PlaceHero({ place }: PlaceHeroProps) {
           <div className="mt-4 flex flex-wrap items-center gap-4">
             <Rating value={place.rating} size="lg" className="text-white" />
             <span className="font-display text-sm font-bold uppercase tracking-wide text-white/85">
-              {place.reviewCount.toLocaleString()} loud opinions
+              {place.reviewCount.toLocaleString()} loud takes
             </span>
           </div>
           <div className="mt-5 flex flex-wrap gap-2">

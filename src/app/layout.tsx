@@ -17,11 +17,11 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: 'WayBoxd — Go somewhere. Have an opinion.',
+    default: 'WayBoxd — Go somewhere. Have a take.',
     template: '%s · WayBoxd',
   },
   description:
-    'Real places. Loud opinions. Zero boring itineraries. Discover where to go through people whose taste is suspiciously good.',
+    'Real places. Loud takes. Zero boring itineraries. Discover where to go through people whose taste is suspiciously good.',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

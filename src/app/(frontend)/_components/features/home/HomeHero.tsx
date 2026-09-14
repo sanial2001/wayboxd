@@ -14,7 +14,7 @@ export function HomeHero() {
       <div className="relative grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:p-12">
         <div>
           <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-purple">
-            Real places · Loud opinions · Zero corporate speak
+            Real places · Loud takes · Zero corporate speak
           </p>
           <h1 className="mt-3 font-display text-4xl font-black uppercase leading-[0.95] tracking-tight text-balance sm:text-6xl lg:text-7xl">
             Where are we <span className="highlighter">going?</span>
@@ -41,7 +41,7 @@ export function HomeHero() {
             Hot take of the hour
           </p>
           <p className="mt-3 font-display text-3xl font-black uppercase leading-tight">
-            People have opinions.
+            People have takes.
           </p>
           <p className="mt-3 text-sm text-white/85">
             Read the ones that sound like your funniest friend who somehow always finds the good

@@ -35,7 +35,7 @@ export function ReviewComposer() {
       <Card className="mx-auto max-w-2xl space-y-4 text-center">
         <Stamp className="mx-auto">Filed</Stamp>
         <h1 className="font-display text-4xl font-black uppercase">
-          And that&apos;s your official opinion.
+          And that&apos;s your official take.
         </h1>
         <p className="text-muted">
           The scrapbook just got louder. Somewhere, a tourist trap just felt a shiver.
@@ -51,7 +51,7 @@ export function ReviewComposer() {
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-3">
         <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-purple">
-          Opinion factory
+          Take factory
         </p>
         <h1 className="font-display text-4xl font-black uppercase leading-tight tracking-tight sm:text-5xl">
           Tell us what you really think.

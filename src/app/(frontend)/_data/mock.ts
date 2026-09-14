@@ -89,7 +89,7 @@ export const places: Place[] = [
     country: 'Greece',
     rating: 4.7,
     reviewCount: 1284,
-    image: 'https://images.unsplash.com/photo-1570077186673-f96372a0a9c4?w=1600&h=1000&fit=crop',
+    image: 'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=1600&h=1000&fit=crop',
     excerpt: 'Beautiful. Crowded. Still worth it.',
     excerptAuthor: 'maya',
     categories: ['Town', 'Views', 'Sunset'],
@@ -317,7 +317,7 @@ export const communities: Community[] = [
     description: 'Traffic, weather debates, and cafés that refuse to be quiet.',
     memberCount: 28000,
     coverImage:
-      'https://images.unsplash.com/photo-1596176530529-78163a4f7d55?w=1200&h=800&fit=crop',
+      'https://images.unsplash.com/photo-1738692840054-c9f3937caa18?w=1200&h=800&fit=crop',
     accent: 'lime',
   },
   {

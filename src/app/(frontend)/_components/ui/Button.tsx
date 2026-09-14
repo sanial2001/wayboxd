@@ -36,6 +36,7 @@ export function Button({
   className,
   children,
   type = 'button',
+  disabled,
   ...props
 }: ButtonProps) {
   const classes = cn(
@@ -45,7 +46,7 @@ export function Button({
     className
   );
 
-  if (href) {
+  if (href && !disabled) {
     return (
       <Link href={href} className={classes}>
         {children}
@@ -54,7 +55,7 @@ export function Button({
   }
 
   return (
-    <button type={type} className={classes} {...props}>
+    <button type={type} className={classes} disabled={disabled} {...props}>
       {children}
     </button>
   );

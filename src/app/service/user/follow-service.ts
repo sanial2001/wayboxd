@@ -34,6 +34,18 @@ export async function getFollowsByFolloweeId(followeeId: number): Promise<Follow
   return mapFollowEntitiesToModels(follows);
 }
 
+export async function countFollowersByUserId(userId: number): Promise<number> {
+  return prisma.follow.count({
+    where: { followeeId: userId },
+  });
+}
+
+export async function countFollowingByUserId(userId: number): Promise<number> {
+  return prisma.follow.count({
+    where: { followerId: userId },
+  });
+}
+
 export async function saveFollow(data: SaveFollowRequest): Promise<FollowModel | null> {
   if (data.followerId === data.followeeId) {
     return null;

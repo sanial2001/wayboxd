@@ -1,14 +1,17 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Stamp } from '@/components/ui/Stamp';
 
 export function UnderProgressBanner() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   if (status !== 'authenticated') {
     return null;
   }
+
+  const username = session?.userDetails?.username;
 
   return (
     <Container className="py-10 sm:py-16">
@@ -18,8 +21,15 @@ export function UnderProgressBanner() {
           We&apos;re still packing the scrapbook
         </h1>
         <p className="mt-4 max-w-xl text-lg text-white/85">
-          You&apos;re in. The logged-in app is being built — check back once the next pages land.
+          You&apos;re in. Set up how you show up while we finish the rest of the scrapbook.
         </p>
+        <Button
+          href={username ? `/profile/${username}` : '/settings/profile'}
+          variant="lime"
+          className="mt-6"
+        >
+          Your profile
+        </Button>
       </section>
     </Container>
   );

@@ -17,11 +17,42 @@ model User {
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime? @map("updated_at")
 
-  createdPlaces     Place[]   @relation("PlaceCreator")
-  reviews           Review[]  @relation("ReviewAuthor")
+  createdPlaces     Place[]      @relation("PlaceCreator")
+  reviews           Review[]     @relation("ReviewAuthor")
+  profile           UserProfile?
+  following         Follow[]     @relation("UserFollowing")
+  followers         Follow[]     @relation("UserFollowers")
 
   @@index([username])
   @@map("users")
+}
+
+model UserProfile {
+  userId              Int       @id @map("user_id")
+  displayName         String?   @map("display_name")
+  bio                 String?   @map("bio")
+  avatarUrl           String?   @map("avatar_url")
+  instagramProfileUrl String?   @map("instagram_profile_url")
+  xProfileUrl         String?   @map("x_profile_url")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime? @map("updated_at")
+
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model Follow {
+  followerId Int      @map("follower_id")
+  followeeId Int      @map("followee_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  follower   User     @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  followee   User     @relation("UserFollowers", fields: [followeeId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followeeId])
+  @@index([followeeId])
+  @@map("follows")
 }
 
 model Place {

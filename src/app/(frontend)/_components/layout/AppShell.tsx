@@ -5,7 +5,17 @@ import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { AuthGateProvider, AuthQueryOpener } from '@/components/auth/AuthGate';
 import { LandingHeader } from '@/components/layout/LandingHeader';
+import { MobileNav } from '@/components/layout/MobileNav';
+import { SideNav } from '@/components/layout/SideNav';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+
+const AUTHENTICATED_APP_PATHS = ['/home', '/settings/profile', '/profile'] as const;
+
+function isAuthenticatedAppPath(pathname: string): boolean {
+  return AUTHENTICATED_APP_PATHS.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`)
+  );
+}
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -37,7 +47,7 @@ function LoggedInMvpFrame({ children }: { children: ReactNode }) {
   const { status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const isHome = pathname === '/home';
+  const allowed = isAuthenticatedAppPath(pathname);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -45,17 +55,21 @@ function LoggedInMvpFrame({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (status === 'authenticated' && !isHome) {
+    if (status === 'authenticated' && !allowed) {
       router.replace('/home');
     }
-  }, [status, isHome, router]);
+  }, [status, allowed, router]);
 
-  const hidePage = status !== 'authenticated' || !isHome;
+  const hidePage = status !== 'authenticated' || !allowed;
 
   return (
-    <div className="flex min-h-full flex-col">
-      <SiteHeader />
-      <main className="flex-1">{hidePage ? null : children}</main>
+    <div className="flex min-h-full">
+      <SideNav />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <SiteHeader />
+        <main className="flex-1 pb-20 lg:pb-0">{hidePage ? null : children}</main>
+        <MobileNav />
+      </div>
     </div>
   );
 }

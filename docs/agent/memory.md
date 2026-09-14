@@ -16,6 +16,7 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Transactional email templates live under `src/app/service/email/templates/` (not repo-root dumps). Builders in `email-service.ts`; provider transport (Resend planned) stays out of template files.
 - Welcome signup email design is locked to scrapbook Option A (`welcome-signup`); theme tokens in `email/_lib/email-tokens.ts`.
 - **Structured logging**: `serverLogger` (`@/app/_lib/server-logger`) on the server; `clientLogger` (`@/app/_lib/client-logger`) in UI and `@/app/api/client/` — browser logs POST to `/api/public/logs` and are written with `serverLogger`. Set `LOG_LEVEL` for verbosity (defaults: `info` in production, `debug` otherwise).
+- **Profile reads in the app UI** use RSC + service layer (`getServerSession`, `getUserProfileByUserId` / `getPublicUserProfileByUsername`) — no dedicated GET profile API unless a non-React consumer needs it.
 - **Do not change legacy service CRUD semantics**: Keep existing `saveX`, `updateX`, `deleteX`, and `getX` as they were (e.g. `saveUserProfile` = create only, `updateUserProfile` = update only). For create-or-update flows, **orchestrate those functions** in the route (`get` → `save` or `update`); do not fold upsert into `saveX` and avoid extra upsert-only service helpers when compose is enough. Skill: `new-service`.
 
 ## Gotchas

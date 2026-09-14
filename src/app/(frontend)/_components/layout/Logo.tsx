@@ -1,7 +1,15 @@
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
 
-export function Logo({ className, href = '/' }: { className?: string; href?: string }) {
+export function Logo({
+  className,
+  href = '/',
+  showWordmark = true,
+}: {
+  className?: string;
+  href?: string;
+  showWordmark?: boolean;
+}) {
   return (
     <Link
       href={href}
@@ -16,9 +24,13 @@ export function Logo({ className, href = '/' }: { className?: string; href?: str
       >
         W
       </span>
-      <span>
-        Way<span className="text-purple">Boxd</span>
-      </span>
+      {showWordmark ? (
+        <span>
+          Way<span className="text-purple">Boxd</span>
+        </span>
+      ) : (
+        <span className="sr-only">Wayboxd</span>
+      )}
     </Link>
   );
 }

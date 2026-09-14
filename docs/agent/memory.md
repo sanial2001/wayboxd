@@ -28,6 +28,8 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Next.js 16 uses `proxy.ts` (not `middleware.ts`) for request proxy/auth.
 - Password hashes must never appear in `UserModel` or public API responses.
 - Swagger spec at `GET /api/docs/swagger.json` returns 404 when `APP_ENV=production`. The UI lives at `/api-docs`. Session is required for the spec route (not excluded in `src/proxy.ts`). The spec route uses raw `NextResponse.json` because it serves OpenAPI JSON, not an `ApiResponse` envelope.
+- **`POST /api/user/profile/avatar`** uses Vercel Blob `handleUpload` and returns raw JSON (not `createApiResponse`). Auth runs only for `blob.generate-client-token`; upload-completion callbacks from Vercel have no session.
+- **Avatar uploads** resize/compress in the browser (`compressImageForUpload`) before Blob client upload — max long edge 1024px, quality ~0.85, WebP when supported; originals may be up to 10 MB, uploaded file must stay under 2 MB.
 
 ## Do not repeat
 

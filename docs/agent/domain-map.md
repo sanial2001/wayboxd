@@ -30,7 +30,7 @@ Follow (follows) — directed user → user edge
 
 **Services:** `src/app/service/user/user-service.ts`, `user-profile-service.ts`, `follow-service.ts`
 
-**Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`)
+**Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`, `uploadUserAvatarClient`)
 
 **Auth:** `src/app/api/(controller)/auth/[...nextauth]/options.ts`
 
@@ -39,6 +39,8 @@ Follow (follows) — directed user → user edge
 **Public sign-in:** `POST /api/public/user-signin`
 
 **Save profile (session required):** `POST /api/user/profile/save` — `userId` from session; creates or updates `UserProfile`
+
+**Upload avatar (session required for token):** `POST /api/user/profile/avatar` — Vercel Blob `handleUpload`; then save `avatarUrl` via profile save
 
 ### Email (transactional)
 
@@ -105,14 +107,15 @@ One review per user per place (`@@unique([userId, placeId])`).
 
 ## API layout
 
-| Path                     | Auth             | Purpose                                       |
-| ------------------------ | ---------------- | --------------------------------------------- |
-| `/api/public/*`          | None             | Public endpoints (signup, sign-in, etc.)      |
-| `/api/auth/*`            | NextAuth         | Session login/logout                          |
-| `/api/docs/swagger.json` | Session required | OpenAPI spec (404 when `APP_ENV=production`)  |
-| `/api-docs`              | Page is public   | Swagger UI (spec fetch still needs a session) |
-| `/api/user/profile/save` | Session required | Create or update the signed-in user's profile |
-| `/api/*` (other)         | Session required | Protected APIs (`src/proxy.ts`)               |
+| Path                       | Auth                          | Purpose                                       |
+| -------------------------- | ----------------------------- | --------------------------------------------- |
+| `/api/public/*`            | None                          | Public endpoints (signup, sign-in, etc.)      |
+| `/api/auth/*`              | NextAuth                      | Session login/logout                          |
+| `/api/docs/swagger.json`   | Session required              | OpenAPI spec (404 when `APP_ENV=production`)  |
+| `/api-docs`                | Page is public                | Swagger UI (spec fetch still needs a session) |
+| `/api/user/profile/save`   | Session required              | Create or update the signed-in user's profile |
+| `/api/user/profile/avatar` | Session required (token step) | Vercel Blob client upload for avatars         |
+| `/api/*` (other)           | Session required              | Protected APIs (`src/proxy.ts`)               |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.
 

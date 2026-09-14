@@ -21,6 +21,11 @@ const options: swaggerJsdoc.Options = {
     ],
     tags: [
       {
+        name: 'User',
+        description:
+          'Authenticated user profile (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
+      },
+      {
         name: 'Place',
         description:
           'Place search and save (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
@@ -59,6 +64,29 @@ const options: swaggerJsdoc.Options = {
               format: 'date-time',
               nullable: true,
             },
+          },
+        },
+        UserProfileModel: {
+          type: 'object',
+          properties: {
+            userId: { type: 'integer' },
+            displayName: { type: 'string', nullable: true },
+            bio: { type: 'string', nullable: true },
+            avatarUrl: { type: 'string', nullable: true },
+            instagramProfileUrl: { type: 'string', nullable: true },
+            xProfileUrl: { type: 'string', nullable: true },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time', nullable: true },
+          },
+        },
+        SaveUserProfileBodyRequest: {
+          type: 'object',
+          properties: {
+            displayName: { type: 'string', nullable: true },
+            bio: { type: 'string', nullable: true },
+            avatarUrl: { type: 'string', nullable: true },
+            instagramProfileUrl: { type: 'string', nullable: true },
+            xProfileUrl: { type: 'string', nullable: true },
           },
         },
         ApiError: {
@@ -209,7 +237,10 @@ const options: swaggerJsdoc.Options = {
       },
     },
   },
-  apis: [path.join(process.cwd(), 'src/app/api/(controller)/place/**/route.docs.ts')],
+  apis: [
+    path.join(process.cwd(), 'src/app/api/(controller)/place/**/route.docs.ts'),
+    path.join(process.cwd(), 'src/app/api/(controller)/user/**/route.docs.ts'),
+  ],
 };
 
 export function getSwaggerSpec() {

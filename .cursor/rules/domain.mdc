@@ -17,9 +17,11 @@ Read `docs/agent/domain-map.md` for the full map.
 
 ## Current models
 
-| Model | Table   | Notes                          |
-| ----- | ------- | ------------------------------ |
-| User  | `users` | email unique, bcrypt password  |
+| Model       | Table           | Notes                                          |
+| ----------- | --------------- | ---------------------------------------------- |
+| User        | `users`         | username unique, bcrypt password               |
+| UserProfile | `user_profiles` | 1:1 with User; bio, avatar, social URLs        |
+| Follow      | `follows`       | follower → followee; composite PK              |
 
 ## API prefixes
 

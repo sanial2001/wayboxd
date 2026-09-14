@@ -14,12 +14,18 @@ All routes live under `src/app/api/(controller)/`. Create a folder per resource 
 ```
 src/app/api/
   └── (controller)/
+      ├── _util/               # Shared auth helpers (validateAuthAndGetUserId)
+      ├── _validate/           # Shared request validators (e.g. optional HTTP URLs)
       ├── public/              # Unauthenticated routes
       │   └── user-signup/
       │       └── route.ts
       ├── auth/                # NextAuth
       └── <resource>/          # Protected routes (require session)
-          └── route.ts
+          └── <action>/
+              ├── route.ts
+              ├── route.docs.ts
+              └── _validate/   # Route-specific body/query validation
+                  └── <request>.ts
 ```
 
 Public routes must live under `public/` so `src/proxy.ts` allows unauthenticated access.
@@ -37,7 +43,7 @@ For protected routes, use **both** `src/proxy.ts` (middleware) and in-handler se
 
 1. **Always wrap handlers in try-catch** — route handlers catch all errors, service layer does NOT
 2. **Use `createApiResponse`** for all responses — never return raw `NextResponse.json`
-3. **Validate at route level** — business logic stays in the service layer, but input validation belongs here
+3. **Validate in `_validate/`** — keep `route.ts` thin; put body/query validation in a sibling `_validate/` module under the route folder. Shared validators live in `(controller)/_validate/`. Auth and entity lookups stay in `(controller)/_util/validate.ts` (onelot-app pattern). Validation result types belong in `src/app/api/model/response/`.
 4. **Use appropriate status codes**: 200 (ok), 201 (created), 400 (bad request), 403 (unauthorized), 404 (not found), 500 (server error)
 5. **Request types** in `src/app/api/model/request/`; **response types** in `src/app/api/model/response/`
 

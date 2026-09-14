@@ -64,18 +64,48 @@ import prisma from '@/app/service/_lib/prisma';
 - **Request types** → `src/app/api/model/request/`
 - **External API wire types** → `src/app/api/model/external/<provider>/`
 
-### 4. Function naming conventions
+### 4. Do not change legacy CRUD functions
 
-| Operation | Name pattern                          |
-| --------- | ------------------------------------- |
-| Create    | `saveX(data)`                         |
-| Read one  | `getXById(id)` / `getXByEmail(email)` |
-| Read many | `getXsByY(y)`                         |
-| Update    | `updateX(id, data)`                   |
-| Delete    | `deleteX(id)`                         |
-| Map       | `mapXEntityToModel(entity)`           |
+**Never change the behavior or signature of existing `saveX`, `updateX`, `deleteX`, or `getX` helpers** to fit a new API or feature. Treat them as stable contracts:
 
-### 5. Map entities to response models
+- `saveX` → **create only** (Prisma `create`)
+- `updateX` → **update existing row only** (returns `null` or throws when missing, per existing pattern)
+- `deleteX` → **delete only**
+
+When you need create-or-update, session-scoped writes, or any flow that does not match a single CRUD call, **orchestrate existing service functions** (usually in the route handler): e.g. `getUserProfileByUserId` → `saveUserProfile` or `updateUserProfile`. Do not fold upsert into `saveX`, and do not add a separate upsert-only service helper when composing `save` + `update` is enough.
+
+```typescript
+// Good — route composes legacy CRUD; saveUserProfile stays create-only
+const existing = await getUserProfileByUserId(userId);
+if (existing) {
+  const profile = await updateUserProfile(userId, body);
+  // ...
+} else {
+  const profile = await saveUserProfile({ userId, ...body });
+  // ...
+}
+
+// Bad — changing saveUserProfile to upsert breaks callers and review expectations
+export async function saveUserProfile(userId: number, data: SaveUserProfileBodyRequest) {
+  return prisma.userProfile.upsert({ ... });
+}
+```
+
+Also recorded in `docs/agent/memory.md`.
+
+### 5. Function naming conventions
+
+| Operation                       | Name pattern                                                                                                                            |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Create                          | `saveX(data)`                                                                                                                           |
+| Read one                        | `getXById(id)` / `getXByEmail(email)`                                                                                                   |
+| Read many                       | `getXsByY(y)`                                                                                                                           |
+| Update                          | `updateX(id, data)`                                                                                                                     |
+| Delete                          | `deleteX(id)`                                                                                                                           |
+| Map                             | `mapXEntityToModel(entity)`                                                                                                             |
+| Composite flows (orchestration) | Prefer route-level `get` + `save` / `update`; new service name only when logic is non-trivial (e.g. `findOrCreateX` with external APIs) |
+
+### 6. Map entities to response models
 
 Services return typed **model** objects (not raw Prisma entities). Never expose `password` in mapped models.
 
@@ -94,7 +124,7 @@ function mapUserEntityToModel(user: User): UserModel {
 }
 ```
 
-### 6. Password handling
+### 7. Password handling
 
 - Hash passwords in the service layer before persisting
 - Use `@/app/_util/password` for compare/hash when using async bcrypt helpers

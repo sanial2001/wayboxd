@@ -9,12 +9,14 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Public API routes live under `src/app/api/(controller)/public/` and are excluded from auth in `src/proxy.ts`.
 - Protected API routes rely on `src/proxy.ts` (`withAuth`) — matcher excludes `public` and `auth`.
 - Protected route handlers also call `validateAuthAndGetUserId()` from `src/app/api/(controller)/_util/validate.ts` (session via `getServerSession`, same pattern as onelot-app).
+- **Route input validation** lives in `_validate/` next to the route (e.g. `user/profile/save/_validate/save-user-profile-body.ts`), not inline in `route.ts`. Reusable validators go in `(controller)/_validate/`. Skill: `new-api-route`.
 - Coding standards live in `.cursor/rules/`; workflows live in `.agents/skills/`.
 - Use `createApiResponse` from `@/app/service/_utils/api-response` for all API JSON responses.
 - UI code calls APIs via `src/app/api/client/*-service-client.ts`, not inline `fetch` in components.
 - Transactional email templates live under `src/app/service/email/templates/` (not repo-root dumps). Builders in `email-service.ts`; provider transport (Resend planned) stays out of template files.
 - Welcome signup email design is locked to scrapbook Option A (`welcome-signup`); theme tokens in `email/_lib/email-tokens.ts`.
 - **Structured logging**: `serverLogger` (`@/app/_lib/server-logger`) on the server; `clientLogger` (`@/app/_lib/client-logger`) in UI and `@/app/api/client/` — browser logs POST to `/api/public/logs` and are written with `serverLogger`. Set `LOG_LEVEL` for verbosity (defaults: `info` in production, `debug` otherwise).
+- **Do not change legacy service CRUD semantics**: Keep existing `saveX`, `updateX`, `deleteX`, and `getX` as they were (e.g. `saveUserProfile` = create only, `updateUserProfile` = update only). For create-or-update flows, **orchestrate those functions** in the route (`get` → `save` or `update`); do not fold upsert into `saveX` and avoid extra upsert-only service helpers when compose is enough. Skill: `new-service`.
 
 ## Gotchas
 
@@ -37,3 +39,4 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - Do not add email HTML under a top-level `emails/` folder — use `src/app/service/email/templates/`.
 - Never interpolate raw user input into email HTML/subjects — use `sanitizeEmailText` / HTML escaping in `render-email-template` / `sanitizeEmailHttpUrl`.
 - Do not use `console.log` in route handlers or services — use `serverLogger` / `clientLogger`.
+- Do not repurpose `saveX` / `updateX` to upsert or new semantics — orchestrate existing CRUD from the route (or a thin delegating helper) instead.

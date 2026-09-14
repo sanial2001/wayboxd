@@ -13,20 +13,32 @@ Wayboxd is a Next.js 16 app (App Router, React 19) with PostgreSQL via Prisma an
 ```
 User (users)
   ├── email (unique)
-  ├── name
+  ├── username
   ├── password (bcrypt hash — never exposed in API models)
   └── timestamps (createdAt, updatedAt)
+
+UserProfile (user_profiles) — 1:1 with User
+  ├── displayName, bio, avatarUrl
+  ├── instagramProfileUrl, xProfileUrl
+  └── timestamps (createdAt, updatedAt)
+
+Follow (follows) — directed user → user edge
+  ├── followerId → User
+  ├── followeeId → User
+  └── createdAt
 ```
 
-**Services:** `src/app/service/user/user-service.ts`
+**Services:** `src/app/service/user/user-service.ts`, `user-profile-service.ts`, `follow-service.ts`
 
-**Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`)
+**Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`)
 
 **Auth:** `src/app/api/(controller)/auth/[...nextauth]/options.ts`
 
 **Public signup:** `POST /api/public/user-signup`
 
 **Public sign-in:** `POST /api/public/user-signin`
+
+**Save profile (session required):** `POST /api/user/profile/save` — `userId` from session; creates or updates `UserProfile`
 
 ### Email (transactional)
 
@@ -99,6 +111,7 @@ One review per user per place (`@@unique([userId, placeId])`).
 | `/api/auth/*`            | NextAuth         | Session login/logout                          |
 | `/api/docs/swagger.json` | Session required | OpenAPI spec (404 when `APP_ENV=production`)  |
 | `/api-docs`              | Page is public   | Swagger UI (spec fetch still needs a session) |
+| `/api/user/profile/save` | Session required | Create or update the signed-in user's profile |
 | `/api/*` (other)         | Session required | Protected APIs (`src/proxy.ts`)               |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.

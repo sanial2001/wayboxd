@@ -24,7 +24,7 @@ export function MobileNav() {
     >
       <ul className="mx-auto grid max-w-lg grid-cols-2 gap-1 py-2">
         {items.map((item) => {
-          const active = isAppNavItemActive(item.id, pathname);
+          const active = isAppNavItemActive(item.id, pathname, username);
           const Icon = item.icon;
           return (
             <li key={item.id}>

@@ -18,7 +18,7 @@ export function SideNav() {
   const username = session?.userDetails?.username;
   const profileHref = username ? `/profile/${username}` : '/settings/profile';
   const homeActive = isAppNavItemActive('home', pathname);
-  const profileActive = isAppNavItemActive('profile', pathname);
+  const profileActive = isAppNavItemActive('profile', pathname, username);
 
   return (
     <aside className="sticky top-0 hidden h-dvh w-[72px] shrink-0 flex-col items-center border-r border-border/80 bg-paper py-6 lg:flex">
@@ -50,17 +50,17 @@ export function SideNav() {
           </li>
         </ul>
 
-        <div className="mt-auto flex flex-col items-center gap-4">
-          <ThemeToggle className="border-transparent bg-transparent p-2 shadow-none hover:translate-y-0 hover:bg-surface-2" />
+        <div className="mt-auto flex shrink-0 flex-col items-center gap-2 pb-1">
           <button
             type="button"
             onClick={() => signOut({ callbackUrl: '/' })}
             aria-label="Sign out"
             title="Sign out"
-            className="flex h-11 w-11 items-center justify-center rounded-xl text-muted transition hover:bg-surface-2 hover:text-ink"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-ink transition hover:bg-surface-2"
           >
             <SignOutNavIcon className="h-6 w-6" />
           </button>
+          <ThemeToggle className="border-transparent bg-transparent p-2 shadow-none hover:translate-y-0 hover:bg-surface-2" />
         </div>
       </nav>
     </aside>

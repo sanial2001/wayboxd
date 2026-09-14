@@ -6,11 +6,21 @@ export type AppNavIconProps = {
   filled?: boolean;
 };
 
-export function isAppNavItemActive(id: AppNavItemId, pathname: string): boolean {
+export function isAppNavItemActive(id: AppNavItemId, pathname: string, username?: string): boolean {
   if (id === 'home') {
     return pathname === '/home';
   }
-  return pathname.startsWith('/profile/') || pathname.startsWith('/settings/profile');
+
+  if (pathname === '/settings/profile' || pathname.startsWith('/settings/profile/')) {
+    return true;
+  }
+
+  if (!username) {
+    return false;
+  }
+
+  const ownProfilePath = `/profile/${username}`;
+  return pathname === ownProfilePath || pathname.startsWith(`${ownProfilePath}/`);
 }
 
 export function HomeNavIcon({ className, filled = false }: AppNavIconProps) {

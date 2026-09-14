@@ -15,7 +15,7 @@ export default function CommunitiesPage() {
           Find your travel chaos crew
         </h1>
         <p className="mt-3 text-muted">
-          Clubs for people who overpack opinions and underpack patience for boring itineraries.
+          Clubs for people who overpack hot takes and underpack patience for boring itineraries.
         </p>
       </header>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

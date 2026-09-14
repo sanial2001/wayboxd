@@ -65,7 +65,7 @@ export default async function ProfilePage({ params }: Props) {
           </div>
           <p className="mt-2 max-w-xl text-lg text-muted">{person.bio}</p>
           <dl className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Stat label="Opinions" value={person.placesReviewed} />
+            <Stat label="Takes" value={person.placesReviewed} />
             <Stat label="Stamps" value={person.countriesVisited} />
             <Stat label="Fans" value={person.followers} />
             <Stat label="Following" value={person.following} />
@@ -130,7 +130,7 @@ export default async function ProfilePage({ params }: Props) {
       </section>
 
       <section>
-        <SectionHeader title="Filed opinions" description="The public record of their taste." />
+        <SectionHeader title="Filed takes" description="The public record of their taste." />
         {authoredReviews.length ? (
           <div className="mx-auto grid max-w-3xl gap-5">
             {authoredReviews.map((review) => (

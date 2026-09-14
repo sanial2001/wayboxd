@@ -17,7 +17,7 @@ export function LandingFeed() {
         <Container className="space-y-14 py-8 sm:space-y-16 sm:py-10">
           <HomeHero />
           <TrendingPlaces places={places.slice(0, 6)} />
-          <PeopleToFollow people={people.filter((p) => p.username !== 'kelvin')} />
+          <PeopleToFollow people={people.filter((p) => p.username !== 'kabir')} />
           <section>
             <SectionHeader
               eyebrow="Highly stealable"

@@ -119,7 +119,7 @@ export function SearchExperience() {
 
       <section>
         <SectionHeader
-          title="Opinions in the results"
+          title="Takes in the results"
           description="Because a place name alone never tells the whole story."
         />
         <div className="mx-auto grid max-w-3xl gap-4">

@@ -1,8 +1,8 @@
 Passport stamped. You’re in, {{name}}.
 
-Go somewhere. Have an opinion.
+Go somewhere. Have a take.
 
-Your scrapbook is empty — for now. WayBoxd is where real places meet real opinions.
+Your scrapbook is empty — for now. WayBoxd is where real places meet real takes.
 Not a booking site. Not a polite three-star review.
 
 Enter the scrapbook: {{ctaUrl}}

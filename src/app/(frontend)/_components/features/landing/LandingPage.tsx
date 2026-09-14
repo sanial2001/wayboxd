@@ -21,7 +21,7 @@ const pillars = [
     tone: 'bg-sky',
   },
   {
-    stamp: 'Opinions',
+    stamp: 'Takes',
     title: 'The content',
     body: 'Reviews that read like group-chat essays. Ratings optional. Personality mandatory.',
     tone: 'bg-pink',
@@ -69,7 +69,7 @@ export function LandingPage() {
           <h1 className="mt-4 max-w-4xl font-display text-5xl font-black uppercase leading-[0.92] tracking-tight text-white text-balance sm:text-7xl lg:text-8xl">
             Go somewhere.
             <br />
-            <span className="text-lime">Have an opinion.</span>
+            <span className="text-lime">Have a take.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-white/85 sm:text-xl">
             A social scrapbook for places — built by people who actually went, felt something, and
@@ -102,13 +102,13 @@ export function LandingPage() {
             </p>
             <p className="mt-4 max-w-xl text-muted">
               Discover places. Follow taste. Steal lists. Argue in the comments. Then go write your
-              own official opinion.
+              own official take.
             </p>
           </div>
           <Card className="relative space-y-4 bg-purple text-white motion-safe:rotate-1">
             <Stamp className="absolute -right-2 -top-3 border-lime text-lime">Core loop</Stamp>
             <p className="font-display text-xs font-bold uppercase tracking-[0.16em] text-lime">
-              Place → People → Opinions
+              Place → People → Takes
             </p>
             <ol className="space-y-4 font-display text-2xl font-black uppercase leading-tight sm:text-3xl">
               <li>1. Find a place</li>
@@ -177,7 +177,7 @@ export function LandingPage() {
                 A taste of the feed
               </p>
               <h2 className="mt-2 font-display text-3xl font-black uppercase tracking-tight sm:text-4xl">
-                People have opinions.
+                People have takes.
               </h2>
               <p className="mt-2 text-muted">
                 This is what it looks like when reviews behave like social posts, not directory
@@ -229,7 +229,7 @@ export function LandingPage() {
           <h2 className="mt-4 max-w-3xl font-display text-4xl font-black uppercase leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
             Go somewhere.
             <br />
-            Have an opinion.
+            Have a take.
           </h2>
           <p className="mt-5 max-w-xl text-lg text-white/85">
             Found a place worth talking about? The scrapbook is waiting. Loud takes preferred.
@@ -248,7 +248,7 @@ export function LandingPage() {
       <footer className="border-t-[3px] border-border py-8">
         <Container className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-display text-sm font-bold uppercase tracking-wide">
-            WayBoxd · Real places. Loud opinions.
+            WayBoxd · Real places. Loud takes.
           </p>
           <p className="text-sm text-muted">Built like a travel scrapbook. Not a spreadsheet.</p>
         </Container>

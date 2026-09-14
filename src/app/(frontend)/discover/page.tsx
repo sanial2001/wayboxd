@@ -17,7 +17,7 @@ export default function DiscoverPage() {
           The feed that actually slaps
         </p>
         <h1 className="mt-2 font-display text-4xl font-black uppercase tracking-tight sm:text-5xl">
-          People have opinions.
+          People have takes.
         </h1>
         <p className="mt-3 text-lg text-muted">
           Places heating up, takes flying in, zero five-star fluff written by a marketing intern.
@@ -27,7 +27,7 @@ export default function DiscoverPage() {
       <section>
         <SectionHeader
           title="Heating up"
-          description="If everyone's talking about it, you should at least have an opinion ready."
+          description="If everyone's talking about it, you should at least have a take ready."
         />
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {places.map((place, i) => (

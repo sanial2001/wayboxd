@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn';
 export function MobileNav() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const username = session?.userDetails?.username ?? 'kelvin';
+  const username = session?.userDetails?.username ?? 'kabir';
 
   const items = [
     { href: '/home', label: 'Home', icon: '🏠' },

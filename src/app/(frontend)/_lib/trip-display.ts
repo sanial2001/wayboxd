@@ -3,7 +3,11 @@ export function formatTripMonthYear(value: Date | string): string {
   if (Number.isNaN(date.getTime())) {
     return '';
   }
-  return new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric' }).format(date);
+  return new Intl.DateTimeFormat('en', {
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
 }
 
 export function formatTripBadge(

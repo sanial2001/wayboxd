@@ -5,7 +5,6 @@ import { clientLogger } from '@/app/_lib/client-logger';
 import { saveTripClient, uploadTripCoverClient } from '@/app/api/client/trip-service-client';
 import { SaveTripBodyRequest } from '@/app/api/model/request/save-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
-import { TripCard } from '@/components/features/profile/TripCard';
 import { Button } from '@/components/ui/Button';
 import { composeTripMonthValue, listTripYears, TRIP_MONTH_OPTIONS } from '@/lib/trip-display';
 import { cn } from '@/lib/cn';
@@ -223,54 +222,8 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
             </button>
           </div>
 
-          <div className="grid gap-6 px-5 py-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(16rem,0.85fr)] sm:px-6">
-            <div className="space-y-4">
-              <input
-                ref={fileInputRef}
-                id={fileInputId}
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                className="sr-only"
-                disabled={busy}
-                onChange={(event) => void onCoverSelected(event.target.files?.[0])}
-              />
-              <FieldLabel label="Cover photo" required />
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => fileInputRef.current?.click()}
-                onDragOver={(event) => {
-                  event.preventDefault();
-                }}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void onCoverSelected(event.dataTransfer.files?.[0]);
-                }}
-                className={cn(
-                  'relative flex aspect-[16/10] w-full flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border-[2.5px] border-dashed border-border bg-surface-2 px-4 text-center disabled:opacity-50'
-                )}
-              >
-                {previewCover ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={previewCover}
-                    alt=""
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                ) : null}
-                <span
-                  className={cn(
-                    'relative z-10',
-                    previewCover && 'rounded-xl bg-ink/70 px-3 py-2 text-paper'
-                  )}
-                >
-                  <span className="block font-display text-sm font-bold uppercase">
-                    {coverUploading ? 'Uploading…' : 'Upload cover photo'}
-                  </span>
-                  <span className="mt-1 block text-xs text-muted">Required · 16:10 · JPG/PNG</span>
-                </span>
-              </button>
-
+          <div className="grid gap-6 px-5 py-4 lg:grid-cols-2 lg:items-stretch sm:px-6">
+            <div className="order-2 space-y-4 lg:order-1">
               <label className="flex w-full flex-col gap-2">
                 <FieldLabel label="Title" required />
                 <input
@@ -382,21 +335,52 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
               </label>
             </div>
 
-            <div>
-              <p className="mb-3 font-display text-[11px] font-bold uppercase tracking-widest text-muted">
-                Live card preview
-              </p>
-              <TripCard
-                trip={{
-                  title,
-                  blurb: emptyToNull(blurb),
-                  coverImageUrl: previewCover,
-                  outboundUrl: emptyToNull(outboundUrl),
-                  tag: emptyToNull(tag),
-                  duration: emptyToNull(duration),
-                  tripDate: composeTripMonthValue(tripYear, tripMonth),
-                }}
+            <div className="order-1 flex min-h-[16rem] flex-col lg:order-2 lg:min-h-full">
+              <input
+                ref={fileInputRef}
+                id={fileInputId}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="sr-only"
+                disabled={busy}
+                onChange={(event) => void onCoverSelected(event.target.files?.[0])}
               />
+              <FieldLabel label="Cover photo" required />
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                }}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  void onCoverSelected(event.dataTransfer.files?.[0]);
+                }}
+                className={cn(
+                  'relative mt-2 flex min-h-[16rem] w-full flex-1 flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border-[2.5px] border-dashed border-border bg-surface-2 px-4 text-center disabled:opacity-50 lg:min-h-0'
+                )}
+              >
+                {previewCover ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={previewCover}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                ) : null}
+                <span
+                  className={cn(
+                    'relative z-10',
+                    previewCover && 'rounded-xl bg-ink/70 px-3 py-2 text-paper'
+                  )}
+                >
+                  <span className="block font-display text-sm font-bold uppercase">
+                    {coverUploading ? 'Uploading…' : 'Upload cover photo'}
+                  </span>
+                  <span className="mt-1 block text-xs text-muted">Required · 16:10 · JPG/PNG</span>
+                </span>
+              </button>
             </div>
           </div>
 

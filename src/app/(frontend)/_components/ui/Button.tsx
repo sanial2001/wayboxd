@@ -40,7 +40,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-2xl border-[3px] border-border font-display font-bold uppercase tracking-wide shadow-chunky transition motion-safe:duration-200 disabled:opacity-50 disabled:pointer-events-none',
+    'inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-[3px] border-border font-display font-bold uppercase tracking-wide shadow-chunky transition motion-safe:duration-200 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
     variants[variant],
     sizes[size],
     className

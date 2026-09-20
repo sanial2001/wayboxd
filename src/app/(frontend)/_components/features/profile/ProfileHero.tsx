@@ -37,6 +37,7 @@ export function ProfileHero({ profile, isOwnProfile, onAddTrip }: ProfileHeroPro
               src={profile.avatarUrl}
               alt={displayName}
               size="hero"
+              preview
               className="border-[4px] border-surface shadow-chunky"
             />
           </div>

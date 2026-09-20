@@ -87,6 +87,7 @@ export function TripViewModal({ trip, author, onClose }: TripViewModalProps) {
               src={author.avatarUrl}
               alt={author.displayName}
               size="lg"
+              preview
               className="shadow-none"
             />
             <div className="min-w-0 pt-0.5">

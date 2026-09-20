@@ -7,9 +7,13 @@ import { TripViewModal } from '@/components/features/profile/TripViewModal';
 
 type ProfileTripsProps = {
   trips: TripModel[];
+  author: {
+    displayName: string;
+    avatarUrl: string | null;
+  };
 };
 
-export function ProfileTrips({ trips }: ProfileTripsProps) {
+export function ProfileTrips({ trips, author }: ProfileTripsProps) {
   const [viewingTrip, setViewingTrip] = useState<TripModel | null>(null);
 
   if (trips.length === 0) {
@@ -30,7 +34,7 @@ export function ProfileTrips({ trips }: ProfileTripsProps) {
         ))}
       </ul>
 
-      <TripViewModal trip={viewingTrip} onClose={() => setViewingTrip(null)} />
+      <TripViewModal trip={viewingTrip} author={author} onClose={() => setViewingTrip(null)} />
     </div>
   );
 }

@@ -52,7 +52,13 @@ export function ProfilePageBody({
 
       <section>
         <h2 className="sr-only">Trips</h2>
-        <ProfileTrips trips={trips} />
+        <ProfileTrips
+          trips={trips}
+          author={{
+            displayName: profile.displayName?.trim() || profile.username,
+            avatarUrl: profile.avatarUrl,
+          }}
+        />
       </section>
 
       {isOwnProfile ? (

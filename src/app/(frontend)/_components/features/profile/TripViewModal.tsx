@@ -3,7 +3,7 @@
 import { useEffect, useId } from 'react';
 import Image from 'next/image';
 import { TripModel } from '@/app/api/model/response/trip-model';
-import { Button } from '@/components/ui/Button';
+import { Avatar } from '@/components/ui/Avatar';
 import {
   formatTripBadge,
   formatTripMonthYear,
@@ -11,12 +11,18 @@ import {
   isRemoteHttpUrl,
 } from '@/lib/trip-display';
 
+type TripViewAuthor = {
+  displayName: string;
+  avatarUrl: string | null;
+};
+
 type TripViewModalProps = {
   trip: TripModel | null;
+  author: TripViewAuthor;
   onClose: () => void;
 };
 
-export function TripViewModal({ trip, onClose }: TripViewModalProps) {
+export function TripViewModal({ trip, author, onClose }: TripViewModalProps) {
   const titleId = useId();
 
   useEffect(() => {
@@ -48,9 +54,12 @@ export function TripViewModal({ trip, onClose }: TripViewModalProps) {
   const dateLabel = formatTripMonthYear(trip.tripDate);
   const host = hostnameFromUrl(trip.outboundUrl);
   const coverSrc = trip.coverImageUrl?.trim() || null;
+  const byline = [`Trip by ${author.displayName}${host ? ` for ${host}` : ''}`, dateLabel]
+    .filter((part) => part.length > 0)
+    .join(' · ');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/70 p-4 sm:p-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/75 p-3 sm:p-5">
       <button
         type="button"
         className="absolute inset-0 cursor-default"
@@ -61,53 +70,37 @@ export function TripViewModal({ trip, onClose }: TripViewModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative z-10 my-4 w-full max-w-5xl rounded-[2rem] border-[3px] border-border bg-surface shadow-chunky-lg"
+        className="relative z-10 flex h-[min(56rem,calc(100dvh-1.5rem))] w-full max-w-4xl flex-col overflow-hidden rounded-[1.75rem] border-[3px] border-border bg-surface shadow-chunky-lg sm:h-[min(56rem,calc(100dvh-2.5rem))] sm:rounded-[2rem]"
       >
-        <div className="flex items-start justify-between gap-4 px-5 pb-2 pt-5 sm:px-6 sm:pt-6">
-          <div>
-            <p className="font-display text-[11px] font-bold uppercase tracking-widest text-muted">
-              Trip
-            </p>
-            <h2 id={titleId} className="mt-1 font-display text-3xl font-black tracking-tight">
-              {trip.title}
-            </h2>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-border bg-surface-2 text-ink"
-          >
-            <span aria-hidden className="text-xl leading-none">
-              ×
-            </span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full text-2xl leading-none text-ink/70 hover:bg-surface-2 hover:text-ink sm:right-4 sm:top-4"
+        >
+          <span aria-hidden>×</span>
+        </button>
 
-        <div className="grid gap-6 px-5 py-4 lg:grid-cols-2 lg:items-stretch sm:px-6">
-          <div className="order-2 space-y-4 lg:order-1">
-            {dateLabel ? <p className="text-sm text-muted">{dateLabel}</p> : null}
-            {badge ? (
-              <p className="inline-flex rounded-full bg-ink/90 px-2.5 py-1 font-display text-[10px] font-bold uppercase tracking-wide text-paper">
-                {badge}
-              </p>
-            ) : null}
-            {trip.blurb?.trim() ? (
-              <p className="whitespace-pre-wrap text-base leading-relaxed">{trip.blurb}</p>
-            ) : null}
-            {trip.outboundUrl ? (
-              <a
-                href={trip.outboundUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-lime px-4 py-2.5 font-display text-sm font-bold uppercase tracking-wide text-ink shadow-chunky transition hover:-translate-y-0.5"
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5 pb-6 pt-6 sm:px-10 sm:pb-8 sm:pt-8">
+          <header className="flex items-start gap-4 pr-12">
+            <Avatar
+              src={author.avatarUrl}
+              alt={author.displayName}
+              size="lg"
+              className="shadow-none"
+            />
+            <div className="min-w-0 pt-0.5">
+              <h2
+                id={titleId}
+                className="font-display text-2xl font-black leading-tight tracking-tight sm:text-4xl"
               >
-                Open {host}
-              </a>
-            ) : null}
-          </div>
+                {trip.title}
+              </h2>
+              {byline ? <p className="mt-2 text-sm text-muted sm:text-base">{byline}</p> : null}
+            </div>
+          </header>
 
-          <div className="order-1 relative min-h-[16rem] overflow-hidden rounded-[1.5rem] border-[3px] border-border bg-surface-2 lg:order-2 lg:min-h-full">
+          <div className="relative mt-6 min-h-[14rem] w-full flex-1 overflow-hidden rounded-2xl bg-surface-2 sm:mt-8 sm:min-h-[18rem] sm:rounded-[1.5rem]">
             {coverSrc ? (
               isRemoteHttpUrl(coverSrc) ? (
                 <Image
@@ -115,7 +108,8 @@ export function TripViewModal({ trip, onClose }: TripViewModalProps) {
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 896px) 100vw, 896px"
+                  priority
                 />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -123,14 +117,52 @@ export function TripViewModal({ trip, onClose }: TripViewModalProps) {
               )
             ) : null}
           </div>
-        </div>
 
-        <div className="flex justify-end border-t-[3px] border-border px-5 py-4 sm:px-6">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Close
-          </Button>
+          {trip.blurb?.trim() ? (
+            <p className="mt-6 max-w-3xl whitespace-pre-wrap text-base leading-relaxed text-ink/90 sm:mt-8 sm:text-lg">
+              {trip.blurb}
+            </p>
+          ) : null}
+
+          {badge ? (
+            <p className="mt-4 text-sm text-muted">
+              <span className="font-medium text-ink">Tag: </span>
+              {badge}
+            </p>
+          ) : null}
+
+          {trip.outboundUrl ? (
+            <a
+              href={trip.outboundUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex w-full shrink-0 items-center justify-center gap-3 rounded-2xl border-[3px] border-border bg-purple px-5 py-4 font-display text-sm font-bold uppercase tracking-wide text-white shadow-chunky transition hover:-translate-y-0.5 sm:mt-8 sm:text-base"
+            >
+              Full story on {host}
+              <ExternalLinkIcon />
+            </a>
+          ) : null}
         </div>
       </div>
     </div>
+  );
+}
+
+function ExternalLinkIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      className="h-4 w-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M6.5 3.5H3.5A1.5 1.5 0 0 0 2 5v7.5A1.5 1.5 0 0 0 3.5 14H11a1.5 1.5 0 0 0 1.5-1.5V9" />
+      <path d="M9 2.5h4.5V7" />
+      <path d="M7.5 8.5 13.5 2.5" />
+    </svg>
   );
 }

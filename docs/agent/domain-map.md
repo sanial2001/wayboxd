@@ -109,6 +109,20 @@ One review per user per place (`@@unique([userId, placeId])`).
 
 **Service:** `src/app/service/review/review-service.ts`
 
+### Trips
+
+```
+Trip (trips)
+  ├── userId → User
+  ├── title, blurb
+  ├── coverImageUrl, outboundUrl
+  ├── tag, duration
+  ├── tripDate
+  └── timestamps (createdAt, updatedAt)
+```
+
+**Service:** `src/app/service/trip/trip-service.ts`
+
 ## API layout
 
 | Path                       | Auth                          | Purpose                                       |

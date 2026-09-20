@@ -22,6 +22,7 @@ model User {
   profile           UserProfile?
   following         Follow[]     @relation("UserFollowing")
   followers         Follow[]     @relation("UserFollowers")
+  trips             Trip[]       @relation("UserTrips")
 
   @@index([username])
   @@map("users")
@@ -106,4 +107,24 @@ model Review {
   @@index([placeId])
   @@index([userId])
   @@map("reviews")
+}
+
+model Trip {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  title         String    @map("title")
+  blurb         String?   @map("blurb")
+  coverImageUrl String    @map("cover_image_url")
+  outboundUrl   String    @map("outbound_url")
+  tag           String?   @map("tag")
+  duration      String?   @map("duration")
+  tripDate      DateTime  @map("trip_date")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  user          User      @relation("UserTrips", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tripDate])
+  @@map("trips")
 }

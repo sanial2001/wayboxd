@@ -32,7 +32,7 @@ export default async function ProfilePage({ params }: Props) {
 
       <section>
         <h2 className="sr-only">Trips</h2>
-        <ProfileTrips trips={trips} />
+        <ProfileTrips trips={trips} isOwnProfile={isOwnProfile} userId={profile.userId} />
       </section>
     </Container>
   );

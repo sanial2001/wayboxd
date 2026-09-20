@@ -32,7 +32,7 @@ Follow (follows) — directed user → user edge
 
 **Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`, `uploadUserAvatarClient`)
 
-**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername`. Own profile shows **Edit profile** → `/settings/profile`.
+**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getTripsByUserId`. Own profile shows **Edit profile** → `/settings/profile`.
 
 **Profile edit UI:** `/settings/profile` — RSC loads session + `getUserProfileByUserId`; `ProfileEditForm` uses `uploadUserAvatarClient` + `saveUserProfileClient` only
 

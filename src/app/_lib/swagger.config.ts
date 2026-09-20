@@ -30,6 +30,11 @@ const options: swaggerJsdoc.Options = {
         description:
           'Place search and save (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
       },
+      {
+        name: 'Trip',
+        description:
+          'Authenticated user trips (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
+      },
     ],
     components: {
       securitySchemes: {
@@ -217,6 +222,35 @@ const options: swaggerJsdoc.Options = {
             latitude: { type: 'number', nullable: true },
             longitude: { type: 'number', nullable: true },
             address: { type: 'string', nullable: true },
+          },
+        },
+        TripModel: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            userId: { type: 'integer' },
+            title: { type: 'string' },
+            blurb: { type: 'string', nullable: true },
+            coverImageUrl: { type: 'string' },
+            outboundUrl: { type: 'string' },
+            tag: { type: 'string', nullable: true },
+            duration: { type: 'string', nullable: true },
+            tripDate: { type: 'string', format: 'date-time' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time', nullable: true },
+          },
+        },
+        SaveTripBodyRequest: {
+          type: 'object',
+          required: ['title', 'coverImageUrl', 'outboundUrl', 'tripDate'],
+          properties: {
+            title: { type: 'string' },
+            coverImageUrl: { type: 'string', format: 'uri' },
+            outboundUrl: { type: 'string', format: 'uri' },
+            tripDate: { type: 'string', format: 'date-time' },
+            blurb: { type: 'string', nullable: true },
+            tag: { type: 'string', nullable: true },
+            duration: { type: 'string', nullable: true },
           },
         },
         ManualPlaceSaveResult: {

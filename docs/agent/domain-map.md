@@ -123,6 +123,10 @@ Trip (trips)
 
 **Service:** `src/app/service/trip/trip-service.ts`
 
+**Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`)
+
+**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only
+
 ## API layout
 
 | Path                       | Auth                          | Purpose                                       |
@@ -133,6 +137,7 @@ Trip (trips)
 | `/api-docs`                | Page is public                | Swagger UI (spec fetch still needs a session) |
 | `/api/user/profile/save`   | Session required              | Create or update the signed-in user's profile |
 | `/api/user/profile/avatar` | Session required (token step) | Vercel Blob client upload for avatars         |
+| `/api/user/trip/save`      | Session required              | Create a trip for the signed-in user          |
 | `/api/*` (other)           | Session required              | Protected APIs (`src/proxy.ts`)               |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.

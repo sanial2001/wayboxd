@@ -116,6 +116,7 @@ html.dark {
   [type='reset']:not(:disabled),
   a[href],
   summary,
+  select:not(:disabled),
   [role='button']:not([aria-disabled='true']) {
     cursor: pointer;
   }

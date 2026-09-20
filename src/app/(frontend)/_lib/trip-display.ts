@@ -34,6 +34,36 @@ export function monthInputToIsoTripDate(monthValue: string): string | null {
   return `${monthValue}-01T00:00:00.000Z`;
 }
 
+export const TRIP_MONTH_OPTIONS = [
+  { value: '01', label: 'January' },
+  { value: '02', label: 'February' },
+  { value: '03', label: 'March' },
+  { value: '04', label: 'April' },
+  { value: '05', label: 'May' },
+  { value: '06', label: 'June' },
+  { value: '07', label: 'July' },
+  { value: '08', label: 'August' },
+  { value: '09', label: 'September' },
+  { value: '10', label: 'October' },
+  { value: '11', label: 'November' },
+  { value: '12', label: 'December' },
+] as const;
+
+export function listTripYears(referenceYear = new Date().getFullYear()): number[] {
+  const years: number[] = [];
+  for (let year = referenceYear + 1; year >= referenceYear - 40; year -= 1) {
+    years.push(year);
+  }
+  return years;
+}
+
+export function composeTripMonthValue(year: string, month: string): string | null {
+  if (!year || !month) {
+    return null;
+  }
+  return monthInputToIsoTripDate(`${year}-${month}`);
+}
+
 export function isoToMonthInput(value: Date | string | null | undefined): string {
   if (!value) {
     return '';

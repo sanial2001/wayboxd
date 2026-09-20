@@ -7,7 +7,7 @@ import { SaveTripBodyRequest } from '@/app/api/model/request/save-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { TripCard } from '@/components/features/profile/TripCard';
 import { Button } from '@/components/ui/Button';
-import { monthInputToIsoTripDate } from '@/lib/trip-display';
+import { composeTripMonthValue, listTripYears, TRIP_MONTH_OPTIONS } from '@/lib/trip-display';
 import { cn } from '@/lib/cn';
 
 type AddTripModalProps = {
@@ -31,6 +31,9 @@ function isHttpUrl(value: string): boolean {
   }
 }
 
+const selectClassName =
+  'w-full cursor-pointer rounded-2xl border-[3px] border-border bg-surface px-4 py-3 font-sans text-base text-ink shadow-chunky-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple/30 disabled:cursor-not-allowed disabled:opacity-50';
+
 export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalProps) {
   const titleId = useId();
   const fileInputId = useId();
@@ -41,7 +44,8 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
   const [tag, setTag] = useState('');
   const [duration, setDuration] = useState('');
   const [outboundUrl, setOutboundUrl] = useState('');
-  const [month, setMonth] = useState('');
+  const [tripMonth, setTripMonth] = useState('');
+  const [tripYear, setTripYear] = useState(() => String(new Date().getFullYear()));
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
   const [coverUploading, setCoverUploading] = useState(false);
@@ -123,10 +127,10 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
     if (!title.trim()) {
       return 'Title is required.';
     }
-    if (!month) {
+    if (!tripMonth || !tripYear) {
       return 'Trip date is required.';
     }
-    if (!monthInputToIsoTripDate(month)) {
+    if (!composeTripMonthValue(tripYear, tripMonth)) {
       return 'Trip date must be a valid month.';
     }
     if (!outboundUrl.trim()) {
@@ -146,7 +150,7 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
       return;
     }
 
-    const tripDate = monthInputToIsoTripDate(month);
+    const tripDate = composeTripMonthValue(tripYear, tripMonth);
     if (!coverImageUrl || !tripDate) {
       return;
     }
@@ -292,17 +296,49 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
                 />
               </label>
 
-              <label className="flex w-full flex-col gap-2">
-                <FieldLabel label="Trip date" required />
-                <input
-                  name="tripDate"
-                  type="month"
-                  value={month}
-                  onChange={(event) => setMonth(event.target.value)}
-                  disabled={busy}
-                  className="w-full rounded-2xl border-[3px] border-border bg-surface px-4 py-3 font-sans text-base text-ink shadow-chunky-sm placeholder:text-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple/30"
-                />
-              </label>
+              <fieldset className="flex w-full flex-col gap-2">
+                <legend>
+                  <FieldLabel label="Trip date" required />
+                </legend>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="sr-only" htmlFor={`${titleId}-month`}>
+                    Month
+                  </label>
+                  <select
+                    id={`${titleId}-month`}
+                    name="tripMonth"
+                    value={tripMonth}
+                    onChange={(event) => setTripMonth(event.target.value)}
+                    disabled={busy}
+                    className={selectClassName}
+                  >
+                    <option value="">Month</option>
+                    {TRIP_MONTH_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <label className="sr-only" htmlFor={`${titleId}-year`}>
+                    Year
+                  </label>
+                  <select
+                    id={`${titleId}-year`}
+                    name="tripYear"
+                    value={tripYear}
+                    onChange={(event) => setTripYear(event.target.value)}
+                    disabled={busy}
+                    className={selectClassName}
+                  >
+                    <option value="">Year</option>
+                    {listTripYears().map((year) => (
+                      <option key={year} value={String(year)}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </fieldset>
 
               <label className="flex w-full flex-col gap-2">
                 <FieldLabel label="Tag" />
@@ -358,7 +394,7 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
                   outboundUrl: emptyToNull(outboundUrl),
                   tag: emptyToNull(tag),
                   duration: emptyToNull(duration),
-                  tripDate: monthInputToIsoTripDate(month),
+                  tripDate: composeTripMonthValue(tripYear, tripMonth),
                 }}
               />
             </div>

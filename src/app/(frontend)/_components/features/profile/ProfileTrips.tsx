@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { AddTripModal } from '@/components/features/profile/AddTripModal';
 import { TripCard } from '@/components/features/profile/TripCard';
+import { TripViewModal } from '@/components/features/profile/TripViewModal';
 import { Button } from '@/components/ui/Button';
 
 type ProfileTripsProps = {
@@ -16,6 +17,7 @@ export function ProfileTrips({ trips: initialTrips, isOwnProfile, userId }: Prof
   const [trips, setTrips] = useState(initialTrips);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
+  const [viewingTrip, setViewingTrip] = useState<TripModel | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ export function ProfileTrips({ trips: initialTrips, isOwnProfile, userId }: Prof
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {trips.map((trip) => (
             <li key={trip.id}>
-              <TripCard trip={trip} />
+              <TripCard trip={trip} onOpen={() => setViewingTrip(trip)} />
             </li>
           ))}
           {isOwnProfile ? (
@@ -90,6 +92,8 @@ export function ProfileTrips({ trips: initialTrips, isOwnProfile, userId }: Prof
           onSaved={onSaved}
         />
       ) : null}
+
+      <TripViewModal trip={viewingTrip} onClose={() => setViewingTrip(null)} />
 
       {toast ? (
         <p

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 type ProfileHeroProps = {
   profile: PublicUserProfileView;
   isOwnProfile: boolean;
+  onAddTrip?: () => void;
 };
 
 function formatJoinedAt(date: Date): string {
@@ -19,7 +20,7 @@ function hostFromUrl(url: string): string {
   }
 }
 
-export function ProfileHero({ profile, isOwnProfile }: ProfileHeroProps) {
+export function ProfileHero({ profile, isOwnProfile, onAddTrip }: ProfileHeroProps) {
   const displayName = profile.displayName?.trim() || profile.username;
 
   return (
@@ -40,9 +41,22 @@ export function ProfileHero({ profile, isOwnProfile }: ProfileHeroProps) {
             />
           </div>
           {isOwnProfile ? (
-            <Button href="/settings/profile" variant="secondary" size="sm" className="mb-1">
-              Edit profile
-            </Button>
+            <div className="mb-1 flex flex-wrap justify-end gap-2">
+              {onAddTrip ? (
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  onClick={onAddTrip}
+                  className="rounded-full bg-tangerine text-ink hover:bg-tangerine"
+                >
+                  + Add trip
+                </Button>
+              ) : null}
+              <Button href="/settings/profile" variant="secondary" size="sm">
+                Edit profile
+              </Button>
+            </div>
           ) : (
             <Button type="button" variant="lime" size="sm" className="mb-1" disabled>
               Follow

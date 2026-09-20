@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ProfileHero } from '@/components/features/profile/ProfileHero';
-import { ProfileTrips } from '@/components/features/profile/ProfileTrips';
+import { ProfilePageBody } from '@/components/features/profile/ProfilePageBody';
 import { Container } from '@/components/ui/Container';
 import { loadPublicProfilePageData } from '@/lib/server/load-public-profile-page-data';
 
@@ -28,12 +27,7 @@ export default async function ProfilePage({ params }: Props) {
 
   return (
     <Container className="space-y-8 py-6 sm:py-8">
-      <ProfileHero profile={profile} isOwnProfile={isOwnProfile} />
-
-      <section>
-        <h2 className="sr-only">Trips</h2>
-        <ProfileTrips trips={trips} isOwnProfile={isOwnProfile} userId={profile.userId} />
-      </section>
+      <ProfilePageBody profile={profile} isOwnProfile={isOwnProfile} trips={trips} />
     </Container>
   );
 }

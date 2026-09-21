@@ -32,7 +32,7 @@ Follow (follows) — directed user → user edge
 
 **Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`, `uploadUserAvatarClient`)
 
-**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getPublishedTripsByUserId`. Own profile shows **Edit profile** → `/settings/profile` and **+ Add trip**. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
+**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getPublishedTripsByUserId`. Own profile also loads drafts via `getDraftTripsByUserId` for the add-trip picker. Own profile shows **Edit profile** → `/settings/profile` and **+ Add trip**. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
 
 **Profile edit UI:** `/settings/profile` — RSC loads session + `getUserProfileByUserId`; `ProfileEditForm` uses `uploadUserAvatarClient` + `saveUserProfileClient` (display name, bio, avatar, Instagram, X, other profile URL)
 

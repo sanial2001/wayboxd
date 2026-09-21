@@ -35,6 +35,7 @@ model UserProfile {
   avatarUrl           String?   @map("avatar_url")
   instagramProfileUrl String?   @map("instagram_profile_url")
   xProfileUrl         String?   @map("x_profile_url")
+  otherProfileUrl     String?   @map("other_profile_url")
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime? @map("updated_at")
 

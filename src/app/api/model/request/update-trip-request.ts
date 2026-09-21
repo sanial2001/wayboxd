@@ -1,6 +1,5 @@
-/** API / client body — userId comes from the session, not the payload. Cover is not updatable. */
+/** API / client body — tripId is a path param, userId comes from the session. Cover is not updatable. */
 export interface UpdateTripBodyRequest {
-  id: number;
   title?: string;
   blurb?: string | null;
   outboundUrl?: string;

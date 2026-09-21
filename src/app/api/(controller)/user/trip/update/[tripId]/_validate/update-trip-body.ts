@@ -15,13 +15,6 @@ export function validateUpdateTripBody(body: unknown): UpdateTripBodyValidationR
 
   const request = body as UpdateTripBodyRequest;
 
-  if (request.id === undefined || request.id === null) {
-    return { error: 'id is required', body: null };
-  }
-  if (typeof request.id !== 'number' || !Number.isInteger(request.id) || request.id < 1) {
-    return { error: 'id must be a positive integer', body: null };
-  }
-
   const hasTitle = request.title !== undefined;
   const hasBlurb = request.blurb !== undefined;
   const hasOutboundUrl = request.outboundUrl !== undefined;
@@ -30,7 +23,7 @@ export function validateUpdateTripBody(body: unknown): UpdateTripBodyValidationR
     return { error: 'At least one of title, blurb, or outboundUrl is required', body: null };
   }
 
-  const patch: UpdateTripValidatedBody = { id: request.id };
+  const patch: UpdateTripValidatedBody = {};
 
   if (hasTitle) {
     if (request.title === null || typeof request.title !== 'string') {

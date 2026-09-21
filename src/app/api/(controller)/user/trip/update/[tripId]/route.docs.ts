@@ -1,24 +1,27 @@
 /**
  * @swagger
- * /api/user/trip/update:
+ * /api/user/trip/update/{tripId}:
  *   put:
  *     summary: Update a trip owned by the signed-in user
- *     description: Updates title, blurb, and/or outbound URL. Cover, tag, duration, and tripDate cannot be changed. userId is taken from the session.
+ *     description: Updates title, blurb, and/or outbound URL. Cover, tag, duration, and tripDate cannot be changed. tripId is a path param; userId is taken from the session.
  *     tags: [Trip]
  *     security:
  *       - sessionCookie: []
+ *     parameters:
+ *       - in: path
+ *         name: tripId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Trip ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - id
  *             properties:
- *               id:
- *                 type: integer
- *                 minimum: 1
  *               title:
  *                 type: string
  *               blurb:

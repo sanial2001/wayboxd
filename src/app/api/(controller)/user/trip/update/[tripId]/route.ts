@@ -1,15 +1,26 @@
 import { validateAuthAndGetUserId } from '@/app/api/(controller)/_util/validate';
-import { validateUpdateTripBody } from '@/app/api/(controller)/user/trip/update/_validate/update-trip-body';
+import { validateUpdateTripBody } from '@/app/api/(controller)/user/trip/update/[tripId]/_validate/update-trip-body';
 import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
 import { createApiResponse } from '@/app/service/_utils/api-response';
 import { getTripById, updateTrip } from '@/app/service/trip/trip-service';
 import { NextRequest } from 'next/server';
 
-export async function PUT(req: NextRequest) {
+type Params = Promise<{ tripId: string }>;
+
+export async function PUT(req: NextRequest, props: { params: Params }) {
   try {
     const auth = await validateAuthAndGetUserId();
     if (auth.error) {
       return auth.error;
+    }
+
+    const params = await props.params;
+    const tripId = parseTripId(params.tripId);
+    if (tripId === null) {
+      return createApiResponse({
+        error: 'tripId must be a positive integer',
+        status: 400,
+      });
     }
 
     const body: UpdateTripBodyRequest = await req.json();
@@ -21,7 +32,7 @@ export async function PUT(req: NextRequest) {
       });
     }
 
-    const existing = await getTripById(validation.body.id);
+    const existing = await getTripById(tripId);
     if (!existing) {
       return createApiResponse({
         error: 'Trip not found',
@@ -36,8 +47,7 @@ export async function PUT(req: NextRequest) {
       });
     }
 
-    const { id, ...patch } = validation.body;
-    const trip = await updateTrip(id, patch);
+    const trip = await updateTrip(tripId, validation.body);
     if (!trip) {
       return createApiResponse({
         error: 'Trip not found',
@@ -56,4 +66,12 @@ export async function PUT(req: NextRequest) {
       status: 500,
     });
   }
+}
+
+function parseTripId(value: string): number | null {
+  const tripId = Number.parseInt(value, 10);
+  if (!Number.isInteger(tripId) || tripId < 1 || String(tripId) !== value) {
+    return null;
+  }
+  return tripId;
 }

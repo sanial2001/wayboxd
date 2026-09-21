@@ -1,5 +1,4 @@
 export interface UpdateTripValidatedBody {
-  id: number;
   title?: string;
   blurb?: string | null;
   outboundUrl?: string;

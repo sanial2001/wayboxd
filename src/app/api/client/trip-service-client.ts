@@ -28,9 +28,10 @@ export async function saveTripClient(
 }
 
 export async function updateTripClient(
+  tripId: number,
   request: UpdateTripBodyRequest
 ): Promise<ApiResponse<TripModel>> {
-  const response = await fetch('/api/user/trip/update', {
+  const response = await fetch(`/api/user/trip/update/${tripId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

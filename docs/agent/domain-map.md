@@ -32,7 +32,7 @@ Follow (follows) — directed user → user edge
 
 **Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`, `uploadUserAvatarClient`)
 
-**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getPublishedTripsByUserId`. Own profile shows **Edit profile** → `/settings/profile` and **+ Add trip**. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
+**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getPublishedTripsByUserId`. Own profile also loads drafts via `getDraftTripsByUserId` for the add-trip picker. Own profile shows **Edit profile** → `/settings/profile` and **+ Add trip**. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
 
 **Profile edit UI:** `/settings/profile` — RSC loads session + `getUserProfileByUserId`; `ProfileEditForm` uses `uploadUserAvatarClient` + `saveUserProfileClient` (display name, bio, avatar, Instagram, X, other profile URL)
 
@@ -115,7 +115,7 @@ One review per user per place (`@@unique([userId, placeId])`).
 Trip (trips)
   ├── userId → User
   ├── title, blurb
-  ├── coverImageUrl, outboundUrl
+  ├── coverImageUrl, outboundUrl (optional)
   ├── tag, duration
   ├── tripDate
   ├── status (Draft | Published | Archived | Deleted)
@@ -123,17 +123,17 @@ Trip (trips)
   └── timestamps (createdAt, updatedAt)
 ```
 
-**Enum:** `src/app/api/model/enums/trip-status.ts` (`Draft`, `Published`, `Archived`, `Deleted`). Profile pages load published trips only via `getPublishedTripsByUserId`.
+**Enum:** `src/app/api/model/enums/trip-status.ts` (`Draft`, `Published`, `Archived`, `Deleted`). Profile pages load published trips only via `getPublishedTripsByUserId`, sorted by `tripDate` descending.
 
 **Service:** `src/app/service/trip/trip-service.ts`
 
 **Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `saveDraftTripClient`, `updateTripClient`, `deleteTripClient`, `uploadTripCoverClient`)
 
-**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set
+**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set. Outbound URL is optional.
 
-**Save draft trip (session required):** `POST /api/user/trip/save/draft` — `userId` from session; create only; `Draft` with `publishedAt` null; cover, outbound URL, and trip date optional
+**Save draft trip (session required):** `POST /api/user/trip/save/draft` — `userId` from session; create only; `Draft` with `publishedAt` null; cover, outbound URL, and trip date optional. Own-profile **+ Add trip** opens the new-trip form; **Continue a draft** lists saved drafts and prefills the composer. Publishing a draft uses `PUT /api/user/trip/update/{tripId}` with the full payload and `status: Published`.
 
-**Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; title, blurb, and/or outboundUrl; cover cannot change. Own-profile view modal uses `EditTripModal` + `updateTripClient`.
+**Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; partial update of any trip fields. `status: Published` requires title, cover, and trip date, and sets `publishedAt` on first publish. Outbound URL is optional. Own-profile view modal still sends title, blurb, and outbound URL only via `EditTripModal` + `updateTripClient`.
 
 **Delete trip (session required):** `DELETE /api/user/trip/delete/{tripId}` — owner only; sets status to `Deleted` (soft-delete). `publishedAt` is kept. Already-deleted trips return 400.
 
@@ -141,20 +141,20 @@ Trip (trips)
 
 ## API layout
 
-| Path                             | Auth                          | Purpose                                        |
-| -------------------------------- | ----------------------------- | ---------------------------------------------- |
-| `/api/public/*`                  | None                          | Public endpoints (signup, sign-in, etc.)       |
-| `/api/auth/*`                    | NextAuth                      | Session login/logout                           |
-| `/api/docs/swagger.json`         | Session required              | OpenAPI spec (404 when `APP_ENV=production`)   |
-| `/api-docs`                      | Page is public                | Swagger UI (spec fetch still needs a session)  |
-| `/api/user/profile/save`         | Session required              | Create or update the signed-in user's profile  |
-| `/api/user/profile/avatar`       | Session required (token step) | Vercel Blob client upload for avatars          |
-| `/api/user/trip/save`            | Session required              | Create a published trip for the signed-in user |
-| `/api/user/trip/save/draft`      | Session required              | Create a draft trip for the signed-in user     |
-| `/api/user/trip/update/{tripId}` | Session required              | Update title, blurb, and/or outbound URL       |
-| `/api/user/trip/delete/{tripId}` | Session required              | Soft-delete a trip (status `Deleted`)          |
-| `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers      |
-| `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)                |
+| Path                             | Auth                          | Purpose                                            |
+| -------------------------------- | ----------------------------- | -------------------------------------------------- |
+| `/api/public/*`                  | None                          | Public endpoints (signup, sign-in, etc.)           |
+| `/api/auth/*`                    | NextAuth                      | Session login/logout                               |
+| `/api/docs/swagger.json`         | Session required              | OpenAPI spec (404 when `APP_ENV=production`)       |
+| `/api-docs`                      | Page is public                | Swagger UI (spec fetch still needs a session)      |
+| `/api/user/profile/save`         | Session required              | Create or update the signed-in user's profile      |
+| `/api/user/profile/avatar`       | Session required (token step) | Vercel Blob client upload for avatars              |
+| `/api/user/trip/save`            | Session required              | Create a published trip for the signed-in user     |
+| `/api/user/trip/save/draft`      | Session required              | Create a draft trip for the signed-in user         |
+| `/api/user/trip/update/{tripId}` | Session required              | Partial update of trip fields; can publish a draft |
+| `/api/user/trip/delete/{tripId}` | Session required              | Soft-delete a trip (status `Deleted`)              |
+| `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers          |
+| `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)                    |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.
 

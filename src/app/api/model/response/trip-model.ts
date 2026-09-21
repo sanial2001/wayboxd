@@ -6,7 +6,7 @@ export interface TripModel {
   title: string;
   blurb: string | null;
   coverImageUrl: string;
-  outboundUrl: string;
+  outboundUrl: string | null;
   tag: string | null;
   duration: string | null;
   tripDate: Date;

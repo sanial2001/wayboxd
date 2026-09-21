@@ -7,6 +7,7 @@ import { deleteTripClient } from '@/app/api/client/trip-service-client';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
+import { CloseButton } from '@/components/ui/CloseButton';
 import { cn } from '@/lib/cn';
 import {
   formatTripBadge,
@@ -68,7 +69,7 @@ export function TripViewModal({ trip, author, onClose, onEdit, onDeleted }: Trip
   const selectedTrip = trip;
   const badge = formatTripBadge(selectedTrip.tag, selectedTrip.duration);
   const dateLabel = formatTripMonthYear(selectedTrip.tripDate);
-  const host = hostnameFromUrl(selectedTrip.outboundUrl);
+  const host = selectedTrip.outboundUrl ? hostnameFromUrl(selectedTrip.outboundUrl) : '';
   const coverSrc = selectedTrip.coverImageUrl?.trim() || null;
   const byline = [`Trip by ${author.displayName}${host ? ` for ${host}` : ''}`, dateLabel]
     .filter((part) => part.length > 0)
@@ -140,19 +141,14 @@ export function TripViewModal({ trip, author, onClose, onEdit, onDeleted }: Trip
               <PencilIcon />
             </button>
           ) : null}
-          <button
-            type="button"
+          <CloseButton
             onClick={() => {
               if (!confirmOpen) {
                 onClose();
               }
             }}
             disabled={pending}
-            aria-label="Close"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-2xl leading-none text-ink/70 hover:bg-surface-2 hover:text-ink disabled:opacity-50"
-          >
-            <span aria-hidden>×</span>
-          </button>
+          />
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5 pb-6 pt-6 sm:px-10 sm:pb-8 sm:pt-8">

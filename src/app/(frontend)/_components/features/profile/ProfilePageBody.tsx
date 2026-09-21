@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { sortTripsByTripDateDesc } from '@/app/_util/sort-trips-by-trip-date';
 import { TripStatus } from '@/app/api/model/enums/trip-status';
 import { PublicUserProfileView } from '@/app/api/model/response/public-user-profile-view';
 import { TripModel } from '@/app/api/model/response/trip-model';
@@ -12,14 +13,17 @@ type ProfilePageBodyProps = {
   profile: PublicUserProfileView;
   isOwnProfile: boolean;
   trips: TripModel[];
+  drafts: TripModel[];
 };
 
 export function ProfilePageBody({
   profile,
   isOwnProfile,
   trips: initialTrips,
+  drafts: initialDrafts,
 }: ProfilePageBodyProps) {
   const [trips, setTrips] = useState(initialTrips);
+  const [drafts, setDrafts] = useState(initialDrafts);
   const [addOpen, setAddOpen] = useState(false);
   const [modalKey, setModalKey] = useState(0);
   const [toast, setToast] = useState<string | null>(null);
@@ -39,14 +43,21 @@ export function ProfilePageBody({
 
   function onSaved(trip: TripModel) {
     if (trip.status === TripStatus.PUBLISHED) {
-      setTrips((current) => [trip, ...current.filter((item) => item.id !== trip.id)]);
+      setTrips((current) =>
+        sortTripsByTripDateDesc([trip, ...current.filter((item) => item.id !== trip.id)])
+      );
+      setDrafts((current) => current.filter((item) => item.id !== trip.id));
+    } else if (trip.status === TripStatus.DRAFT) {
+      setDrafts((current) => [trip, ...current.filter((item) => item.id !== trip.id)]);
     }
     setAddOpen(false);
     setToast(trip.status === TripStatus.DRAFT ? 'Draft saved' : 'Trip saved');
   }
 
   function onTripUpdated(trip: TripModel) {
-    setTrips((current) => current.map((item) => (item.id === trip.id ? trip : item)));
+    setTrips((current) =>
+      sortTripsByTripDateDesc(current.map((item) => (item.id === trip.id ? trip : item)))
+    );
     setToast('Trip updated');
   }
 
@@ -83,6 +94,7 @@ export function ProfilePageBody({
           key={modalKey}
           open={addOpen}
           userId={profile.userId}
+          drafts={drafts}
           onClose={() => setAddOpen(false)}
           onSaved={onSaved}
         />

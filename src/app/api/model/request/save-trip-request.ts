@@ -4,8 +4,8 @@ import { TripStatus } from '@/app/api/model/enums/trip-status';
 export interface SaveTripBodyRequest {
   title: string;
   coverImageUrl: string;
-  outboundUrl: string;
   tripDate: string;
+  outboundUrl?: string | null;
   blurb?: string | null;
   tag?: string | null;
   duration?: string | null;
@@ -27,7 +27,7 @@ export interface SaveTripRequest {
   userId: number;
   title: string;
   coverImageUrl: string;
-  outboundUrl: string;
+  outboundUrl?: string | null;
   tripDate: Date;
   blurb?: string | null;
   tag?: string | null;

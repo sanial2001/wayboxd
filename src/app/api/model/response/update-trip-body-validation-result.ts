@@ -1,7 +1,14 @@
+import { TripStatus } from '@/app/api/model/enums/trip-status';
+
 export interface UpdateTripValidatedBody {
   title?: string;
   blurb?: string | null;
-  outboundUrl?: string;
+  coverImageUrl?: string;
+  outboundUrl?: string | null;
+  tag?: string | null;
+  duration?: string | null;
+  tripDate?: Date;
+  status?: TripStatus;
 }
 
 export interface UpdateTripBodyValidationSuccess {

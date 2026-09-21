@@ -1,6 +1,10 @@
 import { validateAuthAndGetUserId } from '@/app/api/(controller)/_util/validate';
 import { validateUpdateTripBody } from '@/app/api/(controller)/user/trip/update/[tripId]/_validate/update-trip-body';
-import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
+import { isDeletedTripStatus, TripStatus } from '@/app/api/model/enums/trip-status';
+import {
+  UpdateTripBodyRequest,
+  UpdateTripRequest,
+} from '@/app/api/model/request/update-trip-request';
 import { createApiResponse } from '@/app/service/_utils/api-response';
 import { getTripById, updateTrip } from '@/app/service/trip/trip-service';
 import { NextRequest } from 'next/server';
@@ -47,7 +51,19 @@ export async function PUT(req: NextRequest, props: { params: Params }) {
       });
     }
 
-    const trip = await updateTrip(tripId, validation.body);
+    if (isDeletedTripStatus(existing.status)) {
+      return createApiResponse({
+        error: 'Trip is already deleted',
+        status: 400,
+      });
+    }
+
+    const updatePayload: UpdateTripRequest = { ...validation.body };
+    if (updatePayload.status === TripStatus.PUBLISHED && !existing.publishedAt) {
+      updatePayload.publishedAt = new Date();
+    }
+
+    const trip = await updateTrip(tripId, updatePayload);
     if (!trip) {
       return createApiResponse({
         error: 'Trip not found',

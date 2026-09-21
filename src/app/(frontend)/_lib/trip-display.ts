@@ -81,6 +81,18 @@ export function isoToMonthInput(value: Date | string | null | undefined): string
   return `${year}-${month}`;
 }
 
+export function splitTripMonthYear(value: Date | string | null | undefined): {
+  year: string;
+  month: string;
+} {
+  const monthInput = isoToMonthInput(value);
+  if (!monthInput) {
+    return { year: String(new Date().getFullYear()), month: '' };
+  }
+  const [year, month] = monthInput.split('-');
+  return { year, month };
+}
+
 export function isRemoteHttpUrl(url: string): boolean {
   return url.startsWith('https://') || url.startsWith('http://');
 }

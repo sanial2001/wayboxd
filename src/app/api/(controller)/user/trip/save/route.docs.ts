@@ -3,7 +3,7 @@
  * /api/user/trip/save:
  *   post:
  *     summary: Save a trip for the signed-in user
- *     description: Creates a trip owned by the authenticated user. userId is taken from the session.
+ *     description: Creates a published trip owned by the authenticated user. Cover and trip date are required; outbound URL is optional. userId is taken from the session.
  *     tags: [Trip]
  *     security:
  *       - sessionCookie: []
@@ -16,7 +16,6 @@
  *             required:
  *               - title
  *               - coverImageUrl
- *               - outboundUrl
  *               - tripDate
  *             properties:
  *               title:
@@ -27,6 +26,7 @@
  *               outboundUrl:
  *                 type: string
  *                 format: uri
+ *                 nullable: true
  *               tripDate:
  *                 type: string
  *                 format: date-time

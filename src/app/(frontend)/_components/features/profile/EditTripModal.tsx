@@ -6,6 +6,7 @@ import { updateTripClient } from '@/app/api/client/trip-service-client';
 import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { Button } from '@/components/ui/Button';
+import { CloseButton } from '@/components/ui/CloseButton';
 
 type EditTripModalProps = {
   trip: TripModel;
@@ -34,7 +35,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
   const titleId = useId();
   const [title, setTitle] = useState(trip.title);
   const [blurb, setBlurb] = useState(trip.blurb ?? '');
-  const [outboundUrl, setOutboundUrl] = useState(trip.outboundUrl);
+  const [outboundUrl, setOutboundUrl] = useState(trip.outboundUrl ?? '');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,10 +60,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
     if (!title.trim()) {
       return 'Title is required.';
     }
-    if (!outboundUrl.trim()) {
-      return 'Outbound URL is required.';
-    }
-    if (!isHttpUrl(outboundUrl.trim())) {
+    if (outboundUrl.trim() && !isHttpUrl(outboundUrl.trim())) {
       return 'Outbound URL must use http or https.';
     }
     return null;
@@ -79,7 +77,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
     const payload: UpdateTripBodyRequest = {
       title: title.trim(),
       blurb: emptyToNull(blurb),
-      outboundUrl: outboundUrl.trim(),
+      outboundUrl: emptyToNull(outboundUrl),
     };
 
     setError(null);
@@ -126,17 +124,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
                 Title, blurb, and link can change. Cover stays as filed.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={pending}
-              aria-label="Close"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-border bg-surface-2 text-ink disabled:opacity-50"
-            >
-              <span aria-hidden className="text-xl leading-none">
-                ×
-              </span>
-            </button>
+            <CloseButton onClick={onClose} disabled={pending} />
           </div>
 
           <div className="grid gap-6 px-5 py-4 lg:grid-cols-2 lg:items-stretch sm:px-6">
@@ -167,7 +155,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
               </label>
 
               <label className="flex w-full flex-col gap-2">
-                <FieldLabel label="Outbound URL" required />
+                <FieldLabel label="Outbound URL" />
                 <input
                   name="outboundUrl"
                   type="text"

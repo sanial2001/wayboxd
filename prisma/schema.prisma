@@ -116,7 +116,7 @@ model Trip {
   title         String    @map("title")
   blurb         String?   @map("blurb")
   coverImageUrl String    @map("cover_image_url")
-  outboundUrl   String    @map("outbound_url")
+  outboundUrl   String?   @map("outbound_url")
   tag           String?   @map("tag")
   duration      String?   @map("duration")
   tripDate      DateTime  @map("trip_date")

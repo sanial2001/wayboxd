@@ -246,7 +246,7 @@ const options: swaggerJsdoc.Options = {
             title: { type: 'string' },
             blurb: { type: 'string', nullable: true },
             coverImageUrl: { type: 'string' },
-            outboundUrl: { type: 'string' },
+            outboundUrl: { type: 'string', nullable: true },
             tag: { type: 'string', nullable: true },
             duration: { type: 'string', nullable: true },
             tripDate: { type: 'string', format: 'date-time' },
@@ -258,11 +258,11 @@ const options: swaggerJsdoc.Options = {
         },
         SaveTripBodyRequest: {
           type: 'object',
-          required: ['title', 'coverImageUrl', 'outboundUrl', 'tripDate'],
+          required: ['title', 'coverImageUrl', 'tripDate'],
           properties: {
             title: { type: 'string' },
             coverImageUrl: { type: 'string', format: 'uri' },
-            outboundUrl: { type: 'string', format: 'uri' },
+            outboundUrl: { type: 'string', format: 'uri', nullable: true },
             tripDate: { type: 'string', format: 'date-time' },
             blurb: { type: 'string', nullable: true },
             tag: { type: 'string', nullable: true },
@@ -287,7 +287,12 @@ const options: swaggerJsdoc.Options = {
           properties: {
             title: { type: 'string' },
             blurb: { type: 'string', nullable: true },
-            outboundUrl: { type: 'string', format: 'uri' },
+            coverImageUrl: { type: 'string', format: 'uri' },
+            outboundUrl: { type: 'string', format: 'uri', nullable: true },
+            tag: { type: 'string', nullable: true },
+            duration: { type: 'string', nullable: true },
+            tripDate: { type: 'string', format: 'date-time' },
+            status: { $ref: '#/components/schemas/TripStatus' },
           },
         },
         ManualPlaceSaveResult: {

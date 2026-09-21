@@ -41,7 +41,7 @@ export function validateSaveDraftTripBody(body: unknown): SaveTripBodyValidation
     }
   }
 
-  let outboundUrl = '';
+  let outboundUrl: string | null = null;
   if (request.outboundUrl !== undefined && request.outboundUrl !== null) {
     if (typeof request.outboundUrl !== 'string') {
       return { error: 'outboundUrl must be a string', body: null };

@@ -50,6 +50,11 @@ export function ProfilePageBody({
     setToast('Trip updated');
   }
 
+  function onTripDeleted(trip: TripModel) {
+    setTrips((current) => current.filter((item) => item.id !== trip.id));
+    setToast('Trip deleted');
+  }
+
   return (
     <>
       <ProfileHero
@@ -64,6 +69,7 @@ export function ProfilePageBody({
           trips={trips}
           isOwnProfile={isOwnProfile}
           onTripUpdated={isOwnProfile ? onTripUpdated : undefined}
+          onTripDeleted={isOwnProfile ? onTripDeleted : undefined}
           author={{
             displayName: profile.displayName?.trim() || profile.username,
             avatarUrl: profile.avatarUrl,

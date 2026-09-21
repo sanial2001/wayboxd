@@ -1,3 +1,5 @@
+import { TripStatus } from '@/app/api/model/enums/trip-status';
+
 /** API / client body — tripId is a path param, userId comes from the session. Cover is not updatable. */
 export interface UpdateTripBodyRequest {
   title?: string;
@@ -14,4 +16,5 @@ export interface UpdateTripRequest {
   tag?: string | null;
   duration?: string | null;
   tripDate?: Date;
+  status?: TripStatus;
 }

@@ -57,6 +57,16 @@ export async function updateTripClient(
   return await response.json();
 }
 
+export async function deleteTripClient(tripId: number): Promise<ApiResponse<TripModel>> {
+  const response = await fetch(`/api/user/trip/delete/${tripId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return await response.json();
+}
+
 export async function uploadTripCoverClient(
   userId: number,
   file: File

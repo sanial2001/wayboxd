@@ -14,6 +14,7 @@ type ProfileTripsProps = {
   };
   isOwnProfile?: boolean;
   onTripUpdated?: (trip: TripModel) => void;
+  onTripDeleted?: (trip: TripModel) => void;
 };
 
 export function ProfileTrips({
@@ -21,6 +22,7 @@ export function ProfileTrips({
   author,
   isOwnProfile = false,
   onTripUpdated,
+  onTripDeleted,
 }: ProfileTripsProps) {
   const [viewingTrip, setViewingTrip] = useState<TripModel | null>(null);
   const [editingTrip, setEditingTrip] = useState<TripModel | null>(null);
@@ -57,6 +59,7 @@ export function ProfileTrips({
       </ul>
 
       <TripViewModal
+        key={viewingTrip?.id ?? 'closed'}
         trip={viewingTrip}
         author={author}
         onClose={() => setViewingTrip(null)}
@@ -64,6 +67,14 @@ export function ProfileTrips({
           isOwnProfile && viewingTrip
             ? () => {
                 openEdit(viewingTrip);
+              }
+            : undefined
+        }
+        onDeleted={
+          isOwnProfile
+            ? (trip) => {
+                setViewingTrip(null);
+                onTripDeleted?.(trip);
               }
             : undefined
         }

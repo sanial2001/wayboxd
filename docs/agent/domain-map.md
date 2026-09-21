@@ -118,8 +118,12 @@ Trip (trips)
   ├── coverImageUrl, outboundUrl
   ├── tag, duration
   ├── tripDate
+  ├── status (Draft | Published | Archived | Deleted)
+  ├── publishedAt (set on first publish; kept through archive/delete)
   └── timestamps (createdAt, updatedAt)
 ```
+
+**Enum:** `src/app/api/model/enums/trip-status.ts` (`Draft`, `Published`, `Archived`, `Deleted`). Public profiles show `Published` only; owner library is Draft/Published/Archived; `Deleted` is soft-delete/trash.
 
 **Service:** `src/app/service/trip/trip-service.ts`
 

@@ -1,3 +1,5 @@
+import { TripStatus } from '@/app/api/model/enums/trip-status';
+
 /** API / client body — userId comes from the session, not the payload. */
 export interface SaveTripBodyRequest {
   title: string;
@@ -19,4 +21,6 @@ export interface SaveTripRequest {
   blurb?: string | null;
   tag?: string | null;
   duration?: string | null;
+  status: TripStatus;
+  publishedAt: Date | null;
 }

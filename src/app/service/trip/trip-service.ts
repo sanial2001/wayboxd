@@ -1,3 +1,4 @@
+import { TripStatus } from '@/app/api/model/enums/trip-status';
 import { SaveTripRequest } from '@/app/api/model/request/save-trip-request';
 import { UpdateTripRequest } from '@/app/api/model/request/update-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
@@ -33,6 +34,8 @@ export async function saveTrip(data: SaveTripRequest): Promise<TripModel> {
       tag: data.tag ?? null,
       duration: data.duration ?? null,
       tripDate: data.tripDate,
+      status: data.status ?? TripStatus.DRAFT,
+      publishedAt: data.publishedAt ?? null,
       createdAt: new Date(),
     },
   });
@@ -92,6 +95,8 @@ function mapTripEntityToModel(trip: Trip): TripModel {
     tag: trip.tag,
     duration: trip.duration,
     tripDate: trip.tripDate,
+    status: trip.status as TripStatus,
+    publishedAt: trip.publishedAt,
     createdAt: trip.createdAt,
     updatedAt: trip.updatedAt,
   };

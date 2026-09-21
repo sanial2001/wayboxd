@@ -2,6 +2,7 @@ import {
   normalizeOptionalText,
   validateOptionalHttpUrl,
 } from '@/app/api/(controller)/_validate/optional-http-url';
+import { TripStatus } from '@/app/api/model/enums/trip-status';
 import { SaveTripBodyRequest } from '@/app/api/model/request/save-trip-request';
 import { SaveTripBodyValidationResult } from '@/app/api/model/response/save-trip-body-validation-result';
 
@@ -70,6 +71,8 @@ export function validateSaveTripBody(body: unknown): SaveTripBodyValidationResul
       blurb: normalizeOptionalText(request.blurb) ?? null,
       tag: normalizeOptionalText(request.tag) ?? null,
       duration: normalizeOptionalText(request.duration) ?? null,
+      status: TripStatus.PUBLISHED,
+      publishedAt: new Date(),
     },
   };
 }

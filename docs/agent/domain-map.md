@@ -131,7 +131,7 @@ Trip (trips)
 
 **Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set
 
-**Save draft trip (session required):** `POST /api/user/trip/save/draft` — `userId` from session; create only; `Draft` with `publishedAt` null; cover, outbound URL, and trip date optional
+**Save draft trip (session required):** `POST /api/user/trip/save/draft` — `userId` from session; create only; `Draft` with `publishedAt` null; cover, outbound URL, and trip date optional. Own-profile **+ Add trip** lists these drafts; continuing one prefills the composer. Publishing a draft uses `PUT /api/user/trip/update/{tripId}` with the full payload and `status: Published`.
 
 **Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; partial update of any trip fields. `status: Published` requires title, cover, outbound URL, and trip date, and sets `publishedAt` on first publish. Own-profile view modal still sends title, blurb, and outbound URL only via `EditTripModal` + `updateTripClient`.
 

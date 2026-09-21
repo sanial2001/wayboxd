@@ -287,7 +287,12 @@ const options: swaggerJsdoc.Options = {
           properties: {
             title: { type: 'string' },
             blurb: { type: 'string', nullable: true },
+            coverImageUrl: { type: 'string', format: 'uri' },
             outboundUrl: { type: 'string', format: 'uri' },
+            tag: { type: 'string', nullable: true },
+            duration: { type: 'string', nullable: true },
+            tripDate: { type: 'string', format: 'date-time' },
+            status: { $ref: '#/components/schemas/TripStatus' },
           },
         },
         ManualPlaceSaveResult: {

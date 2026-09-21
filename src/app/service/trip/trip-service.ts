@@ -72,6 +72,7 @@ export async function updateTrip(id: number, data: UpdateTripRequest): Promise<T
       ...(data.duration !== undefined ? { duration: data.duration } : {}),
       ...(data.tripDate !== undefined ? { tripDate: data.tripDate } : {}),
       ...(data.status !== undefined ? { status: data.status } : {}),
+      ...(data.publishedAt !== undefined ? { publishedAt: data.publishedAt } : {}),
       updatedAt: new Date(),
     },
   });

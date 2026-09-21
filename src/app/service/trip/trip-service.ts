@@ -34,8 +34,8 @@ export async function saveTrip(data: SaveTripRequest): Promise<TripModel> {
       tag: data.tag ?? null,
       duration: data.duration ?? null,
       tripDate: data.tripDate,
-      status: TripStatus.DRAFT,
-      publishedAt: null,
+      status: data.status ?? TripStatus.DRAFT,
+      publishedAt: data.publishedAt ?? null,
       createdAt: new Date(),
     },
   });

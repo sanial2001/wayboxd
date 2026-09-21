@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Wayboxd">
+  <rect
+    x="1.25"
+    y="1.25"
+    width="29.5"
+    height="29.5"
+    rx="8"
+    fill="#C8FF3D"
+    stroke="#171717"
+    stroke-width="2.5"
+  />
+  <g transform="translate(16 17.1) scale(0.01115 -0.01115) translate(-1024 -733)">
+    <path
+      fill="#171717"
+      d="M-1 1466H429L584 647L810 1466H1239L1466 647L1621 1466H2049L1726 0H1282L1025 923L769 0H325Z"
+    />
+  </g>
+</svg>

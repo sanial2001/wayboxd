@@ -92,6 +92,14 @@ const options: swaggerJsdoc.Options = {
             contentType: { type: 'string', nullable: true },
           },
         },
+        TripCoverUploadResult: {
+          type: 'object',
+          properties: {
+            url: { type: 'string', format: 'uri' },
+            pathname: { type: 'string' },
+            contentType: { type: 'string', nullable: true },
+          },
+        },
         SaveUserProfileBodyRequest: {
           type: 'object',
           properties: {

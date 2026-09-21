@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ProfileHero } from '@/components/features/profile/ProfileHero';
-import { Card } from '@/components/ui/Card';
+import { ProfilePageBody } from '@/components/features/profile/ProfilePageBody';
 import { Container } from '@/components/ui/Container';
-import { SectionHeader } from '@/components/ui/SectionHeader';
 import { loadPublicProfilePageData } from '@/lib/server/load-public-profile-page-data';
 
 type Props = PageProps<'/profile/[username]'>;
@@ -25,24 +23,11 @@ export default async function ProfilePage({ params }: Props) {
     notFound();
   }
 
-  const { profile, isOwnProfile } = data;
-  const emptyCopy = isOwnProfile
-    ? 'Nothing filed yet. Edit your profile, then start stamping places.'
-    : 'This traveler is still warming up the keyboard.';
+  const { profile, isOwnProfile, trips } = data;
 
   return (
     <Container className="space-y-8 py-6 sm:py-8">
-      <ProfileHero profile={profile} isOwnProfile={isOwnProfile} />
-
-      <section>
-        <SectionHeader title="Filed takes" description="The public record of their taste." />
-        <Card className="text-center">
-          <p className="font-display text-xl font-extrabold uppercase">
-            Nobody&apos;s spilled the tea yet.
-          </p>
-          <p className="mt-2 text-muted">{emptyCopy}</p>
-        </Card>
-      </section>
+      <ProfilePageBody profile={profile} isOwnProfile={isOwnProfile} trips={trips} />
     </Container>
   );
 }

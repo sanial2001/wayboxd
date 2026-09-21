@@ -4,6 +4,7 @@ import { useEffect, useId } from 'react';
 import Image from 'next/image';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { Avatar } from '@/components/ui/Avatar';
+import { cn } from '@/lib/cn';
 import {
   formatTripBadge,
   formatTripMonthYear,
@@ -20,9 +21,10 @@ type TripViewModalProps = {
   trip: TripModel | null;
   author: TripViewAuthor;
   onClose: () => void;
+  onEdit?: () => void;
 };
 
-export function TripViewModal({ trip, author, onClose }: TripViewModalProps) {
+export function TripViewModal({ trip, author, onClose, onEdit }: TripViewModalProps) {
   const titleId = useId();
 
   useEffect(() => {
@@ -72,17 +74,29 @@ export function TripViewModal({ trip, author, onClose }: TripViewModalProps) {
         aria-labelledby={titleId}
         className="relative z-10 flex h-[min(56rem,calc(100dvh-1.5rem))] w-full max-w-4xl flex-col overflow-hidden rounded-[1.75rem] border-[3px] border-border bg-surface shadow-chunky-lg sm:h-[min(56rem,calc(100dvh-2.5rem))] sm:rounded-[2rem]"
       >
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full text-2xl leading-none text-ink/70 hover:bg-surface-2 hover:text-ink sm:right-4 sm:top-4"
-        >
-          <span aria-hidden>×</span>
-        </button>
+        <div className="absolute right-3 top-3 z-20 flex items-center gap-1 sm:right-4 sm:top-4">
+          {onEdit ? (
+            <button
+              type="button"
+              onClick={onEdit}
+              aria-label="Edit trip"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink/70 hover:bg-surface-2 hover:text-ink"
+            >
+              <PencilIcon />
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-2xl leading-none text-ink/70 hover:bg-surface-2 hover:text-ink"
+          >
+            <span aria-hidden>×</span>
+          </button>
+        </div>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5 pb-6 pt-6 sm:px-10 sm:pb-8 sm:pt-8">
-          <header className="flex items-start gap-4 pr-12">
+          <header className={cn('flex items-start gap-4', onEdit ? 'pr-24' : 'pr-12')}>
             <Avatar
               src={author.avatarUrl}
               alt={author.displayName}
@@ -146,6 +160,24 @@ export function TripViewModal({ trip, author, onClose }: TripViewModalProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+function PencilIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
   );
 }
 

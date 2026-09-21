@@ -42,6 +42,11 @@ export function ProfilePageBody({
     setToast('Trip saved');
   }
 
+  function onTripUpdated(trip: TripModel) {
+    setTrips((current) => current.map((item) => (item.id === trip.id ? trip : item)));
+    setToast('Trip updated');
+  }
+
   return (
     <>
       <ProfileHero
@@ -54,6 +59,8 @@ export function ProfilePageBody({
         <h2 className="sr-only">Trips</h2>
         <ProfileTrips
           trips={trips}
+          isOwnProfile={isOwnProfile}
+          onTripUpdated={isOwnProfile ? onTripUpdated : undefined}
           author={{
             displayName: profile.displayName?.trim() || profile.username,
             avatarUrl: profile.avatarUrl,

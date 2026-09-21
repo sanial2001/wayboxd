@@ -1,9 +1,16 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { clientLogger } from '@/app/_lib/client-logger';
-import { saveTripClient, uploadTripCoverClient } from '@/app/api/client/trip-service-client';
-import { SaveTripBodyRequest } from '@/app/api/model/request/save-trip-request';
+import {
+  saveDraftTripClient,
+  saveTripClient,
+  uploadTripCoverClient,
+} from '@/app/api/client/trip-service-client';
+import {
+  SaveDraftTripBodyRequest,
+  SaveTripBodyRequest,
+} from '@/app/api/model/request/save-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { Button } from '@/components/ui/Button';
 import { composeTripMonthValue, listTripYears, TRIP_MONTH_OPTIONS } from '@/lib/trip-display';
@@ -50,6 +57,28 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
   const [coverUploading, setCoverUploading] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [draftPromptOpen, setDraftPromptOpen] = useState(false);
+
+  const hasUnsavedWork =
+    title.trim().length > 0 ||
+    blurb.trim().length > 0 ||
+    tag.trim().length > 0 ||
+    duration.trim().length > 0 ||
+    outboundUrl.trim().length > 0 ||
+    Boolean(coverImageUrl) ||
+    Boolean(coverPreviewUrl) ||
+    tripMonth.length > 0;
+
+  const requestClose = useCallback(() => {
+    if (pending) {
+      return;
+    }
+    if (!hasUnsavedWork) {
+      onClose();
+      return;
+    }
+    setDraftPromptOpen(true);
+  }, [pending, hasUnsavedWork, onClose]);
 
   useEffect(() => {
     if (!open) {
@@ -57,9 +86,14 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !pending && !coverUploading) {
-        onClose();
+      if (event.key !== 'Escape' || pending) {
+        return;
       }
+      if (draftPromptOpen) {
+        setDraftPromptOpen(false);
+        return;
+      }
+      requestClose();
     };
 
     const previousOverflow = document.body.style.overflow;
@@ -70,7 +104,7 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [open, pending, coverUploading, onClose]);
+  }, [open, pending, draftPromptOpen, requestClose]);
 
   useEffect(() => {
     return () => {
@@ -181,6 +215,48 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
     }
   }
 
+  async function saveDraft() {
+    if (coverUploading) {
+      setError('Wait for the cover to finish uploading.');
+      return;
+    }
+
+    const payload: SaveDraftTripBodyRequest = {
+      title: title.trim() || 'Untitled trip',
+      blurb: emptyToNull(blurb),
+      tag: emptyToNull(tag),
+      duration: emptyToNull(duration),
+    };
+    if (coverImageUrl) {
+      payload.coverImageUrl = coverImageUrl;
+    }
+    if (outboundUrl.trim() && isHttpUrl(outboundUrl.trim())) {
+      payload.outboundUrl = outboundUrl.trim();
+    }
+    const tripDate = composeTripMonthValue(tripYear, tripMonth);
+    if (tripDate) {
+      payload.tripDate = tripDate;
+    }
+
+    setError(null);
+    setPending(true);
+    try {
+      const response = await saveDraftTripClient(payload);
+      if (response.error || !response.data || response.status >= 400) {
+        setError(response.error ?? 'Could not save this draft.');
+        setDraftPromptOpen(false);
+        return;
+      }
+      onSaved(response.data);
+    } catch (saveError) {
+      clientLogger.error({ err: saveError }, 'Trip draft save failed');
+      setError('Could not save this draft. Try again.');
+      setDraftPromptOpen(false);
+    } finally {
+      setPending(false);
+    }
+  }
+
   const busy = pending || coverUploading;
   const previewCover = coverImageUrl ?? coverPreviewUrl;
 
@@ -190,8 +266,8 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
         type="button"
         className="absolute inset-0 cursor-default"
         aria-label="Close add trip"
-        disabled={busy}
-        onClick={onClose}
+        disabled={pending}
+        onClick={requestClose}
       />
       <div
         role="dialog"
@@ -211,8 +287,8 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
             </div>
             <button
               type="button"
-              onClick={onClose}
-              disabled={busy}
+              onClick={requestClose}
+              disabled={pending}
               aria-label="Close"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-border bg-surface-2 text-ink disabled:opacity-50"
             >
@@ -394,7 +470,7 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
           ) : null}
 
           <div className="flex flex-wrap justify-end gap-3 border-t-[3px] border-border px-5 py-4 sm:px-6">
-            <Button type="button" variant="ghost" onClick={onClose} disabled={busy}>
+            <Button type="button" variant="ghost" onClick={requestClose} disabled={pending}>
               Cancel
             </Button>
             <Button type="submit" variant="lime" disabled={busy}>
@@ -403,6 +479,49 @@ export function AddTripModal({ open, userId, onClose, onSaved }: AddTripModalPro
           </div>
         </form>
       </div>
+
+      {draftPromptOpen ? (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/50 p-4">
+          <button
+            type="button"
+            className="absolute inset-0 cursor-default"
+            aria-label="Keep editing"
+            disabled={pending}
+            onClick={() => setDraftPromptOpen(false)}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`${titleId}-draft`}
+            className="relative z-10 w-full max-w-md rounded-[1.75rem] border-[3px] border-border bg-surface p-5 shadow-chunky-lg sm:p-6"
+          >
+            <h3 id={`${titleId}-draft`} className="font-display text-2xl font-black tracking-tight">
+              Save as draft?
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              You can finish this trip later. Discarding will lose what you have entered.
+            </p>
+            {coverUploading ? (
+              <p className="mt-2 text-sm font-medium text-ink">
+                Wait for the cover to finish uploading.
+              </p>
+            ) : null}
+            <div className="mt-5 flex flex-wrap justify-end gap-3">
+              <Button type="button" variant="ghost" onClick={onClose} disabled={pending}>
+                Discard
+              </Button>
+              <Button
+                type="button"
+                variant="lime"
+                onClick={() => void saveDraft()}
+                disabled={pending || coverUploading}
+              >
+                {pending ? 'Saving…' : 'Save draft'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

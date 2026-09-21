@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { TripStatus } from '@/app/api/model/enums/trip-status';
 import {
   formatTripBadge,
   formatTripMonthYear,
@@ -15,6 +16,7 @@ type TripCardTrip = {
   tag: string | null;
   duration: string | null;
   tripDate: Date | string | null;
+  status?: TripStatus;
 };
 
 type TripCardProps = {
@@ -24,7 +26,8 @@ type TripCardProps = {
 };
 
 export function TripCard({ trip, className, onOpen }: TripCardProps) {
-  const badge = formatTripBadge(trip.tag, trip.duration);
+  const badge =
+    trip.status === TripStatus.DRAFT ? 'Draft' : formatTripBadge(trip.tag, trip.duration);
   const dateLabel = trip.tripDate ? formatTripMonthYear(trip.tripDate) : '';
   const host = trip.outboundUrl ? hostnameFromUrl(trip.outboundUrl) : '';
   const coverSrc = trip.coverImageUrl?.trim() || null;

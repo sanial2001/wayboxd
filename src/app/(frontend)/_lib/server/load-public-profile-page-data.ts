@@ -1,9 +1,8 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/(controller)/auth/[...nextauth]/options';
-import { isOwnerLibraryTripStatus, isPublicTripStatus } from '@/app/api/model/enums/trip-status';
 import { PublicUserProfileView } from '@/app/api/model/response/public-user-profile-view';
 import { TripModel } from '@/app/api/model/response/trip-model';
-import { getTripsByUserId } from '@/app/service/trip/trip-service';
+import { getPublishedTripsByUserId } from '@/app/service/trip/trip-service';
 import { getPublicUserProfileByUsername } from '@/app/service/user/user-profile-service';
 
 export type PublicProfilePageData = {
@@ -23,9 +22,7 @@ export async function loadPublicProfilePageData(
 
   const session = await getServerSession(authOptions);
   const isOwnProfile = session?.userDetails?.id === profile.userId;
-  const trips = (await getTripsByUserId(profile.userId)).filter((trip) =>
-    isOwnProfile ? isOwnerLibraryTripStatus(trip.status) : isPublicTripStatus(trip.status)
-  );
+  const trips = await getPublishedTripsByUserId(profile.userId);
 
   return { profile, isOwnProfile, trips };
 }

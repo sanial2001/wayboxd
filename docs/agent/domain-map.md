@@ -123,7 +123,7 @@ Trip (trips)
   └── timestamps (createdAt, updatedAt)
 ```
 
-**Enum:** `src/app/api/model/enums/trip-status.ts` (`Draft`, `Published`, `Archived`, `Deleted`). Public profiles show `Published` only; owner library is Draft/Published/Archived; `Deleted` is soft-delete/trash.
+**Enum:** `src/app/api/model/enums/trip-status.ts` (`Draft`, `Published`, `Archived`, `Deleted`). Profile pages load published trips only via `getPublishedTripsByUserId`.
 
 **Service:** `src/app/service/trip/trip-service.ts`
 

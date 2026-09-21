@@ -38,7 +38,9 @@ export function ProfilePageBody({
   }
 
   function onSaved(trip: TripModel) {
-    setTrips((current) => [trip, ...current.filter((item) => item.id !== trip.id)]);
+    if (trip.status === TripStatus.PUBLISHED) {
+      setTrips((current) => [trip, ...current.filter((item) => item.id !== trip.id)]);
+    }
     setAddOpen(false);
     setToast(trip.status === TripStatus.DRAFT ? 'Draft saved' : 'Trip saved');
   }

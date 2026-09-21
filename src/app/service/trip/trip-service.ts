@@ -52,7 +52,7 @@ export async function saveTrip(data: SaveTripRequest): Promise<TripModel> {
       title: data.title,
       blurb: data.blurb ?? null,
       coverImageUrl: data.coverImageUrl,
-      outboundUrl: data.outboundUrl,
+      outboundUrl: data.outboundUrl ?? null,
       tag: data.tag ?? null,
       duration: data.duration ?? null,
       tripDate: data.tripDate,

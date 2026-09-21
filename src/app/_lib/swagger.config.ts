@@ -246,7 +246,7 @@ const options: swaggerJsdoc.Options = {
             title: { type: 'string' },
             blurb: { type: 'string', nullable: true },
             coverImageUrl: { type: 'string' },
-            outboundUrl: { type: 'string' },
+            outboundUrl: { type: 'string', nullable: true },
             tag: { type: 'string', nullable: true },
             duration: { type: 'string', nullable: true },
             tripDate: { type: 'string', format: 'date-time' },

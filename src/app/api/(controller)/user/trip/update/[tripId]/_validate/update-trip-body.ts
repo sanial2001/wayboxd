@@ -47,7 +47,7 @@ export function validateUpdateTripBody(body: unknown): UpdateTripBodyValidationR
       return { error: 'outboundUrl must be a string', body: null };
     }
     if (request.outboundUrl === null || request.outboundUrl.trim().length === 0) {
-      patch.outboundUrl = '';
+      patch.outboundUrl = null;
     } else {
       const outboundUrlError = validateOptionalHttpUrl(request.outboundUrl, 'outboundUrl');
       if (outboundUrlError) {

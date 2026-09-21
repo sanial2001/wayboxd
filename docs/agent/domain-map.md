@@ -115,7 +115,7 @@ One review per user per place (`@@unique([userId, placeId])`).
 Trip (trips)
   ├── userId → User
   ├── title, blurb
-  ├── coverImageUrl, outboundUrl
+  ├── coverImageUrl, outboundUrl (optional)
   ├── tag, duration
   ├── tripDate
   ├── status (Draft | Published | Archived | Deleted)

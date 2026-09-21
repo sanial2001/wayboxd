@@ -31,7 +31,7 @@ export function validateSaveTripBody(body: unknown): SaveTripBodyValidationResul
     return { error: coverImageUrlError, body: null };
   }
 
-  let outboundUrl = '';
+  let outboundUrl: string | null = null;
   if (request.outboundUrl !== undefined && request.outboundUrl !== null) {
     if (typeof request.outboundUrl !== 'string') {
       return { error: 'outboundUrl must be a string', body: null };

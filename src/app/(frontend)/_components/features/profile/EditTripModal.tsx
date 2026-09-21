@@ -35,7 +35,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
   const titleId = useId();
   const [title, setTitle] = useState(trip.title);
   const [blurb, setBlurb] = useState(trip.blurb ?? '');
-  const [outboundUrl, setOutboundUrl] = useState(trip.outboundUrl);
+  const [outboundUrl, setOutboundUrl] = useState(trip.outboundUrl ?? '');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -77,7 +77,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
     const payload: UpdateTripBodyRequest = {
       title: title.trim(),
       blurb: emptyToNull(blurb),
-      outboundUrl: outboundUrl.trim(),
+      outboundUrl: emptyToNull(outboundUrl),
     };
 
     setError(null);

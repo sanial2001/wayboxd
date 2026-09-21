@@ -69,7 +69,7 @@ export function TripViewModal({ trip, author, onClose, onEdit, onDeleted }: Trip
   const selectedTrip = trip;
   const badge = formatTripBadge(selectedTrip.tag, selectedTrip.duration);
   const dateLabel = formatTripMonthYear(selectedTrip.tripDate);
-  const host = hostnameFromUrl(selectedTrip.outboundUrl);
+  const host = selectedTrip.outboundUrl ? hostnameFromUrl(selectedTrip.outboundUrl) : '';
   const coverSrc = selectedTrip.coverImageUrl?.trim() || null;
   const byline = [`Trip by ${author.displayName}${host ? ` for ${host}` : ''}`, dateLabel]
     .filter((part) => part.length > 0)

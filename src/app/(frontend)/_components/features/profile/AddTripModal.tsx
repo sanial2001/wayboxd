@@ -154,7 +154,7 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     setBlurb(draft.blurb ?? '');
     setTag(draft.tag ?? '');
     setDuration(draft.duration ?? '');
-    setOutboundUrl(isHttpUrl(draft.outboundUrl) ? draft.outboundUrl : '');
+    setOutboundUrl(draft.outboundUrl && isHttpUrl(draft.outboundUrl) ? draft.outboundUrl : '');
     setTripMonth(month);
     setTripYear(year);
     setCoverImageUrl(isHttpUrl(cover) ? cover : null);
@@ -233,7 +233,7 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     const publishFields = {
       title: title.trim(),
       coverImageUrl,
-      outboundUrl: outboundUrl.trim(),
+      outboundUrl: emptyToNull(outboundUrl),
       tripDate,
       blurb: emptyToNull(blurb),
       tag: emptyToNull(tag),

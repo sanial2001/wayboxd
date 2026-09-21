@@ -27,7 +27,7 @@ export interface SaveTripRequest {
   userId: number;
   title: string;
   coverImageUrl: string;
-  outboundUrl: string;
+  outboundUrl?: string | null;
   tripDate: Date;
   blurb?: string | null;
   tag?: string | null;

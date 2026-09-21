@@ -5,6 +5,7 @@ export interface SaveUserProfileBodyRequest {
   avatarUrl?: string | null;
   instagramProfileUrl?: string | null;
   xProfileUrl?: string | null;
+  otherProfileUrl?: string | null;
 }
 
 /** Service-layer create input for `saveUserProfile` (create only). */

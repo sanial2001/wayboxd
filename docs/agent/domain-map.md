@@ -19,7 +19,7 @@ User (users)
 
 UserProfile (user_profiles) — 1:1 with User
   ├── displayName, bio, avatarUrl
-  ├── instagramProfileUrl, xProfileUrl
+  ├── instagramProfileUrl, xProfileUrl, otherProfileUrl
   └── timestamps (createdAt, updatedAt)
 
 Follow (follows) — directed user → user edge

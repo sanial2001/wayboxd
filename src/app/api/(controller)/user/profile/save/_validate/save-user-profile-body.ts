@@ -11,6 +11,7 @@ const OPTIONAL_TEXT_FIELDS = [
   'avatarUrl',
   'instagramProfileUrl',
   'xProfileUrl',
+  'otherProfileUrl',
 ] as const;
 
 const INSTAGRAM_HOSTS = new Set(['instagram.com', 'www.instagram.com']);
@@ -52,6 +53,11 @@ export function validateSaveUserProfileBody(body: unknown): SaveUserProfileBodyV
     return { error: xError, body: null };
   }
 
+  const otherError = validateOptionalHttpUrl(request.otherProfileUrl, 'otherProfileUrl');
+  if (otherError) {
+    return { error: otherError, body: null };
+  }
+
   return {
     error: null,
     body: normalizeSaveUserProfileBodyRequest(request),
@@ -72,6 +78,9 @@ function normalizeSaveUserProfileBodyRequest(
       : {}),
     ...(body.xProfileUrl !== undefined
       ? { xProfileUrl: normalizeOptionalText(body.xProfileUrl) }
+      : {}),
+    ...(body.otherProfileUrl !== undefined
+      ? { otherProfileUrl: normalizeOptionalText(body.otherProfileUrl) }
       : {}),
   };
 }

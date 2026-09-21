@@ -123,25 +123,28 @@ Trip (trips)
 
 **Service:** `src/app/service/trip/trip-service.ts`
 
-**Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `uploadTripCoverClient`)
+**Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `updateTripClient`, `uploadTripCoverClient`)
 
 **Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only
+
+**Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; title, blurb, and/or outboundUrl; cover cannot change
 
 **Upload cover (session required for token):** `POST /api/user/trip/cover` — Vercel Blob `handleUpload`; then save `coverImageUrl` via trip save
 
 ## API layout
 
-| Path                       | Auth                          | Purpose                                       |
-| -------------------------- | ----------------------------- | --------------------------------------------- |
-| `/api/public/*`            | None                          | Public endpoints (signup, sign-in, etc.)      |
-| `/api/auth/*`              | NextAuth                      | Session login/logout                          |
-| `/api/docs/swagger.json`   | Session required              | OpenAPI spec (404 when `APP_ENV=production`)  |
-| `/api-docs`                | Page is public                | Swagger UI (spec fetch still needs a session) |
-| `/api/user/profile/save`   | Session required              | Create or update the signed-in user's profile |
-| `/api/user/profile/avatar` | Session required (token step) | Vercel Blob client upload for avatars         |
-| `/api/user/trip/save`      | Session required              | Create a trip for the signed-in user          |
-| `/api/user/trip/cover`     | Session required (token step) | Vercel Blob client upload for trip covers     |
-| `/api/*` (other)           | Session required              | Protected APIs (`src/proxy.ts`)               |
+| Path                             | Auth                          | Purpose                                       |
+| -------------------------------- | ----------------------------- | --------------------------------------------- |
+| `/api/public/*`                  | None                          | Public endpoints (signup, sign-in, etc.)      |
+| `/api/auth/*`                    | NextAuth                      | Session login/logout                          |
+| `/api/docs/swagger.json`         | Session required              | OpenAPI spec (404 when `APP_ENV=production`)  |
+| `/api-docs`                      | Page is public                | Swagger UI (spec fetch still needs a session) |
+| `/api/user/profile/save`         | Session required              | Create or update the signed-in user's profile |
+| `/api/user/profile/avatar`       | Session required (token step) | Vercel Blob client upload for avatars         |
+| `/api/user/trip/save`            | Session required              | Create a trip for the signed-in user          |
+| `/api/user/trip/update/{tripId}` | Session required              | Update title, blurb, and/or outbound URL      |
+| `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers     |
+| `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)               |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.
 

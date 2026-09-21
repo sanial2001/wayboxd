@@ -7,7 +7,10 @@ import {
   TRIP_COVER_MAX_LONG_EDGE_PX,
   TRIP_COVER_MAX_SOURCE_BYTES,
 } from '@/app/api/model/enums/trip-cover-upload';
-import { SaveTripBodyRequest } from '@/app/api/model/request/save-trip-request';
+import {
+  SaveDraftTripBodyRequest,
+  SaveTripBodyRequest,
+} from '@/app/api/model/request/save-trip-request';
 import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
 import { ApiResponse } from '@/app/api/model/response/api-response';
 import { TripCoverUploadResult } from '@/app/api/model/response/trip-cover-upload-result';
@@ -18,6 +21,19 @@ export async function saveTripClient(
   request: SaveTripBodyRequest
 ): Promise<ApiResponse<TripModel>> {
   const response = await fetch('/api/user/trip/save', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+  });
+  return await response.json();
+}
+
+export async function saveDraftTripClient(
+  request: SaveDraftTripBodyRequest
+): Promise<ApiResponse<TripModel>> {
+  const response = await fetch('/api/user/trip/save/draft', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

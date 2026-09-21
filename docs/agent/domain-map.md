@@ -127,9 +127,11 @@ Trip (trips)
 
 **Service:** `src/app/service/trip/trip-service.ts`
 
-**Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `updateTripClient`, `uploadTripCoverClient`)
+**Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `saveDraftTripClient`, `updateTripClient`, `uploadTripCoverClient`)
 
-**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only
+**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set
+
+**Save draft trip (session required):** `POST /api/user/trip/save/draft` — `userId` from session; create only; `Draft` with `publishedAt` null; cover, outbound URL, and trip date optional
 
 **Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; title, blurb, and/or outboundUrl; cover cannot change. Own-profile view modal uses `EditTripModal` + `updateTripClient`.
 
@@ -137,18 +139,19 @@ Trip (trips)
 
 ## API layout
 
-| Path                             | Auth                          | Purpose                                       |
-| -------------------------------- | ----------------------------- | --------------------------------------------- |
-| `/api/public/*`                  | None                          | Public endpoints (signup, sign-in, etc.)      |
-| `/api/auth/*`                    | NextAuth                      | Session login/logout                          |
-| `/api/docs/swagger.json`         | Session required              | OpenAPI spec (404 when `APP_ENV=production`)  |
-| `/api-docs`                      | Page is public                | Swagger UI (spec fetch still needs a session) |
-| `/api/user/profile/save`         | Session required              | Create or update the signed-in user's profile |
-| `/api/user/profile/avatar`       | Session required (token step) | Vercel Blob client upload for avatars         |
-| `/api/user/trip/save`            | Session required              | Create a trip for the signed-in user          |
-| `/api/user/trip/update/{tripId}` | Session required              | Update title, blurb, and/or outbound URL      |
-| `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers     |
-| `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)               |
+| Path                             | Auth                          | Purpose                                        |
+| -------------------------------- | ----------------------------- | ---------------------------------------------- |
+| `/api/public/*`                  | None                          | Public endpoints (signup, sign-in, etc.)       |
+| `/api/auth/*`                    | NextAuth                      | Session login/logout                           |
+| `/api/docs/swagger.json`         | Session required              | OpenAPI spec (404 when `APP_ENV=production`)   |
+| `/api-docs`                      | Page is public                | Swagger UI (spec fetch still needs a session)  |
+| `/api/user/profile/save`         | Session required              | Create or update the signed-in user's profile  |
+| `/api/user/profile/avatar`       | Session required (token step) | Vercel Blob client upload for avatars          |
+| `/api/user/trip/save`            | Session required              | Create a published trip for the signed-in user |
+| `/api/user/trip/save/draft`      | Session required              | Create a draft trip for the signed-in user     |
+| `/api/user/trip/update/{tripId}` | Session required              | Update title, blurb, and/or outbound URL       |
+| `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers      |
+| `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)                |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.
 

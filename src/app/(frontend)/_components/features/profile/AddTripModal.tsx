@@ -16,6 +16,7 @@ import {
 import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { Button } from '@/components/ui/Button';
+import { CloseButton } from '@/components/ui/CloseButton';
 import { TripCard } from '@/components/features/profile/TripCard';
 import {
   composeTripMonthValue,
@@ -345,17 +346,11 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
                 </h2>
                 <p className="mt-1 text-sm text-muted">Pick a saved draft to finish it.</p>
               </div>
-              <button
-                type="button"
+              <CloseButton
+                label="Back to add trip"
                 onClick={() => setShowDraftPicker(false)}
                 disabled={pending}
-                aria-label="Back to add trip"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-border bg-surface-2 text-ink disabled:opacity-50"
-              >
-                <span aria-hidden className="text-xl leading-none">
-                  ×
-                </span>
-              </button>
+              />
             </div>
 
             <ul className="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2 sm:px-6">
@@ -390,17 +385,7 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
                     : 'Cover uploads first → then Save posts the trip payload.'}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={requestClose}
-                disabled={pending}
-                aria-label="Close"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-border bg-surface-2 text-ink disabled:opacity-50"
-              >
-                <span aria-hidden className="text-xl leading-none">
-                  ×
-                </span>
-              </button>
+              <CloseButton onClick={requestClose} disabled={pending} />
             </div>
 
             <div className="grid gap-6 px-5 py-4 lg:grid-cols-2 lg:items-stretch sm:px-6">

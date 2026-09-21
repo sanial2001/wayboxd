@@ -15,6 +15,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { userSignupClient } from '@/app/api/client/user-service-client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { CloseButton } from '@/components/ui/CloseButton';
 import { Input } from '@/components/ui/Input';
 import { Stamp } from '@/components/ui/Stamp';
 import { cn } from '@/lib/cn';
@@ -268,17 +269,12 @@ function AuthModal() {
                 : 'Pick up where you left off. Your taste profile missed you.'}
             </p>
           </div>
-          <button
-            type="button"
+          <CloseButton
             onClick={() => {
               if (!pending) closeAuth();
             }}
-            className="rounded-xl border-[2.5px] border-border bg-surface-2 px-2.5 py-1 font-display text-sm font-bold"
-            aria-label="Close"
             disabled={pending}
-          >
-            ✕
-          </button>
+          />
         </div>
 
         <form className="space-y-3" onSubmit={onSubmit}>

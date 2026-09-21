@@ -6,6 +6,7 @@ import { updateTripClient } from '@/app/api/client/trip-service-client';
 import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { Button } from '@/components/ui/Button';
+import { CloseButton } from '@/components/ui/CloseButton';
 
 type EditTripModalProps = {
   trip: TripModel;
@@ -126,17 +127,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
                 Title, blurb, and link can change. Cover stays as filed.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={pending}
-              aria-label="Close"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-border bg-surface-2 text-ink disabled:opacity-50"
-            >
-              <span aria-hidden className="text-xl leading-none">
-                ×
-              </span>
-            </button>
+            <CloseButton onClick={onClose} disabled={pending} />
           </div>
 
           <div className="grid gap-6 px-5 py-4 lg:grid-cols-2 lg:items-stretch sm:px-6">

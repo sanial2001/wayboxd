@@ -123,7 +123,7 @@ Trip (trips)
   └── timestamps (createdAt, updatedAt)
 ```
 
-**Enum:** `src/app/api/model/enums/trip-status.ts` (`Draft`, `Published`, `Archived`, `Deleted`). Profile pages load published trips only via `getPublishedTripsByUserId`.
+**Enum:** `src/app/api/model/enums/trip-status.ts` (`Draft`, `Published`, `Archived`, `Deleted`). Profile pages load published trips only via `getPublishedTripsByUserId`, sorted by `tripDate` descending.
 
 **Service:** `src/app/service/trip/trip-service.ts`
 

@@ -2,6 +2,7 @@ import { TripStatus } from '@/app/api/model/enums/trip-status';
 import { SaveTripRequest } from '@/app/api/model/request/save-trip-request';
 import { UpdateTripRequest } from '@/app/api/model/request/update-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
+import { sortTripsByTripDateDesc } from '@/app/_util/sort-trips-by-trip-date';
 import prisma from '@/app/service/_lib/prisma';
 import { Trip } from '@prisma/client';
 
@@ -31,7 +32,7 @@ export async function getPublishedTripsByUserId(userId: number): Promise<TripMod
     },
     orderBy: { tripDate: 'desc' },
   });
-  return mapTripEntitiesToModels(trips);
+  return sortTripsByTripDateDesc(mapTripEntitiesToModels(trips));
 }
 
 export async function getDraftTripsByUserId(userId: number): Promise<TripModel[]> {

@@ -127,13 +127,15 @@ Trip (trips)
 
 **Service:** `src/app/service/trip/trip-service.ts`
 
-**Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `saveDraftTripClient`, `updateTripClient`, `uploadTripCoverClient`)
+**Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `saveDraftTripClient`, `updateTripClient`, `deleteTripClient`, `uploadTripCoverClient`)
 
 **Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set
 
 **Save draft trip (session required):** `POST /api/user/trip/save/draft` — `userId` from session; create only; `Draft` with `publishedAt` null; cover, outbound URL, and trip date optional
 
 **Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; title, blurb, and/or outboundUrl; cover cannot change. Own-profile view modal uses `EditTripModal` + `updateTripClient`.
+
+**Delete trip (session required):** `DELETE /api/user/trip/delete/{tripId}` — owner only; sets status to `Deleted` (soft-delete). `publishedAt` is kept. Already-deleted trips return 400.
 
 **Upload cover (session required for token):** `POST /api/user/trip/cover` — Vercel Blob `handleUpload`; then save `coverImageUrl` via trip save
 
@@ -150,6 +152,7 @@ Trip (trips)
 | `/api/user/trip/save`            | Session required              | Create a published trip for the signed-in user |
 | `/api/user/trip/save/draft`      | Session required              | Create a draft trip for the signed-in user     |
 | `/api/user/trip/update/{tripId}` | Session required              | Update title, blurb, and/or outbound URL       |
+| `/api/user/trip/delete/{tripId}` | Session required              | Soft-delete a trip (status `Deleted`)          |
 | `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers      |
 | `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)                |
 

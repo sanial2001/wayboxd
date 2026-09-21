@@ -69,7 +69,7 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
   const [error, setError] = useState<string | null>(null);
   const [draftPromptOpen, setDraftPromptOpen] = useState(false);
   const [selectedDraftId, setSelectedDraftId] = useState<number | null>(null);
-  const [showDraftPicker, setShowDraftPicker] = useState(drafts.length > 0);
+  const [showDraftPicker, setShowDraftPicker] = useState(false);
 
   const hasUnsavedWork =
     title.trim().length > 0 ||
@@ -85,7 +85,11 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     if (pending) {
       return;
     }
-    if (showDraftPicker || !hasUnsavedWork) {
+    if (showDraftPicker) {
+      setShowDraftPicker(false);
+      return;
+    }
+    if (!hasUnsavedWork) {
       onClose();
       return;
     }
@@ -105,6 +109,10 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
         setDraftPromptOpen(false);
         return;
       }
+      if (showDraftPicker) {
+        setShowDraftPicker(false);
+        return;
+      }
       requestClose();
     };
 
@@ -116,7 +124,7 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [open, pending, draftPromptOpen, requestClose]);
+  }, [open, pending, draftPromptOpen, showDraftPicker, requestClose]);
 
   useEffect(() => {
     return () => {
@@ -136,22 +144,6 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     }
   }
 
-  function resetComposer() {
-    clearCoverPreview();
-    setSelectedDraftId(null);
-    setTitle('');
-    setBlurb('');
-    setTag('');
-    setDuration('');
-    setOutboundUrl('');
-    setTripMonth('');
-    setTripYear(String(new Date().getFullYear()));
-    setCoverImageUrl(null);
-    setCoverPreviewUrl(null);
-    setError(null);
-    setDraftPromptOpen(false);
-  }
-
   function applyDraft(draft: TripModel) {
     const { year, month } = splitTripMonthYear(draft.tripDate);
     const cover = draft.coverImageUrl.trim();
@@ -168,19 +160,6 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     setCoverPreviewUrl(isHttpUrl(cover) ? cover : null);
     setShowDraftPicker(false);
     setError(null);
-  }
-
-  function startNewTrip() {
-    resetComposer();
-    setShowDraftPicker(false);
-  }
-
-  function backToDrafts() {
-    if (pending) {
-      return;
-    }
-    resetComposer();
-    setShowDraftPicker(true);
   }
 
   async function onCoverSelected(file: File | undefined) {
@@ -364,15 +343,13 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
                 <h2 id={titleId} className="font-display text-3xl font-black tracking-tight">
                   Continue a draft
                 </h2>
-                <p className="mt-1 text-sm text-muted">
-                  Pick a saved draft to finish it, or start a new trip.
-                </p>
+                <p className="mt-1 text-sm text-muted">Pick a saved draft to finish it.</p>
               </div>
               <button
                 type="button"
-                onClick={requestClose}
+                onClick={() => setShowDraftPicker(false)}
                 disabled={pending}
-                aria-label="Close"
+                aria-label="Back to add trip"
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-border bg-surface-2 text-ink disabled:opacity-50"
               >
                 <span aria-hidden className="text-xl leading-none">
@@ -390,11 +367,13 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
             </ul>
 
             <div className="flex flex-wrap justify-end gap-3 border-t-[3px] border-border px-5 py-4 sm:px-6">
-              <Button type="button" variant="ghost" onClick={requestClose} disabled={pending}>
-                Cancel
-              </Button>
-              <Button type="button" variant="lime" onClick={startNewTrip} disabled={pending}>
-                Start a new trip
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setShowDraftPicker(false)}
+                disabled={pending}
+              >
+                Back
               </Button>
             </div>
           </div>
@@ -599,8 +578,13 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
 
             <div className="flex flex-wrap justify-end gap-3 border-t-[3px] border-border px-5 py-4 sm:px-6">
               {drafts.length > 0 ? (
-                <Button type="button" variant="ghost" onClick={backToDrafts} disabled={pending}>
-                  Back to drafts
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setShowDraftPicker(true)}
+                  disabled={pending}
+                >
+                  {selectedDraftId ? 'Choose another draft' : 'Continue a draft'}
                 </Button>
               ) : null}
               <Button type="button" variant="ghost" onClick={requestClose} disabled={pending}>

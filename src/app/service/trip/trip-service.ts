@@ -1,3 +1,4 @@
+import { getTripStatusFromString } from '@/app/api/model/enums/trip-status';
 import { SaveTripRequest } from '@/app/api/model/request/save-trip-request';
 import { UpdateTripRequest } from '@/app/api/model/request/update-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
@@ -36,7 +37,7 @@ export async function saveTrip(data: SaveTripRequest): Promise<TripModel> {
       createdAt: new Date(),
     },
   });
-  return mapTripEntityToModel(trip);
+  return requireMappedTrip(mapTripEntityToModel(trip));
 }
 
 export async function updateTrip(id: number, data: UpdateTripRequest): Promise<TripModel | null> {
@@ -78,10 +79,15 @@ export async function deleteTrip(id: number): Promise<TripModel | null> {
 }
 
 function mapTripEntitiesToModels(trips: Trip[]): TripModel[] {
-  return trips.map(mapTripEntityToModel);
+  return trips.map(mapTripEntityToModel).filter((trip): trip is TripModel => trip !== null);
 }
 
-function mapTripEntityToModel(trip: Trip): TripModel {
+function mapTripEntityToModel(trip: Trip): TripModel | null {
+  const status = getTripStatusFromString(trip.status);
+  if (!status) {
+    return null;
+  }
+
   return {
     id: trip.id,
     userId: trip.userId,
@@ -92,7 +98,16 @@ function mapTripEntityToModel(trip: Trip): TripModel {
     tag: trip.tag,
     duration: trip.duration,
     tripDate: trip.tripDate,
+    status,
+    publishedAt: trip.publishedAt,
     createdAt: trip.createdAt,
     updatedAt: trip.updatedAt,
   };
+}
+
+function requireMappedTrip(trip: TripModel | null): TripModel {
+  if (!trip) {
+    throw new Error('Invalid trip status');
+  }
+  return trip;
 }

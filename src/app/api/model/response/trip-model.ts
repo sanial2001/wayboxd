@@ -1,3 +1,5 @@
+import { TripStatus } from '@/app/api/model/enums/trip-status';
+
 export interface TripModel {
   id: number;
   userId: number;
@@ -8,6 +10,8 @@ export interface TripModel {
   tag: string | null;
   duration: string | null;
   tripDate: Date;
+  status: TripStatus;
+  publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date | null;
 }

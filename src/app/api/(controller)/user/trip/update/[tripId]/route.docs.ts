@@ -3,7 +3,7 @@
  * /api/user/trip/update/{tripId}:
  *   put:
  *     summary: Update a trip owned by the signed-in user
- *     description: Partial update of any trip fields. Sending status Published requires title, cover, outbound URL, and trip date, and sets publishedAt on first publish. tripId is a path param; userId is taken from the session.
+ *     description: Partial update of any trip fields. Sending status Published requires title, cover, and trip date, and sets publishedAt on first publish. Outbound URL is optional. tripId is a path param; userId is taken from the session.
  *     tags: [Trip]
  *     security:
  *       - sessionCookie: []
@@ -33,6 +33,7 @@
  *               outboundUrl:
  *                 type: string
  *                 format: uri
+ *                 nullable: true
  *               tag:
  *                 type: string
  *                 nullable: true

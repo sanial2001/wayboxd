@@ -129,11 +129,11 @@ Trip (trips)
 
 **Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `saveDraftTripClient`, `updateTripClient`, `deleteTripClient`, `uploadTripCoverClient`)
 
-**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set
+**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set. Outbound URL is optional.
 
 **Save draft trip (session required):** `POST /api/user/trip/save/draft` — `userId` from session; create only; `Draft` with `publishedAt` null; cover, outbound URL, and trip date optional. Own-profile **+ Add trip** opens the new-trip form; **Continue a draft** lists saved drafts and prefills the composer. Publishing a draft uses `PUT /api/user/trip/update/{tripId}` with the full payload and `status: Published`.
 
-**Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; partial update of any trip fields. `status: Published` requires title, cover, outbound URL, and trip date, and sets `publishedAt` on first publish. Own-profile view modal still sends title, blurb, and outbound URL only via `EditTripModal` + `updateTripClient`.
+**Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; partial update of any trip fields. `status: Published` requires title, cover, and trip date, and sets `publishedAt` on first publish. Outbound URL is optional. Own-profile view modal still sends title, blurb, and outbound URL only via `EditTripModal` + `updateTripClient`.
 
 **Delete trip (session required):** `DELETE /api/user/trip/delete/{tripId}` — owner only; sets status to `Deleted` (soft-delete). `publishedAt` is kept. Already-deleted trips return 400.
 

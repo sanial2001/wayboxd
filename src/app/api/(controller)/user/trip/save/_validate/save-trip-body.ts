@@ -31,9 +31,19 @@ export function validateSaveTripBody(body: unknown): SaveTripBodyValidationResul
     return { error: coverImageUrlError, body: null };
   }
 
-  const outboundUrlError = validateRequiredHttpUrl(request.outboundUrl, 'outboundUrl');
-  if (outboundUrlError) {
-    return { error: outboundUrlError, body: null };
+  let outboundUrl = '';
+  if (request.outboundUrl !== undefined && request.outboundUrl !== null) {
+    if (typeof request.outboundUrl !== 'string') {
+      return { error: 'outboundUrl must be a string', body: null };
+    }
+    const trimmedOutbound = request.outboundUrl.trim();
+    if (trimmedOutbound.length > 0) {
+      const outboundUrlError = validateOptionalHttpUrl(trimmedOutbound, 'outboundUrl');
+      if (outboundUrlError) {
+        return { error: outboundUrlError, body: null };
+      }
+      outboundUrl = trimmedOutbound;
+    }
   }
 
   if (request.tripDate === undefined || request.tripDate === null) {
@@ -66,7 +76,7 @@ export function validateSaveTripBody(body: unknown): SaveTripBodyValidationResul
     body: {
       title,
       coverImageUrl: request.coverImageUrl.trim(),
-      outboundUrl: request.outboundUrl.trim(),
+      outboundUrl,
       tripDate,
       blurb: normalizeOptionalText(request.blurb) ?? null,
       tag: normalizeOptionalText(request.tag) ?? null,

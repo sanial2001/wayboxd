@@ -211,10 +211,7 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     if (!composeTripMonthValue(tripYear, tripMonth)) {
       return 'Trip date must be a valid month.';
     }
-    if (!outboundUrl.trim()) {
-      return 'Outbound URL is required.';
-    }
-    if (!isHttpUrl(outboundUrl.trim())) {
+    if (outboundUrl.trim() && !isHttpUrl(outboundUrl.trim())) {
       return 'Outbound URL must use http or https.';
     }
     return null;
@@ -486,7 +483,7 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
                 </label>
 
                 <label className="flex w-full flex-col gap-2">
-                  <FieldLabel label="Outbound URL" required />
+                  <FieldLabel label="Outbound URL" />
                   <input
                     name="outboundUrl"
                     type="text"

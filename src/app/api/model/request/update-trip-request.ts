@@ -5,7 +5,7 @@ export interface UpdateTripBodyRequest {
   title?: string;
   blurb?: string | null;
   coverImageUrl?: string;
-  outboundUrl?: string;
+  outboundUrl?: string | null;
   tag?: string | null;
   duration?: string | null;
   tripDate?: string;

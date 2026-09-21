@@ -10,7 +10,7 @@ import {
 } from '@/app/api/model/response/update-trip-body-validation-result';
 
 const OPTIONAL_TEXT_FIELDS = ['blurb', 'tag', 'duration'] as const;
-const PUBLISH_REQUIRED_FIELDS = ['title', 'coverImageUrl', 'outboundUrl', 'tripDate'] as const;
+const PUBLISH_REQUIRED_FIELDS = ['title', 'coverImageUrl', 'tripDate'] as const;
 
 export function validateUpdateTripBody(body: unknown): UpdateTripBodyValidationResult {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
@@ -43,14 +43,18 @@ export function validateUpdateTripBody(body: unknown): UpdateTripBodyValidationR
   }
 
   if (request.outboundUrl !== undefined) {
-    const outboundUrlError = validateRequiredHttpUrl(request.outboundUrl, 'outboundUrl');
-    if (outboundUrlError) {
-      return { error: outboundUrlError, body: null };
-    }
-    if (typeof request.outboundUrl !== 'string') {
+    if (request.outboundUrl !== null && typeof request.outboundUrl !== 'string') {
       return { error: 'outboundUrl must be a string', body: null };
     }
-    patch.outboundUrl = request.outboundUrl.trim();
+    if (request.outboundUrl === null || request.outboundUrl.trim().length === 0) {
+      patch.outboundUrl = '';
+    } else {
+      const outboundUrlError = validateOptionalHttpUrl(request.outboundUrl, 'outboundUrl');
+      if (outboundUrlError) {
+        return { error: outboundUrlError, body: null };
+      }
+      patch.outboundUrl = request.outboundUrl.trim();
+    }
   }
 
   if (request.tripDate !== undefined) {

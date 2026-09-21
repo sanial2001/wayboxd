@@ -60,10 +60,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
     if (!title.trim()) {
       return 'Title is required.';
     }
-    if (!outboundUrl.trim()) {
-      return 'Outbound URL is required.';
-    }
-    if (!isHttpUrl(outboundUrl.trim())) {
+    if (outboundUrl.trim() && !isHttpUrl(outboundUrl.trim())) {
       return 'Outbound URL must use http or https.';
     }
     return null;
@@ -158,7 +155,7 @@ export function EditTripModal({ trip, onClose, onUpdated }: EditTripModalProps) 
               </label>
 
               <label className="flex w-full flex-col gap-2">
-                <FieldLabel label="Outbound URL" required />
+                <FieldLabel label="Outbound URL" />
                 <input
                   name="outboundUrl"
                   type="text"

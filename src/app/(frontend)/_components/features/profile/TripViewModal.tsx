@@ -4,7 +4,6 @@ import { useEffect, useId } from 'react';
 import Image from 'next/image';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { Avatar } from '@/components/ui/Avatar';
-import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
 import {
   formatTripBadge,
@@ -75,17 +74,16 @@ export function TripViewModal({ trip, author, onClose, onEdit }: TripViewModalPr
         aria-labelledby={titleId}
         className="relative z-10 flex h-[min(56rem,calc(100dvh-1.5rem))] w-full max-w-4xl flex-col overflow-hidden rounded-[1.75rem] border-[3px] border-border bg-surface shadow-chunky-lg sm:h-[min(56rem,calc(100dvh-2.5rem))] sm:rounded-[2rem]"
       >
-        <div className="absolute right-3 top-3 z-20 flex items-center gap-2 sm:right-4 sm:top-4">
+        <div className="absolute right-3 top-3 z-20 flex items-center gap-1 sm:right-4 sm:top-4">
           {onEdit ? (
-            <Button
+            <button
               type="button"
-              variant="secondary"
-              size="sm"
-              className="rounded-full"
               onClick={onEdit}
+              aria-label="Edit trip"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink/70 hover:bg-surface-2 hover:text-ink"
             >
-              Edit
-            </Button>
+              <PencilIcon />
+            </button>
           ) : null}
           <button
             type="button"
@@ -98,7 +96,7 @@ export function TripViewModal({ trip, author, onClose, onEdit }: TripViewModalPr
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5 pb-6 pt-6 sm:px-10 sm:pb-8 sm:pt-8">
-          <header className={cn('flex items-start gap-4', onEdit ? 'pr-32 sm:pr-36' : 'pr-12')}>
+          <header className={cn('flex items-start gap-4', onEdit ? 'pr-24' : 'pr-12')}>
             <Avatar
               src={author.avatarUrl}
               alt={author.displayName}
@@ -162,6 +160,24 @@ export function TripViewModal({ trip, author, onClose, onEdit }: TripViewModalPr
         </div>
       </div>
     </div>
+  );
+}
+
+function PencilIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
   );
 }
 

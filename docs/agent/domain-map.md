@@ -34,7 +34,7 @@ Follow (follows) — directed user → user edge
 
 **Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getPublishedTripsByUserId`. Own profile shows **Edit profile** → `/settings/profile` and **+ Add trip**. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
 
-**Profile edit UI:** `/settings/profile` — RSC loads session + `getUserProfileByUserId`; `ProfileEditForm` uses `uploadUserAvatarClient` + `saveUserProfileClient` only
+**Profile edit UI:** `/settings/profile` — RSC loads session + `getUserProfileByUserId`; `ProfileEditForm` uses `uploadUserAvatarClient` + `saveUserProfileClient` (display name, bio, avatar, Instagram, X, other profile URL)
 
 **Auth:** `src/app/api/(controller)/auth/[...nextauth]/options.ts`
 

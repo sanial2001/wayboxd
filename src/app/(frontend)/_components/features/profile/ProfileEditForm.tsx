@@ -56,6 +56,9 @@ export function ProfileEditForm({ userId, username, initialProfile }: ProfileEdi
     initialField(initialProfile, 'instagramProfileUrl')
   );
   const [xProfileUrl, setXProfileUrl] = useState(() => initialField(initialProfile, 'xProfileUrl'));
+  const [otherProfileUrl, setOtherProfileUrl] = useState(() =>
+    initialField(initialProfile, 'otherProfileUrl')
+  );
 
   async function onAvatarSelected(file: File | undefined) {
     if (!file) return;
@@ -89,6 +92,7 @@ export function ProfileEditForm({ userId, username, initialProfile }: ProfileEdi
       avatarUrl,
       instagramProfileUrl: emptyToNull(instagramProfileUrl),
       xProfileUrl: emptyToNull(xProfileUrl),
+      otherProfileUrl: emptyToNull(otherProfileUrl),
     };
 
     try {
@@ -208,6 +212,16 @@ export function ProfileEditForm({ userId, username, initialProfile }: ProfileEdi
           value={xProfileUrl}
           onChange={(e) => setXProfileUrl(e.target.value)}
           placeholder="https://x.com/you"
+          disabled={busy}
+        />
+
+        <Input
+          label="Other link"
+          name="otherProfileUrl"
+          type="url"
+          value={otherProfileUrl}
+          onChange={(e) => setOtherProfileUrl(e.target.value)}
+          placeholder="https://you.com"
           disabled={busy}
         />
 

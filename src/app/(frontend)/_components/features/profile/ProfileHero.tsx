@@ -99,6 +99,18 @@ export function ProfileHero({ profile, isOwnProfile, onAddTrip }: ProfileHeroPro
               </a>
             </li>
           ) : null}
+          {profile.otherProfileUrl ? (
+            <li>
+              <a
+                href={profile.otherProfileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-purple underline decoration-[3px] underline-offset-4"
+              >
+                {hostFromUrl(profile.otherProfileUrl)}
+              </a>
+            </li>
+          ) : null}
           <li className="text-muted">Joined {formatJoinedAt(profile.joinedAt)}</li>
         </ul>
 

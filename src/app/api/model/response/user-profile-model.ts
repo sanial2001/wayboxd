@@ -5,6 +5,7 @@ export interface UserProfileModel {
   avatarUrl: string | null;
   instagramProfileUrl: string | null;
   xProfileUrl: string | null;
+  otherProfileUrl: string | null;
   createdAt: Date;
   updatedAt: Date | null;
 }

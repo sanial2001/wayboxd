@@ -80,6 +80,7 @@ const options: swaggerJsdoc.Options = {
             avatarUrl: { type: 'string', nullable: true },
             instagramProfileUrl: { type: 'string', nullable: true },
             xProfileUrl: { type: 'string', nullable: true },
+            otherProfileUrl: { type: 'string', nullable: true },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time', nullable: true },
           },
@@ -108,6 +109,7 @@ const options: swaggerJsdoc.Options = {
             avatarUrl: { type: 'string', nullable: true },
             instagramProfileUrl: { type: 'string', nullable: true },
             xProfileUrl: { type: 'string', nullable: true },
+            otherProfileUrl: { type: 'string', nullable: true },
           },
         },
         ApiError: {

@@ -39,6 +39,7 @@ export async function getPublicUserProfileByUsername(
     avatarUrl: profile?.avatarUrl ?? null,
     instagramProfileUrl: profile?.instagramProfileUrl ?? null,
     xProfileUrl: profile?.xProfileUrl ?? null,
+    otherProfileUrl: profile?.otherProfileUrl ?? null,
     followerCount,
     followingCount,
     joinedAt: user.createdAt,
@@ -54,6 +55,7 @@ export async function saveUserProfile(data: SaveUserProfileRequest): Promise<Use
       avatarUrl: data.avatarUrl ?? null,
       instagramProfileUrl: data.instagramProfileUrl ?? null,
       xProfileUrl: data.xProfileUrl ?? null,
+      otherProfileUrl: data.otherProfileUrl ?? null,
       createdAt: new Date(),
     },
   });
@@ -81,6 +83,7 @@ export async function updateUserProfile(
         ? { instagramProfileUrl: data.instagramProfileUrl }
         : {}),
       ...(data.xProfileUrl !== undefined ? { xProfileUrl: data.xProfileUrl } : {}),
+      ...(data.otherProfileUrl !== undefined ? { otherProfileUrl: data.otherProfileUrl } : {}),
       updatedAt: new Date(),
     },
   });
@@ -95,6 +98,7 @@ function mapUserProfileEntityToModel(profile: UserProfile): UserProfileModel {
     avatarUrl: profile.avatarUrl,
     instagramProfileUrl: profile.instagramProfileUrl,
     xProfileUrl: profile.xProfileUrl,
+    otherProfileUrl: profile.otherProfileUrl,
     createdAt: profile.createdAt,
     updatedAt: profile.updatedAt,
   };

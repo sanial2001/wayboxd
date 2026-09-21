@@ -6,6 +6,7 @@ export interface PublicUserProfileView {
   avatarUrl: string | null;
   instagramProfileUrl: string | null;
   xProfileUrl: string | null;
+  otherProfileUrl: string | null;
   followerCount: number;
   followingCount: number;
   joinedAt: Date;

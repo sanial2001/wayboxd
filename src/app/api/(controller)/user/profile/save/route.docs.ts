@@ -29,6 +29,9 @@
  *               xProfileUrl:
  *                 type: string
  *                 nullable: true
+ *               otherProfileUrl:
+ *                 type: string
+ *                 nullable: true
  *     responses:
  *       200:
  *         description: Profile updated

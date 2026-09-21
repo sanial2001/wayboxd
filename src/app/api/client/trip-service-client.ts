@@ -8,6 +8,7 @@ import {
   TRIP_COVER_MAX_SOURCE_BYTES,
 } from '@/app/api/model/enums/trip-cover-upload';
 import { SaveTripBodyRequest } from '@/app/api/model/request/save-trip-request';
+import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
 import { ApiResponse } from '@/app/api/model/response/api-response';
 import { TripCoverUploadResult } from '@/app/api/model/response/trip-cover-upload-result';
 import { TripModel } from '@/app/api/model/response/trip-model';
@@ -18,6 +19,20 @@ export async function saveTripClient(
 ): Promise<ApiResponse<TripModel>> {
   const response = await fetch('/api/user/trip/save', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+  });
+  return await response.json();
+}
+
+export async function updateTripClient(
+  tripId: number,
+  request: UpdateTripBodyRequest
+): Promise<ApiResponse<TripModel>> {
+  const response = await fetch(`/api/user/trip/update/${tripId}`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },

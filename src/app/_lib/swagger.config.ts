@@ -261,6 +261,14 @@ const options: swaggerJsdoc.Options = {
             duration: { type: 'string', nullable: true },
           },
         },
+        UpdateTripBodyRequest: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            blurb: { type: 'string', nullable: true },
+            outboundUrl: { type: 'string', format: 'uri' },
+          },
+        },
         ManualPlaceSaveResult: {
           oneOf: [
             {

@@ -32,7 +32,7 @@ Follow (follows) — directed user → user edge
 
 **Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`, `uploadUserAvatarClient`)
 
-**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getTripsByUserId`. Own profile shows **Edit profile** → `/settings/profile`.
+**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getTripsByUserId`. Own profile shows **Edit profile** → `/settings/profile` and **+ Add trip**. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only).
 
 **Profile edit UI:** `/settings/profile` — RSC loads session + `getUserProfileByUserId`; `ProfileEditForm` uses `uploadUserAvatarClient` + `saveUserProfileClient` only
 
@@ -127,7 +127,7 @@ Trip (trips)
 
 **Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only
 
-**Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; title, blurb, and/or outboundUrl; cover cannot change
+**Update trip (session required):** `PUT /api/user/trip/update/{tripId}` — owner only; title, blurb, and/or outboundUrl; cover cannot change. Own-profile view modal uses `EditTripModal` + `updateTripClient`.
 
 **Upload cover (session required for token):** `POST /api/user/trip/cover` — Vercel Blob `handleUpload`; then save `coverImageUrl` via trip save
 

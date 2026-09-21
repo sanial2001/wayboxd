@@ -11,6 +11,17 @@ export interface SaveTripBodyRequest {
   duration?: string | null;
 }
 
+/** API / client body for an unfinished trip. Cover, outbound URL, and date may be omitted. */
+export interface SaveDraftTripBodyRequest {
+  title: string;
+  coverImageUrl?: string | null;
+  outboundUrl?: string | null;
+  tripDate?: string | null;
+  blurb?: string | null;
+  tag?: string | null;
+  duration?: string | null;
+}
+
 /** Service-layer create input for `saveTrip` (create only). */
 export interface SaveTripRequest {
   userId: number;

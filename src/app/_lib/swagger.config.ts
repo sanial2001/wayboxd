@@ -232,6 +232,10 @@ const options: swaggerJsdoc.Options = {
             address: { type: 'string', nullable: true },
           },
         },
+        TripStatus: {
+          type: 'string',
+          enum: ['Draft', 'Published', 'Archived', 'Deleted'],
+        },
         TripModel: {
           type: 'object',
           properties: {
@@ -244,6 +248,8 @@ const options: swaggerJsdoc.Options = {
             tag: { type: 'string', nullable: true },
             duration: { type: 'string', nullable: true },
             tripDate: { type: 'string', format: 'date-time' },
+            status: { $ref: '#/components/schemas/TripStatus' },
+            publishedAt: { type: 'string', format: 'date-time', nullable: true },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time', nullable: true },
           },
@@ -256,6 +262,19 @@ const options: swaggerJsdoc.Options = {
             coverImageUrl: { type: 'string', format: 'uri' },
             outboundUrl: { type: 'string', format: 'uri' },
             tripDate: { type: 'string', format: 'date-time' },
+            blurb: { type: 'string', nullable: true },
+            tag: { type: 'string', nullable: true },
+            duration: { type: 'string', nullable: true },
+          },
+        },
+        SaveDraftTripBodyRequest: {
+          type: 'object',
+          required: ['title'],
+          properties: {
+            title: { type: 'string' },
+            coverImageUrl: { type: 'string', format: 'uri', nullable: true },
+            outboundUrl: { type: 'string', format: 'uri', nullable: true },
+            tripDate: { type: 'string', format: 'date-time', nullable: true },
             blurb: { type: 'string', nullable: true },
             tag: { type: 'string', nullable: true },
             duration: { type: 'string', nullable: true },

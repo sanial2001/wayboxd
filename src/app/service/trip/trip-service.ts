@@ -23,6 +23,17 @@ export async function getTripsByUserId(userId: number): Promise<TripModel[]> {
   return mapTripEntitiesToModels(trips);
 }
 
+export async function getPublishedTripsByUserId(userId: number): Promise<TripModel[]> {
+  const trips = await prisma.trip.findMany({
+    where: {
+      userId,
+      status: TripStatus.PUBLISHED,
+    },
+    orderBy: { tripDate: 'desc' },
+  });
+  return mapTripEntitiesToModels(trips);
+}
+
 export async function saveTrip(data: SaveTripRequest): Promise<TripModel> {
   const trip = await prisma.trip.create({
     data: {

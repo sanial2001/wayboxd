@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { TripStatus } from '@/app/api/model/enums/trip-status';
 import { PublicUserProfileView } from '@/app/api/model/response/public-user-profile-view';
 import { TripModel } from '@/app/api/model/response/trip-model';
 import { AddTripModal } from '@/components/features/profile/AddTripModal';
@@ -37,9 +38,11 @@ export function ProfilePageBody({
   }
 
   function onSaved(trip: TripModel) {
-    setTrips((current) => [trip, ...current.filter((item) => item.id !== trip.id)]);
+    if (trip.status === TripStatus.PUBLISHED) {
+      setTrips((current) => [trip, ...current.filter((item) => item.id !== trip.id)]);
+    }
     setAddOpen(false);
-    setToast('Trip saved');
+    setToast(trip.status === TripStatus.DRAFT ? 'Draft saved' : 'Trip saved');
   }
 
   function onTripUpdated(trip: TripModel) {

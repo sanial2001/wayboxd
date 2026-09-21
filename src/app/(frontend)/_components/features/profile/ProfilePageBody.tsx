@@ -60,6 +60,7 @@ export function ProfilePageBody({
       <ProfileHero
         profile={profile}
         isOwnProfile={isOwnProfile}
+        tripCount={trips.length}
         onAddTrip={isOwnProfile ? openAddTrip : undefined}
       />
 

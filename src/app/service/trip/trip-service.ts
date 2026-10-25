@@ -29,6 +29,15 @@ export async function getTripsByUserId(userId: number): Promise<TripModel[]> {
   return mapTripEntitiesToModels(trips);
 }
 
+export async function countPublishedTripsByUserId(userId: number): Promise<number> {
+  return prisma.trip.count({
+    where: {
+      userId,
+      status: TripStatus.PUBLISHED,
+    },
+  });
+}
+
 export async function getPublishedTripsByUserId(userId: number): Promise<TripModel[]> {
   const trips = await prisma.trip.findMany({
     where: {

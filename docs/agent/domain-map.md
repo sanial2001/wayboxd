@@ -96,18 +96,15 @@ Place (places)
 ```
 Review (reviews)
   ├── userId → User (author)
-  ├── placeId → Place
-  ├── title, body
-  ├── rating (1–5)
-  ├── wouldGoAgain, visitDate, tags
+  ├── body (plain text; v1)
   └── timestamps (createdAt, updatedAt)
 ```
 
-One review per user per place (`@@unique([userId, placeId])`).
+v1 is a text post on the author's profile. Place, rating, and comments are later.
 
-**Enum:** `src/app/api/model/enums/review-rating.ts`
+**Limit:** `REVIEW_BODY_MAX_LENGTH` in `src/app/api/model/enums/review-body.ts`
 
-**Service:** `src/app/service/review/review-service.ts`
+**Service:** `src/app/service/review/review-service.ts` (`getReviewsByUserId`, `countReviewsByUserId`, `saveReview`)
 
 ### Trips
 

@@ -77,7 +77,6 @@ model Place {
   coverImageUrl   String?       @map("cover_image_url")
   createdByUserId Int?          @map("created_by_user_id")
   createdBy       User?         @relation("PlaceCreator", fields: [createdByUserId], references: [id])
-  reviews         Review[]
   trips           Trip[]
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime?     @map("updated_at")
@@ -90,23 +89,14 @@ model Place {
 }
 
 model Review {
-  id           Int       @id @default(autoincrement())
-  userId       Int       @map("user_id")
-  placeId      Int       @map("place_id")
-  title        String    @map("title")
-  body         String?   @map("body")
-  rating       Int       @map("rating")
-  wouldGoAgain Boolean?  @map("would_go_again")
-  visitDate    DateTime? @map("visit_date")
-  tags         String[]  @map("tags")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime? @map("updated_at")
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  body      String    @map("body")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @map("updated_at")
 
-  user         User      @relation("ReviewAuthor", fields: [userId], references: [id])
-  place        Place     @relation(fields: [placeId], references: [id])
+  user      User      @relation("ReviewAuthor", fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, placeId])
-  @@index([placeId])
   @@index([userId])
   @@map("reviews")
 }

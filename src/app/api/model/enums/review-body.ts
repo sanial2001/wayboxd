@@ -1,0 +1,1 @@
+export const REVIEW_BODY_MAX_LENGTH = 2000;

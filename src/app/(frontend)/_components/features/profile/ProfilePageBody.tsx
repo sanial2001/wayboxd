@@ -107,15 +107,17 @@ function TripsProfileBody({
 
   return (
     <>
-      <ProfileHero
-        profile={profile}
-        isOwnProfile={isOwnProfile}
-        section="trips"
-        tripCount={trips.length}
-        reviewCount={reviewCount}
-        onAddTrip={isOwnProfile ? openAddTrip : undefined}
-      />
-      <ProfileTabs username={profile.username} section="trips" />
+      <div>
+        <ProfileHero
+          profile={profile}
+          isOwnProfile={isOwnProfile}
+          section="trips"
+          tripCount={trips.length}
+          reviewCount={reviewCount}
+          onAddTrip={isOwnProfile ? openAddTrip : undefined}
+        />
+        <ProfileTabs username={profile.username} section="trips" />
+      </div>
 
       <section>
         <h2 className="sr-only">Trips</h2>
@@ -171,15 +173,17 @@ function ReviewsProfileBody({
 
   return (
     <>
-      <ProfileHero
-        profile={profile}
-        isOwnProfile={isOwnProfile}
-        section="reviews"
-        tripCount={tripCount}
-        reviewCount={reviews.length}
-        onAddReview={isOwnProfile ? openAddReview : undefined}
-      />
-      <ProfileTabs username={profile.username} section="reviews" />
+      <div>
+        <ProfileHero
+          profile={profile}
+          isOwnProfile={isOwnProfile}
+          section="reviews"
+          tripCount={tripCount}
+          reviewCount={reviews.length}
+          onAddReview={isOwnProfile ? openAddReview : undefined}
+        />
+        <ProfileTabs username={profile.username} section="reviews" />
+      </div>
 
       <section>
         <h2 className="sr-only">Reviews</h2>

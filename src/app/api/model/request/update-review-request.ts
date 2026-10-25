@@ -1,3 +1,8 @@
 export interface UpdateReviewRequest {
-  body?: string;
+  title?: string;
+  body?: string | null;
+  rating?: number;
+  wouldGoAgain?: boolean | null;
+  visitDate?: Date | null;
+  tags?: string[];
 }

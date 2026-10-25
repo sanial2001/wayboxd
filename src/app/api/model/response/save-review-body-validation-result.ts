@@ -1,8 +1,8 @@
-import { SaveReviewBodyRequest } from '@/app/api/model/request/save-review-request';
+import { SaveReviewRequest } from '@/app/api/model/request/save-review-request';
 
 export interface SaveReviewBodyValidationSuccess {
   error: null;
-  body: SaveReviewBodyRequest;
+  body: Omit<SaveReviewRequest, 'userId'>;
 }
 
 export interface SaveReviewBodyValidationFailure {

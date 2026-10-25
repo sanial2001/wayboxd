@@ -96,19 +96,24 @@ Place (places)
 ```
 Review (reviews)
   ├── userId → User (author)
-  ├── body (plain text; v1)
+  ├── placeId → Place
+  ├── title, body
+  ├── rating (1–5)
+  ├── wouldGoAgain, visitDate, tags
   └── timestamps (createdAt, updatedAt)
 ```
 
-v1 is a text post on the author's profile. Place, rating, and comments are later.
+One review per user per place (`@@unique([userId, placeId])`).
 
-**Limit:** `REVIEW_BODY_MAX_LENGTH` in `src/app/api/model/enums/review-body.ts`
+**Enum:** `src/app/api/model/enums/review-rating.ts`
+
+**Limits:** `src/app/api/model/enums/review-body.ts`
 
 **Service:** `src/app/service/review/review-service.ts` (`getReviewsByUserId`, `countReviewsByUserId`, `saveReview`)
 
 **Client:** `src/app/api/client/review-service-client.ts` (`saveReviewClient`)
 
-**Save review (session required):** `POST /api/user/review/save` — `userId` from session; create only; `body` is required trimmed text up to `REVIEW_BODY_MAX_LENGTH`.
+**Save review (session required):** `POST /api/user/review/save` — `userId` from session; create only. `placeId`, `title`, and `rating` are required. `body`, `wouldGoAgain`, `visitDate`, and `tags` are optional. `placeId` must match an existing place. A second review of the same place returns 400. Add review searches places with `GET /api/place/search` and saves an OpenStreetMap hit with `POST /api/place/save/from-osm` before storing `placeId`.
 
 ### Trips
 
@@ -156,7 +161,7 @@ Trip (trips)
 | `/api/user/trip/update/{tripId}` | Session required              | Partial update of trip fields; can publish a draft |
 | `/api/user/trip/delete/{tripId}` | Session required              | Soft-delete a trip (status `Deleted`)              |
 | `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers          |
-| `/api/user/review/save`          | Session required              | Create a text review for the signed-in user        |
+| `/api/user/review/save`          | Session required              | Create a place review for the signed-in user       |
 | `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)                    |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.

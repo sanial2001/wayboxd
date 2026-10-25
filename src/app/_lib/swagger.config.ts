@@ -1,4 +1,4 @@
-import { REVIEW_BODY_MAX_LENGTH } from '@/app/api/model/enums/review-body';
+import { REVIEW_BODY_MAX_LENGTH, REVIEW_TITLE_MAX_LENGTH } from '@/app/api/model/enums/review-body';
 import swaggerJsdoc from 'swagger-jsdoc';
 import path from 'path';
 import fs from 'fs';
@@ -255,16 +255,29 @@ const options: swaggerJsdoc.Options = {
           properties: {
             id: { type: 'integer' },
             userId: { type: 'integer' },
-            body: { type: 'string' },
+            placeId: { type: 'integer' },
+            title: { type: 'string' },
+            body: { type: 'string', nullable: true },
+            rating: { type: 'integer', minimum: 1, maximum: 5 },
+            wouldGoAgain: { type: 'boolean', nullable: true },
+            visitDate: { type: 'string', format: 'date-time', nullable: true },
+            tags: { type: 'array', items: { type: 'string' } },
+            place: { $ref: '#/components/schemas/TripPlaceModel' },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time', nullable: true },
           },
         },
         SaveReviewBodyRequest: {
           type: 'object',
-          required: ['body'],
+          required: ['placeId', 'title', 'rating'],
           properties: {
-            body: { type: 'string', maxLength: REVIEW_BODY_MAX_LENGTH },
+            placeId: { type: 'integer', minimum: 1 },
+            title: { type: 'string', maxLength: REVIEW_TITLE_MAX_LENGTH },
+            rating: { type: 'integer', minimum: 1, maximum: 5 },
+            body: { type: 'string', nullable: true, maxLength: REVIEW_BODY_MAX_LENGTH },
+            wouldGoAgain: { type: 'boolean', nullable: true },
+            visitDate: { type: 'string', format: 'date-time', nullable: true },
+            tags: { type: 'array', items: { type: 'string' } },
           },
         },
         TripStatus: {

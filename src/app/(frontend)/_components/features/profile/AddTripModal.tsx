@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { clientLogger } from '@/app/_lib/client-logger';
+import { savePlaceFromOsmClient } from '@/app/api/client/place-service-client';
 import {
   saveDraftTripClient,
   saveTripClient,
@@ -15,11 +16,14 @@ import {
 } from '@/app/api/model/request/save-trip-request';
 import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
 import { TripModel } from '@/app/api/model/response/trip-model';
+import { TripPlaceSelection } from '@/app/api/model/response/trip-place-selection';
 import { Button } from '@/components/ui/Button';
 import { CloseButton } from '@/components/ui/CloseButton';
+import { PlaceSearchField } from '@/components/features/profile/PlaceSearchField';
 import { TripCard } from '@/components/features/profile/TripCard';
 import {
   composeTripMonthValue,
+  formatTripPlaceLabel,
   listTripYears,
   splitTripMonthYear,
   TRIP_MONTH_OPTIONS,
@@ -61,6 +65,8 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
   const [tag, setTag] = useState('');
   const [duration, setDuration] = useState('');
   const [outboundUrl, setOutboundUrl] = useState('');
+  const [placeQuery, setPlaceQuery] = useState('');
+  const [selectedPlace, setSelectedPlace] = useState<TripPlaceSelection | null>(null);
   const [tripMonth, setTripMonth] = useState('');
   const [tripYear, setTripYear] = useState(() => String(new Date().getFullYear()));
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
@@ -78,6 +84,8 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     tag.trim().length > 0 ||
     duration.trim().length > 0 ||
     outboundUrl.trim().length > 0 ||
+    placeQuery.trim().length > 0 ||
+    Boolean(selectedPlace) ||
     Boolean(coverImageUrl) ||
     Boolean(coverPreviewUrl) ||
     tripMonth.length > 0;
@@ -155,6 +163,14 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     setTag(draft.tag ?? '');
     setDuration(draft.duration ?? '');
     setOutboundUrl(draft.outboundUrl && isHttpUrl(draft.outboundUrl) ? draft.outboundUrl : '');
+    if (draft.place) {
+      const label = formatTripPlaceLabel(draft.place);
+      setSelectedPlace({ label, placeId: draft.place.id, osmHit: null });
+      setPlaceQuery(label);
+    } else {
+      setSelectedPlace(null);
+      setPlaceQuery('');
+    }
     setTripMonth(month);
     setTripYear(year);
     setCoverImageUrl(isHttpUrl(cover) ? cover : null);
@@ -214,7 +230,27 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     if (outboundUrl.trim() && !isHttpUrl(outboundUrl.trim())) {
       return 'Outbound URL must use http or https.';
     }
+    if (placeQuery.trim() && !selectedPlace) {
+      return 'Choose a place from the list, or clear the place field.';
+    }
     return null;
+  }
+
+  async function resolvePlaceId(): Promise<number | null> {
+    if (!selectedPlace) {
+      return null;
+    }
+    if (selectedPlace.placeId) {
+      return selectedPlace.placeId;
+    }
+    if (!selectedPlace.osmHit) {
+      return null;
+    }
+    const response = await savePlaceFromOsmClient(selectedPlace.osmHit);
+    if (response.error || !response.data || response.status >= 400) {
+      throw new Error(response.error ?? 'Could not save that place.');
+    }
+    return response.data.id;
   }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -230,24 +266,25 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
       return;
     }
 
-    const publishFields = {
-      title: title.trim(),
-      coverImageUrl,
-      outboundUrl: emptyToNull(outboundUrl),
-      tripDate,
-      blurb: emptyToNull(blurb),
-      tag: emptyToNull(tag),
-      duration: emptyToNull(duration),
-    };
-    const createPayload: SaveTripBodyRequest = publishFields;
-    const updatePayload: UpdateTripBodyRequest = {
-      ...publishFields,
-      status: TripStatus.PUBLISHED,
-    };
-
     setError(null);
     setPending(true);
     try {
+      const placeId = await resolvePlaceId();
+      const publishFields = {
+        title: title.trim(),
+        coverImageUrl,
+        outboundUrl: emptyToNull(outboundUrl),
+        tripDate,
+        blurb: emptyToNull(blurb),
+        tag: emptyToNull(tag),
+        duration: emptyToNull(duration),
+        placeId,
+      };
+      const createPayload: SaveTripBodyRequest = publishFields;
+      const updatePayload: UpdateTripBodyRequest = {
+        ...publishFields,
+        status: TripStatus.PUBLISHED,
+      };
       const response = selectedDraftId
         ? await updateTripClient(selectedDraftId, updatePayload)
         : await saveTripClient(createPayload);
@@ -258,7 +295,9 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
       onSaved(response.data);
     } catch (saveError) {
       clientLogger.error({ err: saveError }, 'Trip save failed');
-      setError('Could not save this trip. Try again.');
+      setError(
+        saveError instanceof Error ? saveError.message : 'Could not save this trip. Try again.'
+      );
     } finally {
       setPending(false);
     }
@@ -269,33 +308,41 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
       setError('Wait for the cover to finish uploading.');
       return;
     }
-
-    const payload: SaveDraftTripBodyRequest = {
-      title: title.trim() || 'Untitled trip',
-      blurb: emptyToNull(blurb),
-      tag: emptyToNull(tag),
-      duration: emptyToNull(duration),
-    };
-    if (coverImageUrl) {
-      payload.coverImageUrl = coverImageUrl;
-    }
-    if (outboundUrl.trim() && isHttpUrl(outboundUrl.trim())) {
-      payload.outboundUrl = outboundUrl.trim();
-    }
-    const tripDate = composeTripMonthValue(tripYear, tripMonth);
-    if (tripDate) {
-      payload.tripDate = tripDate;
+    if (placeQuery.trim() && !selectedPlace) {
+      setError('Choose a place from the list, or clear the place field.');
+      setDraftPromptOpen(false);
+      return;
     }
 
     setError(null);
     setPending(true);
     try {
+      const placeId = await resolvePlaceId();
+      const payload: SaveDraftTripBodyRequest = {
+        title: title.trim() || 'Untitled trip',
+        blurb: emptyToNull(blurb),
+        tag: emptyToNull(tag),
+        duration: emptyToNull(duration),
+        placeId,
+      };
+      if (coverImageUrl) {
+        payload.coverImageUrl = coverImageUrl;
+      }
+      if (outboundUrl.trim() && isHttpUrl(outboundUrl.trim())) {
+        payload.outboundUrl = outboundUrl.trim();
+      }
+      const tripDate = composeTripMonthValue(tripYear, tripMonth);
+      if (tripDate) {
+        payload.tripDate = tripDate;
+      }
+
       const response = selectedDraftId
         ? await updateTripClient(selectedDraftId, {
             title: payload.title,
             blurb: payload.blurb,
             tag: payload.tag,
             duration: payload.duration,
+            placeId,
             ...(payload.coverImageUrl ? { coverImageUrl: payload.coverImageUrl } : {}),
             ...(payload.outboundUrl ? { outboundUrl: payload.outboundUrl } : {}),
             ...(payload.tripDate ? { tripDate: payload.tripDate } : {}),
@@ -309,7 +356,9 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
       onSaved(response.data);
     } catch (saveError) {
       clientLogger.error({ err: saveError }, 'Trip draft save failed');
-      setError('Could not save this draft. Try again.');
+      setError(
+        saveError instanceof Error ? saveError.message : 'Could not save this draft. Try again.'
+      );
       setDraftPromptOpen(false);
     } finally {
       setPending(false);
@@ -455,6 +504,19 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
                     </select>
                   </div>
                 </fieldset>
+
+                <div className="flex w-full flex-col gap-2">
+                  <label htmlFor={`${titleId}-place`}>
+                    <FieldLabel label="Place" />
+                  </label>
+                  <PlaceSearchField
+                    id={`${titleId}-place`}
+                    disabled={busy}
+                    selected={selectedPlace}
+                    onQueryChange={setPlaceQuery}
+                    onSelect={setSelectedPlace}
+                  />
+                </div>
 
                 <label className="flex w-full flex-col gap-2">
                   <FieldLabel label="Tag" />

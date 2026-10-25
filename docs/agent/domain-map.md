@@ -130,7 +130,7 @@ Trip (trips)
 
 **Client:** `src/app/api/client/trip-service-client.ts` (`saveTripClient`, `saveDraftTripClient`, `updateTripClient`, `deleteTripClient`, `uploadTripCoverClient`)
 
-**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set. Outbound URL and `placeId` are optional. `placeId` must match an existing place.
+**Save trip (session required):** `POST /api/user/trip/save` — `userId` from session; create only; `Published` with `publishedAt` set. Outbound URL and `placeId` are optional. `placeId` must match an existing place. Add trip searches places with `GET /api/place/search`. An OpenStreetMap hit is saved with `POST /api/place/save/from-osm` when the trip is saved, then stored as `placeId`.
 
 **Save draft trip (session required):** `POST /api/user/trip/save/draft` — `userId` from session; create only; `Draft` with `publishedAt` null; cover, outbound URL, trip date, and place optional. Own-profile **+ Add trip** opens the new-trip form; **Continue a draft** lists saved drafts and prefills the composer. Publishing a draft uses `PUT /api/user/trip/update/{tripId}` with the full payload and `status: Published`.
 

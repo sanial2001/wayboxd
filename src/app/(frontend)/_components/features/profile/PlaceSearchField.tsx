@@ -28,6 +28,7 @@ export function PlaceSearchField({
 }: PlaceSearchFieldProps) {
   const listId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const listDismissedRef = useRef(false);
   const [query, setQuery] = useState(selected?.label ?? '');
   const [open, setOpen] = useState(false);
   const [searching, setSearching] = useState(false);
@@ -56,7 +57,9 @@ export function PlaceSearchField({
           const nextOptions = toPlaceOptions(response.data);
           setOptions(nextOptions);
           setActiveIndex(nextOptions.length > 0 ? 0 : -1);
-          setOpen(true);
+          if (!listDismissedRef.current) {
+            setOpen(true);
+          }
         } catch (searchError) {
           if (!cancelled) {
             setOptions([]);
@@ -87,14 +90,13 @@ export function PlaceSearchField({
   }, []);
 
   function updateQuery(value: string) {
+    listDismissedRef.current = false;
     setQuery(value);
     onQueryChange(value);
     setOpen(true);
-    if (value.trim().length < MIN_QUERY_LENGTH) {
-      setOptions([]);
-      setSearching(false);
-      setActiveIndex(-1);
-    }
+    setOptions([]);
+    setActiveIndex(-1);
+    setSearching(value.trim().length >= MIN_QUERY_LENGTH);
     if (selected && value !== selected.label) {
       onSelect(null);
     }
@@ -136,6 +138,7 @@ export function PlaceSearchField({
         onChange={(event) => updateQuery(event.target.value)}
         onFocus={() => {
           if (!selected && query.trim().length >= MIN_QUERY_LENGTH) {
+            listDismissedRef.current = false;
             setOpen(true);
           }
         }}
@@ -153,13 +156,15 @@ export function PlaceSearchField({
           }
           if (event.key === 'Enter') {
             event.preventDefault();
-            if (showList && options[activeIndex]) {
+            if (showList && !searching && options[activeIndex]) {
               choose(options[activeIndex]);
             }
             return;
           }
-          if (event.key === 'Escape') {
+          if (event.key === 'Escape' && showList) {
             event.preventDefault();
+            event.stopPropagation();
+            listDismissedRef.current = true;
             setOpen(false);
           }
         }}
@@ -185,28 +190,32 @@ export function PlaceSearchField({
           {!searching && options.length === 0 ? (
             <li className="px-4 py-3 text-sm text-muted">No places match that search.</li>
           ) : null}
-          {options.map((option, index) => (
-            <li
-              key={option.key}
-              id={`${listId}-${option.key}`}
-              role="option"
-              aria-selected={index === activeIndex}
-            >
-              <button
-                type="button"
-                className={cn(
-                  'flex w-full flex-col px-4 py-2 text-left',
-                  index === activeIndex ? 'bg-surface-2' : 'hover:bg-surface-2'
-                )}
-                onMouseDown={(event) => event.preventDefault()}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => choose(option)}
-              >
-                <span className="font-medium text-ink">{option.name}</span>
-                {option.detail ? <span className="text-sm text-muted">{option.detail}</span> : null}
-              </button>
-            </li>
-          ))}
+          {!searching
+            ? options.map((option, index) => (
+                <li
+                  key={option.key}
+                  id={`${listId}-${option.key}`}
+                  role="option"
+                  aria-selected={index === activeIndex}
+                >
+                  <button
+                    type="button"
+                    className={cn(
+                      'flex w-full flex-col px-4 py-2 text-left',
+                      index === activeIndex ? 'bg-surface-2' : 'hover:bg-surface-2'
+                    )}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onClick={() => choose(option)}
+                  >
+                    <span className="font-medium text-ink">{option.name}</span>
+                    {option.detail ? (
+                      <span className="text-sm text-muted">{option.detail}</span>
+                    ) : null}
+                  </button>
+                </li>
+              ))
+            : null}
         </ul>
       ) : null}
     </div>

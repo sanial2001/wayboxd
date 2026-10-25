@@ -111,7 +111,7 @@ export function AddTripModal({ open, userId, drafts, onClose, onSaved }: AddTrip
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || pending) {
+      if (event.key !== 'Escape' || pending || event.defaultPrevented) {
         return;
       }
       if (draftPromptOpen) {

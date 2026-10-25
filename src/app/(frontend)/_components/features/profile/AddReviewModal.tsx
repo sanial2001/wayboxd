@@ -163,7 +163,7 @@ export function AddReviewModal({ open, onClose, onSaved }: AddReviewModalProps) 
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/70 p-4 sm:p-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-3 sm:p-6">
       <button
         type="button"
         className="absolute inset-0 cursor-default"
@@ -175,9 +175,9 @@ export function AddReviewModal({ open, onClose, onSaved }: AddReviewModalProps) 
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative z-10 my-4 w-full max-w-2xl rounded-[2rem] border-[3px] border-border bg-surface shadow-chunky-lg"
+        className="relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border-[3px] border-border bg-surface shadow-chunky-lg sm:max-h-[calc(100dvh-3rem)]"
       >
-        <form onSubmit={(event) => void onSubmit(event)}>
+        <form onSubmit={(event) => void onSubmit(event)} className="flex min-h-0 flex-1 flex-col">
           <div className="flex items-start justify-between gap-4 px-5 pb-2 pt-5 sm:px-6 sm:pt-6">
             <div>
               <h2 id={titleId} className="font-display text-3xl font-black tracking-tight">
@@ -188,160 +188,167 @@ export function AddReviewModal({ open, onClose, onSaved }: AddReviewModalProps) 
             <CloseButton onClick={onClose} disabled={pending} />
           </div>
 
-          <div className="space-y-4 px-5 py-4 sm:px-6">
-            <div className="flex w-full flex-col gap-2">
-              <FieldLabel label="Place" required />
-              <PlaceSearchField
-                id={placeFieldId}
-                disabled={pending}
-                selected={selectedPlace}
-                onQueryChange={setPlaceQuery}
-                onSelect={setSelectedPlace}
-              />
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-4 sm:px-6">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="flex flex-col gap-2 sm:col-span-2">
+                <FieldLabel label="Place" required />
+                <PlaceSearchField
+                  id={placeFieldId}
+                  disabled={pending}
+                  selected={selectedPlace}
+                  onQueryChange={setPlaceQuery}
+                  onSelect={setSelectedPlace}
+                />
+              </div>
+
+              <label className="flex flex-col gap-2 sm:col-span-2">
+                <FieldLabel label="Title" required />
+                <input
+                  name="title"
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                  disabled={pending}
+                  maxLength={REVIEW_TITLE_MAX_LENGTH}
+                  className={fieldClassName}
+                />
+              </label>
+
+              <label className="flex flex-col gap-2 sm:col-span-2">
+                <span className="flex items-baseline justify-between gap-3">
+                  <FieldLabel label="Review" />
+                  <span className="text-sm text-muted">
+                    {body.trim().length}/{REVIEW_BODY_MAX_LENGTH}
+                  </span>
+                </span>
+                <textarea
+                  name="body"
+                  value={body}
+                  onChange={(event) => setBody(event.target.value)}
+                  disabled={pending}
+                  maxLength={REVIEW_BODY_MAX_LENGTH}
+                  rows={5}
+                  placeholder="Beautiful. Crowded. Still somehow worth it..."
+                  className={fieldClassName}
+                />
+              </label>
             </div>
 
-            <label className="flex w-full flex-col gap-2">
-              <FieldLabel label="Title" required />
-              <input
-                name="title"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                disabled={pending}
-                maxLength={REVIEW_TITLE_MAX_LENGTH}
-                className={fieldClassName}
-              />
-            </label>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <FieldLabel label="Rating" required />
+                <div className="mt-2 flex gap-2" role="radiogroup" aria-label="Rating">
+                  {ratings.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      disabled={pending}
+                      onClick={() => setRating(value)}
+                      aria-label={`${value} star${value === 1 ? '' : 's'}`}
+                      aria-pressed={rating === value}
+                      className={cn(
+                        'h-11 w-11 rounded-2xl border-[3px] border-border font-display text-lg font-black shadow-chunky-sm',
+                        rating !== null && rating >= value ? 'bg-sun' : 'bg-surface'
+                      )}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-            <div>
-              <FieldLabel label="Rating" required />
-              <div className="mt-2 flex gap-2" role="radiogroup" aria-label="Rating">
-                {ratings.map((value) => (
-                  <button
-                    key={value}
+              <div>
+                <FieldLabel label="Would you go again?" />
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <Button
                     type="button"
+                    size="sm"
+                    variant={wouldGoAgain === true ? 'lime' : 'secondary'}
                     disabled={pending}
-                    onClick={() => setRating(value)}
-                    aria-label={`${value} star${value === 1 ? '' : 's'}`}
-                    aria-pressed={rating === value}
-                    className={cn(
-                      'h-12 w-12 rounded-2xl border-[3px] border-border font-display text-xl font-black shadow-chunky-sm',
-                      rating !== null && rating >= value ? 'bg-sun' : 'bg-surface'
-                    )}
+                    onClick={() => setWouldGoAgain((current) => (current === true ? null : true))}
                   >
-                    ★
-                  </button>
-                ))}
+                    Yes
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={wouldGoAgain === false ? 'danger' : 'secondary'}
+                    disabled={pending}
+                    onClick={() => setWouldGoAgain((current) => (current === false ? null : false))}
+                  >
+                    No
+                  </Button>
+                </div>
               </div>
+
+              <fieldset className="flex min-w-0 flex-col gap-2">
+                <legend>
+                  <FieldLabel label="Visit date" />
+                </legend>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="sr-only" htmlFor={`${titleId}-month`}>
+                    Month
+                  </label>
+                  <select
+                    id={`${titleId}-month`}
+                    name="visitMonth"
+                    value={visitMonth}
+                    onChange={(event) => setVisitMonth(event.target.value)}
+                    disabled={pending}
+                    className={selectClassName}
+                  >
+                    <option value="">Month</option>
+                    {TRIP_MONTH_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <label className="sr-only" htmlFor={`${titleId}-year`}>
+                    Year
+                  </label>
+                  <select
+                    id={`${titleId}-year`}
+                    name="visitYear"
+                    value={visitYear}
+                    onChange={(event) => setVisitYear(event.target.value)}
+                    disabled={pending}
+                    className={selectClassName}
+                  >
+                    <option value="">Year</option>
+                    {listTripYears().map((year) => (
+                      <option key={year} value={String(year)}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </fieldset>
+
+              <label className="flex min-w-0 flex-col gap-2">
+                <FieldLabel label="Tags" />
+                <input
+                  name="tags"
+                  value={tags}
+                  onChange={(event) => setTags(event.target.value)}
+                  disabled={pending}
+                  placeholder="loud, worth it, sunset"
+                  className={fieldClassName}
+                />
+                <span className="text-sm text-muted">Separate tags with commas.</span>
+              </label>
             </div>
-
-            <label className="flex w-full flex-col gap-2">
-              <FieldLabel label="Review" />
-              <textarea
-                name="body"
-                value={body}
-                onChange={(event) => setBody(event.target.value)}
-                disabled={pending}
-                maxLength={REVIEW_BODY_MAX_LENGTH}
-                rows={6}
-                placeholder="Beautiful. Crowded. Still somehow worth it..."
-                className={fieldClassName}
-              />
-              <span className="text-right text-sm text-muted">
-                {body.trim().length}/{REVIEW_BODY_MAX_LENGTH}
-              </span>
-            </label>
-
-            <div>
-              <FieldLabel label="Would you go again?" />
-              <div className="mt-2 flex flex-wrap gap-2">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={wouldGoAgain === true ? 'lime' : 'secondary'}
-                  disabled={pending}
-                  onClick={() => setWouldGoAgain((current) => (current === true ? null : true))}
-                >
-                  Yes
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={wouldGoAgain === false ? 'danger' : 'secondary'}
-                  disabled={pending}
-                  onClick={() => setWouldGoAgain((current) => (current === false ? null : false))}
-                >
-                  No
-                </Button>
-              </div>
-            </div>
-
-            <fieldset className="flex w-full flex-col gap-2">
-              <legend>
-                <FieldLabel label="Visit date" />
-              </legend>
-              <div className="grid grid-cols-2 gap-3">
-                <label className="sr-only" htmlFor={`${titleId}-month`}>
-                  Month
-                </label>
-                <select
-                  id={`${titleId}-month`}
-                  name="visitMonth"
-                  value={visitMonth}
-                  onChange={(event) => setVisitMonth(event.target.value)}
-                  disabled={pending}
-                  className={selectClassName}
-                >
-                  <option value="">Month</option>
-                  {TRIP_MONTH_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <label className="sr-only" htmlFor={`${titleId}-year`}>
-                  Year
-                </label>
-                <select
-                  id={`${titleId}-year`}
-                  name="visitYear"
-                  value={visitYear}
-                  onChange={(event) => setVisitYear(event.target.value)}
-                  disabled={pending}
-                  className={selectClassName}
-                >
-                  <option value="">Year</option>
-                  {listTripYears().map((year) => (
-                    <option key={year} value={String(year)}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </fieldset>
-
-            <label className="flex w-full flex-col gap-2">
-              <FieldLabel label="Tags" />
-              <input
-                name="tags"
-                value={tags}
-                onChange={(event) => setTags(event.target.value)}
-                disabled={pending}
-                placeholder="loud, worth it, sunset"
-                className={fieldClassName}
-              />
-              <span className="text-sm text-muted">Separate tags with commas.</span>
-            </label>
-
-            {error ? <p className="text-sm font-medium text-coral">{error}</p> : null}
           </div>
 
-          <div className="flex flex-wrap justify-end gap-3 border-t-[3px] border-border px-5 py-4 sm:px-6">
-            <Button type="button" variant="ghost" onClick={onClose} disabled={pending}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="lime" disabled={pending}>
-              {pending ? 'Saving…' : 'Save'}
-            </Button>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t-[3px] border-border px-5 py-4 sm:px-6">
+            {error ? <p className="text-sm font-medium text-coral">{error}</p> : <span />}
+            <div className="ml-auto flex flex-wrap justify-end gap-3">
+              <Button type="button" variant="ghost" onClick={onClose} disabled={pending}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="lime" disabled={pending}>
+                {pending ? 'Saving…' : 'Save'}
+              </Button>
+            </div>
           </div>
         </form>
       </div>

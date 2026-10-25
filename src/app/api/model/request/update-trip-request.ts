@@ -9,6 +9,7 @@ export interface UpdateTripBodyRequest {
   tag?: string | null;
   duration?: string | null;
   tripDate?: string;
+  placeId?: number | null;
   status?: TripStatus;
 }
 
@@ -21,6 +22,7 @@ export interface UpdateTripRequest {
   tag?: string | null;
   duration?: string | null;
   tripDate?: Date;
+  placeId?: number | null;
   status?: TripStatus;
   publishedAt?: Date | null;
 }

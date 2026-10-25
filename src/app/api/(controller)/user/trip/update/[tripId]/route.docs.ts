@@ -3,7 +3,7 @@
  * /api/user/trip/update/{tripId}:
  *   put:
  *     summary: Update a trip owned by the signed-in user
- *     description: Partial update of any trip fields. Sending status Published requires title, cover, and trip date, and sets publishedAt on first publish. Outbound URL is optional. tripId is a path param; userId is taken from the session.
+ *     description: Partial update of any trip fields. Sending status Published requires title, cover, and trip date, and sets publishedAt on first publish. Outbound URL and place are optional. placeId null clears the place. tripId is a path param; userId is taken from the session.
  *     tags: [Trip]
  *     security:
  *       - sessionCookie: []
@@ -43,6 +43,10 @@
  *               tripDate:
  *                 type: string
  *                 format: date-time
+ *               placeId:
+ *                 type: integer
+ *                 nullable: true
+ *                 minimum: 1
  *               status:
  *                 $ref: '#/components/schemas/TripStatus'
  *     responses:

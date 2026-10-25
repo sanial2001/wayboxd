@@ -2,6 +2,7 @@ import {
   normalizeOptionalText,
   validateOptionalHttpUrl,
 } from '@/app/api/(controller)/_validate/optional-http-url';
+import { readOptionalPlaceId } from '@/app/api/(controller)/_validate/optional-place-id';
 import { getTripStatusFromString, TripStatus } from '@/app/api/model/enums/trip-status';
 import { UpdateTripBodyRequest } from '@/app/api/model/request/update-trip-request';
 import {
@@ -81,6 +82,14 @@ export function validateUpdateTripBody(body: unknown): UpdateTripBodyValidationR
       return { error: `${field} must be a string`, body: null };
     }
     patch[field] = normalizeOptionalText(value) ?? null;
+  }
+
+  if (request.placeId !== undefined) {
+    const placeId = readOptionalPlaceId(request.placeId);
+    if (placeId.error) {
+      return { error: placeId.error, body: null };
+    }
+    patch.placeId = placeId.placeId;
   }
 
   if (request.status !== undefined) {

@@ -1,5 +1,6 @@
 import { validateAuthAndGetUserId } from '@/app/api/(controller)/_util/validate';
 import { validateUpdateTripBody } from '@/app/api/(controller)/user/trip/update/[tripId]/_validate/update-trip-body';
+import { validatePlaceExists } from '@/app/api/(controller)/user/trip/_validate/existing-place-id';
 import { isDeletedTripStatus, TripStatus } from '@/app/api/model/enums/trip-status';
 import {
   UpdateTripBodyRequest,
@@ -32,6 +33,14 @@ export async function PUT(req: NextRequest, props: { params: Params }) {
     if (validation.error !== null) {
       return createApiResponse({
         error: validation.error,
+        status: 400,
+      });
+    }
+
+    const placeError = await validatePlaceExists(validation.body.placeId);
+    if (placeError) {
+      return createApiResponse({
+        error: placeError,
         status: 400,
       });
     }

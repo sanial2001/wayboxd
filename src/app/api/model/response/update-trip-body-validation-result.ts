@@ -8,6 +8,7 @@ export interface UpdateTripValidatedBody {
   tag?: string | null;
   duration?: string | null;
   tripDate?: Date;
+  placeId?: number | null;
   status?: TripStatus;
 }
 

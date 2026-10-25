@@ -9,6 +9,7 @@ export interface SaveTripBodyRequest {
   blurb?: string | null;
   tag?: string | null;
   duration?: string | null;
+  placeId?: number | null;
 }
 
 /** API / client body for an unfinished trip. Cover, outbound URL, and date may be omitted. */
@@ -20,6 +21,7 @@ export interface SaveDraftTripBodyRequest {
   blurb?: string | null;
   tag?: string | null;
   duration?: string | null;
+  placeId?: number | null;
 }
 
 /** Service-layer create input for `saveTrip` (create only). */
@@ -32,6 +34,7 @@ export interface SaveTripRequest {
   blurb?: string | null;
   tag?: string | null;
   duration?: string | null;
+  placeId: number | null;
   status: TripStatus;
   publishedAt: Date | null;
 }

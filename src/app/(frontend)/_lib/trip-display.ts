@@ -96,3 +96,15 @@ export function splitTripMonthYear(value: Date | string | null | undefined): {
 export function isRemoteHttpUrl(url: string): boolean {
   return url.startsWith('https://') || url.startsWith('http://');
 }
+
+export function formatTripPlaceLabel(place: {
+  name: string;
+  city: string;
+  country: string;
+}): string {
+  const name = place.name.trim();
+  const extras = [place.city, place.country]
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0 && part.toLowerCase() !== name.toLowerCase());
+  return [name, ...extras].join(', ');
+}

@@ -2,6 +2,7 @@ import {
   normalizeOptionalText,
   validateOptionalHttpUrl,
 } from '@/app/api/(controller)/_validate/optional-http-url';
+import { readOptionalPlaceId } from '@/app/api/(controller)/_validate/optional-place-id';
 import { TripStatus } from '@/app/api/model/enums/trip-status';
 import { SaveDraftTripBodyRequest } from '@/app/api/model/request/save-trip-request';
 import { SaveTripBodyValidationResult } from '@/app/api/model/response/save-trip-body-validation-result';
@@ -80,6 +81,11 @@ export function validateSaveDraftTripBody(body: unknown): SaveTripBodyValidation
     }
   }
 
+  const placeId = readOptionalPlaceId(request.placeId);
+  if (placeId.error) {
+    return { error: placeId.error, body: null };
+  }
+
   return {
     error: null,
     body: {
@@ -90,6 +96,7 @@ export function validateSaveDraftTripBody(body: unknown): SaveTripBodyValidation
       blurb: normalizeOptionalText(request.blurb) ?? null,
       tag: normalizeOptionalText(request.tag) ?? null,
       duration: normalizeOptionalText(request.duration) ?? null,
+      placeId: placeId.placeId,
       status: TripStatus.DRAFT,
       publishedAt: null,
     },

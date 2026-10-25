@@ -234,6 +234,16 @@ const options: swaggerJsdoc.Options = {
             address: { type: 'string', nullable: true },
           },
         },
+        TripPlaceModel: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'string' },
+            city: { type: 'string' },
+            region: { type: 'string', nullable: true },
+            country: { type: 'string' },
+          },
+        },
         TripStatus: {
           type: 'string',
           enum: ['Draft', 'Published', 'Archived', 'Deleted'],
@@ -250,6 +260,11 @@ const options: swaggerJsdoc.Options = {
             tag: { type: 'string', nullable: true },
             duration: { type: 'string', nullable: true },
             tripDate: { type: 'string', format: 'date-time' },
+            placeId: { type: 'integer', nullable: true },
+            place: {
+              nullable: true,
+              allOf: [{ $ref: '#/components/schemas/TripPlaceModel' }],
+            },
             status: { $ref: '#/components/schemas/TripStatus' },
             publishedAt: { type: 'string', format: 'date-time', nullable: true },
             createdAt: { type: 'string', format: 'date-time' },
@@ -267,6 +282,7 @@ const options: swaggerJsdoc.Options = {
             blurb: { type: 'string', nullable: true },
             tag: { type: 'string', nullable: true },
             duration: { type: 'string', nullable: true },
+            placeId: { type: 'integer', nullable: true, minimum: 1 },
           },
         },
         SaveDraftTripBodyRequest: {
@@ -280,6 +296,7 @@ const options: swaggerJsdoc.Options = {
             blurb: { type: 'string', nullable: true },
             tag: { type: 'string', nullable: true },
             duration: { type: 'string', nullable: true },
+            placeId: { type: 'integer', nullable: true, minimum: 1 },
           },
         },
         UpdateTripBodyRequest: {
@@ -292,6 +309,7 @@ const options: swaggerJsdoc.Options = {
             tag: { type: 'string', nullable: true },
             duration: { type: 'string', nullable: true },
             tripDate: { type: 'string', format: 'date-time' },
+            placeId: { type: 'integer', nullable: true, minimum: 1 },
             status: { $ref: '#/components/schemas/TripStatus' },
           },
         },

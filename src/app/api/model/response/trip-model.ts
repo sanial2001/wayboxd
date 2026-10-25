@@ -1,4 +1,5 @@
 import { TripStatus } from '@/app/api/model/enums/trip-status';
+import { TripPlaceModel } from '@/app/api/model/response/trip-place-model';
 
 export interface TripModel {
   id: number;
@@ -10,6 +11,8 @@ export interface TripModel {
   tag: string | null;
   duration: string | null;
   tripDate: Date;
+  placeId: number | null;
+  place: TripPlaceModel | null;
   status: TripStatus;
   publishedAt: Date | null;
   createdAt: Date;

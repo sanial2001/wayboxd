@@ -1,5 +1,6 @@
 import { validateAuthAndGetUserId } from '@/app/api/(controller)/_util/validate';
 import { validateSaveTripBody } from '@/app/api/(controller)/user/trip/save/_validate/save-trip-body';
+import { validatePlaceExists } from '@/app/api/(controller)/user/trip/_validate/existing-place-id';
 import { SaveTripBodyRequest } from '@/app/api/model/request/save-trip-request';
 import { createApiResponse } from '@/app/service/_utils/api-response';
 import { saveTrip } from '@/app/service/trip/trip-service';
@@ -17,6 +18,14 @@ export async function POST(req: NextRequest) {
     if (validation.error !== null) {
       return createApiResponse({
         error: validation.error,
+        status: 400,
+      });
+    }
+
+    const placeError = await validatePlaceExists(validation.body.placeId);
+    if (placeError) {
+      return createApiResponse({
+        error: placeError,
         status: 400,
       });
     }

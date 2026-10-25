@@ -78,6 +78,7 @@ model Place {
   createdByUserId Int?          @map("created_by_user_id")
   createdBy       User?         @relation("PlaceCreator", fields: [createdByUserId], references: [id])
   reviews         Review[]
+  trips           Trip[]
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime?     @map("updated_at")
 
@@ -122,12 +123,15 @@ model Trip {
   tripDate      DateTime  @map("trip_date")
   status        String    @default("Draft") @map("status")
   publishedAt   DateTime? @map("published_at")
+  placeId       Int?      @map("place_id")
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime? @map("updated_at")
 
   user          User      @relation("UserTrips", fields: [userId], references: [id], onDelete: Cascade)
+  place         Place?    @relation(fields: [placeId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([tripDate])
+  @@index([placeId])
   @@map("trips")
 }

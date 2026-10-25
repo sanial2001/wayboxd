@@ -12,6 +12,7 @@ import { cn } from '@/lib/cn';
 import {
   formatTripBadge,
   formatTripMonthYear,
+  formatTripPlaceLabel,
   hostnameFromUrl,
   isRemoteHttpUrl,
 } from '@/lib/trip-display';
@@ -168,6 +169,11 @@ export function TripViewModal({ trip, author, onClose, onEdit, onDeleted }: Trip
                 {selectedTrip.title}
               </h2>
               {byline ? <p className="mt-2 text-sm text-muted sm:text-base">{byline}</p> : null}
+              {selectedTrip.place ? (
+                <p className="mt-1 text-sm text-ink sm:text-base">
+                  {formatTripPlaceLabel(selectedTrip.place)}
+                </p>
+              ) : null}
             </div>
           </header>
 

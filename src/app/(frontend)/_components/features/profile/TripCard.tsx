@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import { TripStatus } from '@/app/api/model/enums/trip-status';
+import { TripPlaceModel } from '@/app/api/model/response/trip-place-model';
 import {
   formatTripBadge,
   formatTripMonthYear,
+  formatTripPlaceLabel,
   hostnameFromUrl,
   isRemoteHttpUrl,
 } from '@/lib/trip-display';
@@ -16,6 +18,7 @@ type TripCardTrip = {
   tag: string | null;
   duration: string | null;
   tripDate: Date | string | null;
+  place?: TripPlaceModel | null;
   status?: TripStatus;
 };
 
@@ -81,6 +84,9 @@ export function TripCard({ trip, className, onOpen }: TripCardProps) {
               Title
             </h3>
           )}
+          {trip.place ? (
+            <p className="text-sm text-muted">{formatTripPlaceLabel(trip.place)}</p>
+          ) : null}
           {trip.blurb?.trim() ? (
             <p className="line-clamp-3 text-sm leading-relaxed text-ink/90">{trip.blurb}</p>
           ) : null}

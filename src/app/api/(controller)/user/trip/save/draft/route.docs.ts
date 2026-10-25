@@ -3,7 +3,7 @@
  * /api/user/trip/save/draft:
  *   post:
  *     summary: Save a trip draft for the signed-in user
- *     description: Creates an unpublished trip owned by the authenticated user. Cover, outbound URL, and trip date may be omitted. userId is taken from the session.
+ *     description: Creates an unpublished trip owned by the authenticated user. Cover, outbound URL, trip date, and place may be omitted. userId is taken from the session.
  *     tags: [Trip]
  *     security:
  *       - sessionCookie: []
@@ -39,6 +39,10 @@
  *               duration:
  *                 type: string
  *                 nullable: true
+ *               placeId:
+ *                 type: integer
+ *                 nullable: true
+ *                 minimum: 1
  *     responses:
  *       201:
  *         description: Draft trip created

@@ -106,6 +106,10 @@ v1 is a text post on the author's profile. Place, rating, and comments are later
 
 **Service:** `src/app/service/review/review-service.ts` (`getReviewsByUserId`, `countReviewsByUserId`, `saveReview`)
 
+**Client:** `src/app/api/client/review-service-client.ts` (`saveReviewClient`)
+
+**Save review (session required):** `POST /api/user/review/save` — `userId` from session; create only; `body` is required trimmed text up to `REVIEW_BODY_MAX_LENGTH`.
+
 ### Trips
 
 ```
@@ -152,6 +156,7 @@ Trip (trips)
 | `/api/user/trip/update/{tripId}` | Session required              | Partial update of trip fields; can publish a draft |
 | `/api/user/trip/delete/{tripId}` | Session required              | Soft-delete a trip (status `Deleted`)              |
 | `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers          |
+| `/api/user/review/save`          | Session required              | Create a text review for the signed-in user        |
 | `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)                    |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.

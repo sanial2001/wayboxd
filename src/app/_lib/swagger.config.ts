@@ -1,3 +1,4 @@
+import { REVIEW_BODY_MAX_LENGTH } from '@/app/api/model/enums/review-body';
 import swaggerJsdoc from 'swagger-jsdoc';
 import path from 'path';
 import fs from 'fs';
@@ -34,6 +35,11 @@ const options: swaggerJsdoc.Options = {
         name: 'Trip',
         description:
           'Authenticated user trips (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
+      },
+      {
+        name: 'Review',
+        description:
+          'Authenticated user reviews (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
       },
     ],
     components: {
@@ -242,6 +248,23 @@ const options: swaggerJsdoc.Options = {
             city: { type: 'string' },
             region: { type: 'string', nullable: true },
             country: { type: 'string' },
+          },
+        },
+        ReviewModel: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            userId: { type: 'integer' },
+            body: { type: 'string' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time', nullable: true },
+          },
+        },
+        SaveReviewBodyRequest: {
+          type: 'object',
+          required: ['body'],
+          properties: {
+            body: { type: 'string', maxLength: REVIEW_BODY_MAX_LENGTH },
           },
         },
         TripStatus: {

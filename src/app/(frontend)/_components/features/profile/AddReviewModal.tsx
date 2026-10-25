@@ -17,6 +17,7 @@ import { PlaceSearchField } from '@/components/features/profile/PlaceSearchField
 import { Button } from '@/components/ui/Button';
 import { CloseButton } from '@/components/ui/CloseButton';
 import { cn } from '@/lib/cn';
+import { composeTripMonthValue, listTripYears, TRIP_MONTH_OPTIONS } from '@/lib/trip-display';
 
 type AddReviewModalProps = {
   open: boolean;
@@ -27,6 +28,9 @@ type AddReviewModalProps = {
 const fieldClassName =
   'w-full rounded-2xl border-[3px] border-border bg-surface px-4 py-3 font-sans text-base text-ink shadow-chunky-sm placeholder:text-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple/30 disabled:cursor-not-allowed disabled:opacity-50';
 
+const selectClassName =
+  'w-full cursor-pointer rounded-2xl border-[3px] border-border bg-surface px-4 py-3 font-sans text-base text-ink shadow-chunky-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple/30 disabled:cursor-not-allowed disabled:opacity-50';
+
 export function AddReviewModal({ open, onClose, onSaved }: AddReviewModalProps) {
   const titleId = useId();
   const placeFieldId = useId();
@@ -36,7 +40,8 @@ export function AddReviewModal({ open, onClose, onSaved }: AddReviewModalProps) 
   const [rating, setRating] = useState<number | null>(null);
   const [body, setBody] = useState('');
   const [wouldGoAgain, setWouldGoAgain] = useState<boolean | null>(null);
-  const [visitDate, setVisitDate] = useState('');
+  const [visitMonth, setVisitMonth] = useState('');
+  const [visitYear, setVisitYear] = useState('');
   const [tags, setTags] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -93,6 +98,9 @@ export function AddReviewModal({ open, onClose, onSaved }: AddReviewModalProps) 
     if (parsedTags.some((tag) => tag.length > REVIEW_TAG_MAX_LENGTH)) {
       return `Each tag must be ${REVIEW_TAG_MAX_LENGTH} characters or fewer.`;
     }
+    if ((visitMonth && !visitYear) || (!visitMonth && visitYear)) {
+      return 'Choose both a month and a year, or leave the visit date empty.';
+    }
     return null;
   }
 
@@ -131,7 +139,7 @@ export function AddReviewModal({ open, onClose, onSaved }: AddReviewModalProps) 
         rating,
         body: body.trim() || null,
         wouldGoAgain,
-        visitDate: visitDate ? `${visitDate}T00:00:00.000Z` : null,
+        visitDate: composeTripMonthValue(visitYear, visitMonth),
         tags: parseTags(tags),
       });
       if (response.error || !response.data || response.status >= 400) {
@@ -267,17 +275,49 @@ export function AddReviewModal({ open, onClose, onSaved }: AddReviewModalProps) 
               </div>
             </div>
 
-            <label className="flex w-full flex-col gap-2">
-              <FieldLabel label="Visit date" />
-              <input
-                name="visitDate"
-                type="date"
-                value={visitDate}
-                onChange={(event) => setVisitDate(event.target.value)}
-                disabled={pending}
-                className={fieldClassName}
-              />
-            </label>
+            <fieldset className="flex w-full flex-col gap-2">
+              <legend>
+                <FieldLabel label="Visit date" />
+              </legend>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="sr-only" htmlFor={`${titleId}-month`}>
+                  Month
+                </label>
+                <select
+                  id={`${titleId}-month`}
+                  name="visitMonth"
+                  value={visitMonth}
+                  onChange={(event) => setVisitMonth(event.target.value)}
+                  disabled={pending}
+                  className={selectClassName}
+                >
+                  <option value="">Month</option>
+                  {TRIP_MONTH_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <label className="sr-only" htmlFor={`${titleId}-year`}>
+                  Year
+                </label>
+                <select
+                  id={`${titleId}-year`}
+                  name="visitYear"
+                  value={visitYear}
+                  onChange={(event) => setVisitYear(event.target.value)}
+                  disabled={pending}
+                  className={selectClassName}
+                >
+                  <option value="">Year</option>
+                  {listTripYears().map((year) => (
+                    <option key={year} value={String(year)}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </fieldset>
 
             <label className="flex w-full flex-col gap-2">
               <FieldLabel label="Tags" />

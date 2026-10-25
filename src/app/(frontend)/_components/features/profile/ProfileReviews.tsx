@@ -1,7 +1,7 @@
 import { ReviewModel } from '@/app/api/model/response/review-model';
 import { Badge } from '@/components/ui/Badge';
 import { Rating } from '@/components/ui/Rating';
-import { formatTripPlaceLabel } from '@/lib/trip-display';
+import { formatTripMonthYear, formatTripPlaceLabel } from '@/lib/trip-display';
 
 type ProfileReviewsProps = {
   reviews: ReviewModel[];
@@ -39,7 +39,7 @@ export function ProfileReviews({ reviews }: ProfileReviewsProps) {
   return (
     <ul className="mx-auto flex max-w-2xl flex-col gap-4">
       {reviews.map((review) => {
-        const visited = review.visitDate ? formatReviewDate(review.visitDate) : '';
+        const visited = review.visitDate ? formatTripMonthYear(review.visitDate) : '';
         return (
           <li key={review.id}>
             <article className="rounded-[1.75rem] border-[3px] border-border bg-surface px-5 py-5 shadow-chunky">

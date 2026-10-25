@@ -32,7 +32,7 @@ Follow (follows) — directed user → user edge
 
 **Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`, `uploadUserAvatarClient`)
 
-**Profile UI:** `/profile/[username]` (Trips) and `/profile/[username]/reviews` (Reviews) — separate tab pages under the same profile header, like posts and reels. Trips load via `loadPublicProfilePageData` (`getPublishedTripsByUserId`, plus drafts on your own profile). Reviews load via `loadPublicProfileReviewsPageData` + `getReviewsByUserId`. Own profile shows **Edit profile** → `/settings/profile`. **+ Add trip** is on the Trips tab; **+ Add review** is on the Reviews tab. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
+**Profile UI:** `/profile/[username]` (Trips) and `/profile/[username]/reviews` (Reviews) — separate tab pages under the same profile header, like posts and reels. Trips load via `loadPublicProfilePageData` (`getPublishedTripsByUserId`, plus drafts on your own profile). Reviews load via `loadPublicProfileReviewsPageData` + `getReviewsByUserId`. Own profile shows **Edit profile** → `/settings/profile`. **+ Add trip** is on the Trips tab; **+ Add review** is on the Reviews tab. Clicking a review opens `ReviewViewModal`. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
 
 **Profile edit UI:** `/settings/profile` — RSC loads session + `getUserProfileByUserId`; `ProfileEditForm` uses `uploadUserAvatarClient` + `saveUserProfileClient` (display name, bio, avatar, Instagram, X, other profile URL)
 

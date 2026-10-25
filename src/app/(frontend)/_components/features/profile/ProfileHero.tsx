@@ -1,4 +1,5 @@
 import { PublicUserProfileView } from '@/app/api/model/response/public-user-profile-view';
+import { ProfileSection } from '@/components/features/profile/ProfileTabs';
 import { ProfileSocialLinks } from '@/components/features/profile/profile-social-links';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
@@ -6,8 +7,11 @@ import { Button } from '@/components/ui/Button';
 type ProfileHeroProps = {
   profile: PublicUserProfileView;
   isOwnProfile: boolean;
+  section: ProfileSection;
   tripCount: number;
+  reviewCount: number;
   onAddTrip?: () => void;
+  onAddReview?: () => void;
 };
 
 function formatJoinedAt(date: Date): string {
@@ -16,10 +20,14 @@ function formatJoinedAt(date: Date): string {
 
 function ProfileActions({
   isOwnProfile,
+  section,
   onAddTrip,
+  onAddReview,
 }: {
   isOwnProfile: boolean;
+  section: ProfileSection;
   onAddTrip?: () => void;
+  onAddReview?: () => void;
 }) {
   if (isOwnProfile) {
     return (
@@ -27,7 +35,7 @@ function ProfileActions({
         <Button href="/settings/profile" variant="secondary" size="sm">
           Edit profile
         </Button>
-        {onAddTrip ? (
+        {section === 'trips' && onAddTrip ? (
           <Button
             type="button"
             variant="primary"
@@ -36,6 +44,17 @@ function ProfileActions({
             className="rounded-full bg-tangerine text-ink hover:bg-tangerine"
           >
             + Add trip
+          </Button>
+        ) : null}
+        {section === 'reviews' && onAddReview ? (
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={onAddReview}
+            className="rounded-full bg-tangerine text-ink hover:bg-tangerine"
+          >
+            + Add review
           </Button>
         ) : null}
       </>
@@ -61,7 +80,15 @@ function Stat({ value, label }: { value: number; label: string }) {
   );
 }
 
-export function ProfileHero({ profile, isOwnProfile, tripCount, onAddTrip }: ProfileHeroProps) {
+export function ProfileHero({
+  profile,
+  isOwnProfile,
+  section,
+  tripCount,
+  reviewCount,
+  onAddTrip,
+  onAddReview,
+}: ProfileHeroProps) {
   const displayName = profile.displayName?.trim() || profile.username;
 
   return (
@@ -91,7 +118,12 @@ export function ProfileHero({ profile, isOwnProfile, tripCount, onAddTrip }: Pro
               <p className="mt-1.5 text-muted">@{profile.username}</p>
             </div>
             <div className="flex flex-wrap justify-center gap-2 sm:justify-end">
-              <ProfileActions isOwnProfile={isOwnProfile} onAddTrip={onAddTrip} />
+              <ProfileActions
+                isOwnProfile={isOwnProfile}
+                section={section}
+                onAddTrip={onAddTrip}
+                onAddReview={onAddReview}
+              />
             </div>
           </div>
         </div>
@@ -101,6 +133,7 @@ export function ProfileHero({ profile, isOwnProfile, tripCount, onAddTrip }: Pro
 
           <dl className="flex flex-wrap justify-center gap-x-6 gap-y-1 sm:justify-start">
             <Stat value={tripCount} label={tripCount === 1 ? 'Trip' : 'Trips'} />
+            <Stat value={reviewCount} label={reviewCount === 1 ? 'Review' : 'Reviews'} />
             <Stat value={profile.followingCount} label="Following" />
             <Stat value={profile.followerCount} label="Followers" />
           </dl>

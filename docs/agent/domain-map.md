@@ -32,7 +32,7 @@ Follow (follows) — directed user → user edge
 
 **Client:** `src/app/api/client/user-service-client.ts` (`userSignupClient`, `userSigninClient`, `saveUserProfileClient`, `uploadUserAvatarClient`)
 
-**Profile UI:** `/profile/[username]` — RSC via `loadPublicProfilePageData` + `getPublicUserProfileByUsername` + `getPublishedTripsByUserId`. Own profile also loads drafts via `getDraftTripsByUserId` for the add-trip picker. Own profile shows **Edit profile** → `/settings/profile` and **+ Add trip**. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
+**Profile UI:** `/profile/[username]` (Trips) and `/profile/[username]/reviews` (Reviews) — separate tab pages under the same profile header, like posts and reels. Trips load via `loadPublicProfilePageData` (`getPublishedTripsByUserId`, plus drafts on your own profile). Reviews load via `loadPublicProfileReviewsPageData` + `getReviewsByUserId`. Own profile shows **Edit profile** → `/settings/profile`. **+ Add trip** is on the Trips tab; **+ Add review** is on the Reviews tab. Clicking a review opens `ReviewViewModal`. Own trip view modal shows **Edit** → `updateTripClient` (title, blurb, outbound URL only) and **Delete** → `deleteTripClient` (confirm, then soft-delete).
 
 **Profile edit UI:** `/settings/profile` — RSC loads session + `getUserProfileByUserId`; `ProfileEditForm` uses `uploadUserAvatarClient` + `saveUserProfileClient` (display name, bio, avatar, Instagram, X, other profile URL)
 
@@ -107,7 +107,13 @@ One review per user per place (`@@unique([userId, placeId])`).
 
 **Enum:** `src/app/api/model/enums/review-rating.ts`
 
-**Service:** `src/app/service/review/review-service.ts`
+**Limits:** `src/app/api/model/enums/review-body.ts`
+
+**Service:** `src/app/service/review/review-service.ts` (`getReviewsByUserId`, `countReviewsByUserId`, `saveReview`)
+
+**Client:** `src/app/api/client/review-service-client.ts` (`saveReviewClient`)
+
+**Save review (session required):** `POST /api/user/review/save` — `userId` from session; create only. `placeId`, `title`, and `rating` are required. `body`, `wouldGoAgain`, `visitDate`, and `tags` are optional. `placeId` must match an existing place. A second review of the same place returns 400. Add review searches places with `GET /api/place/search` and saves an OpenStreetMap hit with `POST /api/place/save/from-osm` before storing `placeId`.
 
 ### Trips
 
@@ -155,6 +161,7 @@ Trip (trips)
 | `/api/user/trip/update/{tripId}` | Session required              | Partial update of trip fields; can publish a draft |
 | `/api/user/trip/delete/{tripId}` | Session required              | Soft-delete a trip (status `Deleted`)              |
 | `/api/user/trip/cover`           | Session required (token step) | Vercel Blob client upload for trip covers          |
+| `/api/user/review/save`          | Session required              | Create a place review for the signed-in user       |
 | `/api/*` (other)                 | Session required              | Protected APIs (`src/proxy.ts`)                    |
 
 Every `route.ts` under a coverage-whitelisted folder needs a sibling `route.docs.ts`. Run `npm run swagger:validate`.

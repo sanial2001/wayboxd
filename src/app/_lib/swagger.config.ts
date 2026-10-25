@@ -1,3 +1,4 @@
+import { REVIEW_BODY_MAX_LENGTH, REVIEW_TITLE_MAX_LENGTH } from '@/app/api/model/enums/review-body';
 import swaggerJsdoc from 'swagger-jsdoc';
 import path from 'path';
 import fs from 'fs';
@@ -34,6 +35,11 @@ const options: swaggerJsdoc.Options = {
         name: 'Trip',
         description:
           'Authenticated user trips (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
+      },
+      {
+        name: 'Review',
+        description:
+          'Authenticated user reviews (session required). Sign in via the app first so the browser sends the NextAuth session cookie.',
       },
     ],
     components: {
@@ -242,6 +248,36 @@ const options: swaggerJsdoc.Options = {
             city: { type: 'string' },
             region: { type: 'string', nullable: true },
             country: { type: 'string' },
+          },
+        },
+        ReviewModel: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            userId: { type: 'integer' },
+            placeId: { type: 'integer' },
+            title: { type: 'string' },
+            body: { type: 'string', nullable: true },
+            rating: { type: 'integer', minimum: 1, maximum: 5 },
+            wouldGoAgain: { type: 'boolean', nullable: true },
+            visitDate: { type: 'string', format: 'date-time', nullable: true },
+            tags: { type: 'array', items: { type: 'string' } },
+            place: { $ref: '#/components/schemas/TripPlaceModel' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time', nullable: true },
+          },
+        },
+        SaveReviewBodyRequest: {
+          type: 'object',
+          required: ['placeId', 'title', 'rating'],
+          properties: {
+            placeId: { type: 'integer', minimum: 1 },
+            title: { type: 'string', maxLength: REVIEW_TITLE_MAX_LENGTH },
+            rating: { type: 'integer', minimum: 1, maximum: 5 },
+            body: { type: 'string', nullable: true, maxLength: REVIEW_BODY_MAX_LENGTH },
+            wouldGoAgain: { type: 'boolean', nullable: true },
+            visitDate: { type: 'string', format: 'date-time', nullable: true },
+            tags: { type: 'array', items: { type: 'string' } },
           },
         },
         TripStatus: {

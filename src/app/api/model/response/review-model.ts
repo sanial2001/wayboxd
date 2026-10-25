@@ -1,3 +1,5 @@
+import { TripPlaceModel } from '@/app/api/model/response/trip-place-model';
+
 export interface ReviewModel {
   id: number;
   userId: number;
@@ -8,6 +10,7 @@ export interface ReviewModel {
   wouldGoAgain: boolean | null;
   visitDate: Date | null;
   tags: string[];
+  place: TripPlaceModel;
   createdAt: Date;
   updatedAt: Date | null;
 }

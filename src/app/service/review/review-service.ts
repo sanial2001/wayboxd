@@ -2,12 +2,18 @@ import { isValidReviewRating } from '@/app/api/model/enums/review-rating';
 import { SaveReviewRequest } from '@/app/api/model/request/save-review-request';
 import { UpdateReviewRequest } from '@/app/api/model/request/update-review-request';
 import { ReviewModel } from '@/app/api/model/response/review-model';
+import { TripPlaceModel } from '@/app/api/model/response/trip-place-model';
 import prisma from '@/app/service/_lib/prisma';
-import { Review } from '@prisma/client';
+import { Place, Prisma } from '@prisma/client';
+
+const reviewWithPlace = { place: true } satisfies Prisma.ReviewInclude;
+
+type ReviewWithPlace = Prisma.ReviewGetPayload<{ include: typeof reviewWithPlace }>;
 
 export async function getReviewById(id: number): Promise<ReviewModel | null> {
   const review = await prisma.review.findUnique({
     where: { id },
+    include: reviewWithPlace,
   });
   if (!review) {
     return null;
@@ -23,6 +29,7 @@ export async function getReviewByUserIdAndPlaceId(
     where: {
       userId_placeId: { userId, placeId },
     },
+    include: reviewWithPlace,
   });
   if (!review) {
     return null;
@@ -34,6 +41,7 @@ export async function getReviewsByPlaceId(placeId: number): Promise<ReviewModel[
   const reviews = await prisma.review.findMany({
     where: { placeId },
     orderBy: { createdAt: 'desc' },
+    include: reviewWithPlace,
   });
   return mapReviewEntitiesToModels(reviews);
 }
@@ -42,8 +50,15 @@ export async function getReviewsByUserId(userId: number): Promise<ReviewModel[]>
   const reviews = await prisma.review.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
+    include: reviewWithPlace,
   });
   return mapReviewEntitiesToModels(reviews);
+}
+
+export async function countReviewsByUserId(userId: number): Promise<number> {
+  return prisma.review.count({
+    where: { userId },
+  });
 }
 
 export async function saveReview(data: SaveReviewRequest): Promise<ReviewModel | null> {
@@ -63,6 +78,7 @@ export async function saveReview(data: SaveReviewRequest): Promise<ReviewModel |
       tags: data.tags ?? [],
       createdAt: new Date(),
     },
+    include: reviewWithPlace,
   });
   return mapReviewEntityToModel(review);
 }
@@ -93,6 +109,7 @@ export async function updateReview(
       ...(data.tags !== undefined ? { tags: data.tags } : {}),
       updatedAt: new Date(),
     },
+    include: reviewWithPlace,
   });
   return mapReviewEntityToModel(review);
 }
@@ -107,15 +124,16 @@ export async function deleteReview(id: number): Promise<ReviewModel | null> {
 
   const review = await prisma.review.delete({
     where: { id },
+    include: reviewWithPlace,
   });
   return mapReviewEntityToModel(review);
 }
 
-function mapReviewEntitiesToModels(reviews: Review[]): ReviewModel[] {
+function mapReviewEntitiesToModels(reviews: ReviewWithPlace[]): ReviewModel[] {
   return reviews.map(mapReviewEntityToModel);
 }
 
-function mapReviewEntityToModel(review: Review): ReviewModel {
+function mapReviewEntityToModel(review: ReviewWithPlace): ReviewModel {
   return {
     id: review.id,
     userId: review.userId,
@@ -126,7 +144,18 @@ function mapReviewEntityToModel(review: Review): ReviewModel {
     wouldGoAgain: review.wouldGoAgain,
     visitDate: review.visitDate,
     tags: review.tags,
+    place: mapReviewPlace(review.place),
     createdAt: review.createdAt,
     updatedAt: review.updatedAt,
+  };
+}
+
+function mapReviewPlace(place: Place): TripPlaceModel {
+  return {
+    id: place.id,
+    name: place.name,
+    city: place.city,
+    region: place.region,
+    country: place.country,
   };
 }

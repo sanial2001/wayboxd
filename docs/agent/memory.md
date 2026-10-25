@@ -18,6 +18,7 @@ Team-maintained notes for Cursor agents. Update this file when you learn somethi
 - **Structured logging**: `serverLogger` (`@/app/_lib/server-logger`) on the server; `clientLogger` (`@/app/_lib/client-logger`) in UI and `@/app/api/client/` — browser logs POST to `/api/public/logs` and are written with `serverLogger`. Set `LOG_LEVEL` for verbosity (defaults: `info` in production, `debug` otherwise).
 - **Profile reads in the app UI** use RSC + service layer (`getServerSession`, `getUserProfileByUserId` / `getPublicUserProfileByUsername`) — no dedicated GET profile API unless a non-React consumer needs it.
 - **Modal close control**: Use `CloseButton` from `@/components/ui/CloseButton` — 40px circle, `border-[2.5px] border-border`, `bg-surface-2`, × glyph. Do not invent a borderless or rectangular X on dialogs (trip view, add/edit trip, auth). Overlay click-to-dismiss can stay, but the visible close affordance must be this button.
+- **Review** keeps the original columns: one review per user per place, with `title`, optional `body`, `rating` 1–5, and optional `wouldGoAgain`, `visitDate`, and `tags`. Comments are later. Do not collapse a review to a text body.
 
 ## Gotchas
 

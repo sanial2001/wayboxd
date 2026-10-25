@@ -23,15 +23,17 @@ export default async function ProfilePage({ params }: Props) {
     notFound();
   }
 
-  const { profile, isOwnProfile, trips, drafts } = data;
+  const { profile, isOwnProfile, trips, drafts, reviewCount } = data;
 
   return (
     <Container className="space-y-8 py-6 sm:py-8">
       <ProfilePageBody
+        section="trips"
         profile={profile}
         isOwnProfile={isOwnProfile}
         trips={trips}
         drafts={drafts}
+        reviewCount={reviewCount}
       />
     </Container>
   );
